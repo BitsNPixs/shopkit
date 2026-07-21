@@ -1,0 +1,227 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// BUTTON  ·  .sk-btn  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The foundational interactive control. Works on <button>, <a>, and <input>.
+//
+// TIER-3 TOKEN SURFACE — every visual is driven by a `--sk-btn-*` token that
+// FALLS BACK to a semantic / shared-control token. So:
+//   • move a semantic token  → every button (and control) reskins
+//   • set a `--sk-btn-*` token → only buttons change
+//   • set it on one element   → only that button changes
+//
+// STRUCTURE vs COLOR — the base `.sk-btn` owns *structure* (box, size, focus,
+// motion) and a default solid-primary *color*. Variants (`--secondary`,
+// `--ghost`, …) only remap the `--sk-btn-*` colour tokens; they never restate
+// structure. Sizes remap height / padding / font tokens. This keeps every
+// combination (`sk-btn sk-btn--ghost sk-btn--lg sk-btn--block`) valid.
+//
+// ACCESSIBILITY
+//   • min-block-size = --sk-control-height (44px) → meets WCAG 2.2 target size
+//   • :focus-visible → token-driven focus ring (survives overflow, forced-colors)
+//   • disabled via :disabled OR [aria-disabled="true"] (the latter for <a>)
+//   • icon-only (`--icon`) REQUIRES an aria-label — documented, not enforceable in CSS
+//
+// RTL — logical properties throughout; the only transform is vertical
+// (`translateY` on :active), which is direction-agnostic.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-btn {
+    // ── Tier-3 tokens (defaults resolve to the semantic / control layer) ──
+    --#{$prefix}-btn-bg:           var(--#{$prefix}-color-primary);
+    --#{$prefix}-btn-bg-hover:     var(--#{$prefix}-color-primary-hover);
+    --#{$prefix}-btn-bg-active:    var(--#{$prefix}-color-primary-active);
+    --#{$prefix}-btn-fg:           var(--#{$prefix}-color-primary-contrast);
+    --#{$prefix}-btn-border-color: transparent;
+    --#{$prefix}-btn-radius:       var(--#{$prefix}-control-radius);
+    --#{$prefix}-btn-height:       var(--#{$prefix}-control-height);
+    --#{$prefix}-btn-padding-x:    var(--#{$prefix}-space-5);
+    --#{$prefix}-btn-gap:          var(--#{$prefix}-space-2);
+    --#{$prefix}-btn-font-size:    var(--#{$prefix}-text-sm);
+    --#{$prefix}-btn-font-weight:  var(--#{$prefix}-weight-semibold);
+
+    // ── Structure ──
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--#{$prefix}-btn-gap);
+    min-block-size: var(--#{$prefix}-btn-height);
+    padding-block: 0;
+    padding-inline: var(--#{$prefix}-btn-padding-x);
+    border: 1px solid var(--#{$prefix}-btn-border-color);
+    border-radius: var(--#{$prefix}-btn-radius);
+    background: var(--#{$prefix}-btn-bg);
+    color: var(--#{$prefix}-btn-fg);
+    font-family: inherit;
+    font-size: var(--#{$prefix}-btn-font-size);
+    font-weight: var(--#{$prefix}-btn-font-weight);
+    line-height: 1.1;
+    text-align: center;
+    text-decoration: none;            // for <a class="sk-btn">
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+      background   var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+      border-color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+      color        var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+      transform    var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+
+  // Icons scale with the label; never shrink in a flex row.
+  .#{$prefix}-btn svg,
+  .#{$prefix}-btn .#{$prefix}-btn__icon {
+    inline-size: 1.15em;
+    block-size: 1.15em;
+    flex: none;
+  }
+
+  // ── Interaction (guarded so disabled buttons don't react) ──
+  .#{$prefix}-btn:not(:disabled):not([aria-disabled="true"]):hover {
+    background: var(--#{$prefix}-btn-bg-hover);
+  }
+  .#{$prefix}-btn:not(:disabled):not([aria-disabled="true"]):active {
+    background: var(--#{$prefix}-btn-bg-active);
+    transform: translateY(1px);
+  }
+  .#{$prefix}-btn:focus-visible { @include focus-ring; }
+
+  // ── Disabled (native + ARIA, for <a>) ──
+  .#{$prefix}-btn:disabled,
+  .#{$prefix}-btn[disabled],
+  .#{$prefix}-btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+  // Each only remaps colour tokens — structure is inherited from .sk-btn.
+
+  // Accent (secondary brand colour)
+  .#{$prefix}-btn--accent {
+    --#{$prefix}-btn-bg:        var(--#{$prefix}-color-accent);
+    --#{$prefix}-btn-bg-hover:  var(--#{$prefix}-color-accent-hover);
+    --#{$prefix}-btn-bg-active: var(--#{$prefix}-color-accent-hover);
+    --#{$prefix}-btn-fg:        var(--#{$prefix}-color-accent-contrast);
+  }
+
+  // Secondary — neutral filled surface
+  .#{$prefix}-btn--secondary {
+    --#{$prefix}-btn-bg:           var(--#{$prefix}-color-surface-alt);
+    --#{$prefix}-btn-bg-hover:     var(--#{$prefix}-color-surface-sunken);
+    --#{$prefix}-btn-bg-active:    var(--#{$prefix}-color-surface-sunken);
+    --#{$prefix}-btn-fg:           var(--#{$prefix}-color-text);
+    --#{$prefix}-btn-border-color: var(--#{$prefix}-color-border);
+  }
+
+  // Outline — transparent with a strong border, primary text
+  .#{$prefix}-btn--outline {
+    --#{$prefix}-btn-bg:           transparent;
+    --#{$prefix}-btn-bg-hover:     var(--#{$prefix}-color-primary-soft);
+    --#{$prefix}-btn-bg-active:    var(--#{$prefix}-color-primary-soft);
+    --#{$prefix}-btn-fg:           var(--#{$prefix}-color-primary);
+    --#{$prefix}-btn-border-color: var(--#{$prefix}-color-border-strong);
+  }
+
+  // Ghost — no border, no fill until hover
+  .#{$prefix}-btn--ghost {
+    --#{$prefix}-btn-bg:        transparent;
+    --#{$prefix}-btn-bg-hover:  var(--#{$prefix}-color-primary-soft);
+    --#{$prefix}-btn-bg-active: var(--#{$prefix}-color-primary-soft);
+    --#{$prefix}-btn-fg:        var(--#{$prefix}-color-primary);
+  }
+
+  // Soft — tinted primary fill
+  .#{$prefix}-btn--soft {
+    --#{$prefix}-btn-bg:        var(--#{$prefix}-color-primary-soft);
+    --#{$prefix}-btn-bg-hover:  color-mix(in srgb, var(--#{$prefix}-color-primary) 22%, transparent);
+    --#{$prefix}-btn-bg-active: color-mix(in srgb, var(--#{$prefix}-color-primary) 30%, transparent);
+    --#{$prefix}-btn-fg:        var(--#{$prefix}-color-primary);
+  }
+
+  // Status: danger / success (no semantic -hover token, so mix toward black)
+  .#{$prefix}-btn--danger {
+    --#{$prefix}-btn-bg:        var(--#{$prefix}-color-danger);
+    --#{$prefix}-btn-bg-hover:  color-mix(in srgb, var(--#{$prefix}-color-danger), var(--#{$prefix}-black) 10%);
+    --#{$prefix}-btn-bg-active: color-mix(in srgb, var(--#{$prefix}-color-danger), var(--#{$prefix}-black) 18%);
+    --#{$prefix}-btn-fg:        var(--#{$prefix}-white);
+  }
+  .#{$prefix}-btn--success {
+    --#{$prefix}-btn-bg:        var(--#{$prefix}-color-success);
+    --#{$prefix}-btn-bg-hover:  color-mix(in srgb, var(--#{$prefix}-color-success), var(--#{$prefix}-black) 10%);
+    --#{$prefix}-btn-bg-active: color-mix(in srgb, var(--#{$prefix}-color-success), var(--#{$prefix}-black) 18%);
+    --#{$prefix}-btn-fg:        var(--#{$prefix}-white);
+  }
+
+  // Link — looks like inline text, keeps button semantics/target size
+  .#{$prefix}-btn--link {
+    --#{$prefix}-btn-bg:        transparent;
+    --#{$prefix}-btn-bg-hover:  transparent;
+    --#{$prefix}-btn-bg-active: transparent;
+    --#{$prefix}-btn-fg:        var(--#{$prefix}-color-link);
+    --#{$prefix}-btn-padding-x: var(--#{$prefix}-space-1);
+    --#{$prefix}-btn-height:    auto;
+    min-block-size: auto;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  .#{$prefix}-btn--link:not(:disabled):not([aria-disabled="true"]):hover {
+    --#{$prefix}-btn-fg: var(--#{$prefix}-color-link-hover);
+    color: var(--#{$prefix}-btn-fg);
+  }
+
+  // ═════════════════════════════ SIZES ════════════════════════════════
+  .#{$prefix}-btn--sm {
+    --#{$prefix}-btn-height:    var(--#{$prefix}-control-height-sm);
+    --#{$prefix}-btn-padding-x: var(--#{$prefix}-space-3);
+    --#{$prefix}-btn-font-size: var(--#{$prefix}-text-xs);
+    --#{$prefix}-btn-gap:       var(--#{$prefix}-space-1);
+  }
+  .#{$prefix}-btn--lg {
+    --#{$prefix}-btn-height:    var(--#{$prefix}-control-height-lg);
+    --#{$prefix}-btn-padding-x: var(--#{$prefix}-space-6);
+    --#{$prefix}-btn-font-size: var(--#{$prefix}-text-md);
+  }
+
+  // ═════════════════════════════ MODIFIERS ════════════════════════════
+  // Full-width
+  .#{$prefix}-btn--block { display: flex; inline-size: 100%; }
+
+  // Pill
+  .#{$prefix}-btn--pill { --#{$prefix}-btn-radius: var(--#{$prefix}-radius-pill); }
+
+  // Icon-only square — REQUIRES an aria-label on the element
+  .#{$prefix}-btn--icon {
+    padding-inline: 0;
+    inline-size: var(--#{$prefix}-btn-height);
+    aspect-ratio: 1;
+  }
+
+  // ── Loading: spinner overlay, label hidden but width preserved ──
+  .#{$prefix}-btn--loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+  }
+  .#{$prefix}-btn--loading::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: 1.1em;
+    block-size: 1.1em;
+    margin-block-start: -0.55em;
+    margin-inline-start: -0.55em;
+    border: 2px solid var(--#{$prefix}-btn-fg);
+    border-block-start-color: transparent;   // the ring gap
+    border-radius: 50%;
+    animation: #{$prefix}-btn-spin var(--#{$prefix}-dur-slow) linear infinite;
+  }
+  // Reduced-motion users zero the duration tokens → the ring simply stops.
+  @keyframes #{$prefix}-btn-spin { to { transform: rotate(360deg); } }
+}

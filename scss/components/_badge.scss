@@ -1,0 +1,131 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// BADGE · TAG · CHIP  ·  .sk-badge / .sk-chip  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Small status / metadata labels. `.sk-badge` is the static label (counts,
+// statuses, the commerce "Sale" / "New" flags). `.sk-chip` is its interactive
+// cousin — a removable / selectable pill with an optional close affordance.
+//
+// TIER-3 — everything is a `--sk-badge-*` token defaulting to a semantic one, so
+// a variant is just a two-line colour remap (fg + bg). Soft variants tint the
+// status colour; solid commerce variants sit on a saturated fill.
+//
+// RTL — logical padding + gap; the chip's remove button uses a logical inline
+// margin, so it flips to the correct side automatically.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-badge {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-badge-bg:      var(--#{$prefix}-color-surface-sunken);
+    --#{$prefix}-badge-fg:      var(--#{$prefix}-color-text);
+    --#{$prefix}-badge-radius:  var(--#{$prefix}-radius-sm);
+    --#{$prefix}-badge-pad-x:   var(--#{$prefix}-space-2);
+    --#{$prefix}-badge-pad-y:   var(--#{$prefix}-space-1);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-1);
+    padding-block: var(--#{$prefix}-badge-pad-y);
+    padding-inline: var(--#{$prefix}-badge-pad-x);
+    border-radius: var(--#{$prefix}-badge-radius);
+    background: var(--#{$prefix}-badge-bg);
+    color: var(--#{$prefix}-badge-fg);
+    font-size: var(--#{$prefix}-text-xs);
+    font-weight: var(--#{$prefix}-weight-medium);
+    line-height: 1.2;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  // Leading status dot (inherits currentColor).
+  .#{$prefix}-badge__dot {
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+
+  // ── Soft status variants (tinted fill, coloured text) ──
+  .#{$prefix}-badge--primary {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-primary-soft);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-badge--success {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-success-soft);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-success);
+  }
+  .#{$prefix}-badge--danger {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-danger-soft);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-danger);
+  }
+  .#{$prefix}-badge--warning {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-warning-soft);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-warning);
+  }
+  .#{$prefix}-badge--info {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-info-soft);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-info);
+  }
+
+  // ── Solid commerce flags (saturated fill, on-colour text) ──
+  .#{$prefix}-badge--sale {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-badge-sale);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-badge-contrast);
+  }
+  .#{$prefix}-badge--new {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-badge-new);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-badge-contrast);
+  }
+  .#{$prefix}-badge--bestseller {
+    --#{$prefix}-badge-bg: var(--#{$prefix}-color-badge-bestseller);
+    --#{$prefix}-badge-fg: var(--#{$prefix}-color-badge-contrast);
+  }
+
+  // Outline treatment — hairline instead of a fill.
+  .#{$prefix}-badge--outline {
+    --#{$prefix}-badge-bg: transparent;
+    box-shadow: inset 0 0 0 1px var(--#{$prefix}-color-border-strong);
+  }
+
+  .#{$prefix}-badge--pill { --#{$prefix}-badge-radius: var(--#{$prefix}-radius-pill); }
+
+  // ═══════════════════════════════ CHIP ═══════════════════════════════
+  // Interactive, larger tap area, optional remove button. Inherits the badge
+  // colour tokens (so `.sk-chip.sk-badge--primary` works).
+  .#{$prefix}-chip {
+    --#{$prefix}-badge-radius: var(--#{$prefix}-radius-pill);
+    --#{$prefix}-badge-pad-x:  var(--#{$prefix}-space-3);
+    --#{$prefix}-badge-pad-y:  var(--#{$prefix}-space-2);
+    font-size: var(--#{$prefix}-text-sm);
+  }
+
+  // The dismiss control — a bare button sitting at the trailing edge.
+  .#{$prefix}-chip__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.15em;
+    block-size: 1.15em;
+    margin-inline-start: var(--#{$prefix}-space-1);
+    margin-inline-end: calc(var(--#{$prefix}-space-1) * -1);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-chip__remove:hover {
+    opacity: 1;
+    background: color-mix(in srgb, currentColor 18%, transparent);
+  }
+  .#{$prefix}-chip__remove:focus-visible { @include focus-ring; }
+}

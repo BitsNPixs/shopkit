@@ -1,0 +1,78 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ACCORDION · DISCLOSURE  ·  .sk-accordion  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Built on native <details>/<summary> — open/close state, keyboard operation
+// and the accessibility tree come free from the platform; we only style.
+//
+//   <div class="sk-accordion">
+//     <details class="sk-accordion__item" open>
+//       <summary class="sk-accordion__trigger">Question<span class="sk-accordion__marker"></span></summary>
+//       <div class="sk-accordion__panel">Answer…</div>
+//     </details>
+//   </div>
+//
+// A single-open group = add the same `name` attribute to each <details> (native
+// exclusive accordion). The marker rotates on open via `--sk-dur-fast`, so
+// reduced-motion users get an instant flip.
+//
+// RTL — logical borders / padding; the marker is drawn with a CSS mask so it
+// takes currentColor and needs no per-direction handling.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-accordion {
+    --#{$prefix}-accordion-border: var(--#{$prefix}-color-border);
+    border-block-start: 1px solid var(--#{$prefix}-accordion-border);
+  }
+
+  .#{$prefix}-accordion__item {
+    border-block-end: 1px solid var(--#{$prefix}-accordion-border);
+  }
+
+  // The clickable header row.
+  .#{$prefix}-accordion__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--#{$prefix}-space-3);
+    padding-block: var(--#{$prefix}-space-4);
+    padding-inline: var(--#{$prefix}-space-1);
+    color: var(--#{$prefix}-color-text);
+    font-weight: var(--#{$prefix}-weight-medium);
+    line-height: var(--#{$prefix}-leading-snug);
+    cursor: pointer;
+    list-style: none;                       // kill the default triangle …
+  }
+  .#{$prefix}-accordion__trigger::-webkit-details-marker { display: none; }  // …in Safari
+  .#{$prefix}-accordion__trigger:focus-visible {
+    @include focus-ring;
+    border-radius: var(--#{$prefix}-radius-xs);
+  }
+  .#{$prefix}-accordion__trigger:hover { color: var(--#{$prefix}-color-primary); }
+
+  // Chevron marker — a masked triangle so it inherits text colour.
+  .#{$prefix}-accordion__marker {
+    inline-size: 0.7em;
+    block-size: 0.7em;
+    flex: none;
+    background: currentColor;
+    transition: transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+    -webkit-mask: var(--#{$prefix}-accordion-marker-icon) center / contain no-repeat;
+    mask: var(--#{$prefix}-accordion-marker-icon) center / contain no-repeat;
+    --#{$prefix}-accordion-marker-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' stroke='black' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .#{$prefix}-accordion__item[open] .#{$prefix}-accordion__marker {
+    transform: rotate(180deg);
+  }
+
+  // The revealed content.
+  .#{$prefix}-accordion__panel {
+    padding-block: 0 var(--#{$prefix}-space-4);
+    padding-inline: var(--#{$prefix}-space-1);
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-body);
+  }
+}

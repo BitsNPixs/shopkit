@@ -1,0 +1,70 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// BUTTON GROUP  ·  .sk-btn-group  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Attaches a row (or column) of `.sk-btn`s into one segmented control: shared
+// edges collapse to a single hairline, only the outer corners stay rounded.
+//
+// It owns NO colour or size of its own — every child is a full `.sk-btn`, so
+// variants / sizes / states keep working inside a group. The group only edits
+// geometry (radius, negative margin to merge borders) and z-index so the
+// hovered / focused / active segment lifts its border above its neighbours.
+//
+// RTL — logical corner + inset properties throughout, so the group mirrors
+// automatically; the vertical modifier is writing-mode agnostic.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.components {
+  .#{$prefix}-btn-group {
+    display: inline-flex;
+    vertical-align: middle;
+  }
+
+  // Square every segment, then re-round the two outer ends only.
+  .#{$prefix}-btn-group > .#{$prefix}-btn {
+    border-radius: 0;
+  }
+
+  // Merge the shared border (pull each non-first segment onto the previous).
+  .#{$prefix}-btn-group > .#{$prefix}-btn:not(:first-child) {
+    margin-inline-start: -1px;
+  }
+
+  // Lift the interactive segment so its (coloured) border wins the overlap.
+  .#{$prefix}-btn-group > .#{$prefix}-btn:hover,
+  .#{$prefix}-btn-group > .#{$prefix}-btn:focus-visible,
+  .#{$prefix}-btn-group > .#{$prefix}-btn[aria-pressed="true"] {
+    position: relative;
+    z-index: var(--#{$prefix}-z-raised);
+  }
+
+  // ── Horizontal ends (default) ──
+  .#{$prefix}-btn-group > .#{$prefix}-btn:first-child {
+    border-start-start-radius: var(--#{$prefix}-btn-radius);
+    border-end-start-radius: var(--#{$prefix}-btn-radius);
+  }
+  .#{$prefix}-btn-group > .#{$prefix}-btn:last-child {
+    border-start-end-radius: var(--#{$prefix}-btn-radius);
+    border-end-end-radius: var(--#{$prefix}-btn-radius);
+  }
+
+  // ── Vertical ──
+  .#{$prefix}-btn-group--vertical {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .#{$prefix}-btn-group--vertical > .#{$prefix}-btn:not(:first-child) {
+    margin-inline-start: 0;
+    margin-block-start: -1px;
+  }
+  .#{$prefix}-btn-group--vertical > .#{$prefix}-btn:first-child {
+    border-start-start-radius: var(--#{$prefix}-btn-radius);
+    border-start-end-radius: var(--#{$prefix}-btn-radius);
+    border-end-start-radius: 0;
+  }
+  .#{$prefix}-btn-group--vertical > .#{$prefix}-btn:last-child {
+    border-end-start-radius: var(--#{$prefix}-btn-radius);
+    border-end-end-radius: var(--#{$prefix}-btn-radius);
+    border-start-end-radius: 0;
+  }
+}

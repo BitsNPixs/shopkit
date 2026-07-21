@@ -5,13 +5,12 @@ with token-driven **runtime theming**, first-class **dark mode**, and **multi-br
 support on a single page — no recompile. An optional React layer (later phase) reuses
 the exact same tokens and class names.
 
-> **Status: Phase 1 — Foundation.** This release ships the token system, cascade
-> layers, reset, typography, the a11y base, and the layout primitives (container /
-> grid / section) with light + dark + multi-brand plumbing. Components, utilities,
-> the motion system, the React layer, and the docs site follow in later phases and
-> drop into the layers already declared here.
+> **Status: Phase 2 — Utilities + Core UI (in progress).** Foundation (Phase 1) is
+> complete. Now shipping: spacing / display / flex utilities and the first components
+> (button live). Everything drops into the cascade layers already declared in Phase 1.
+> **Full plan & progress → [`PHASES.md`](PHASES.md).**
 
-Compiled core today: **5.4 KB gzip** (min) — 18% of the 30 KB budget.
+Compiled core today: **11.0 KB gzip** (min) — 37% of the 30 KB budget.
 
 ---
 
@@ -218,10 +217,12 @@ in this preview.
 
 ## Roadmap
 
+Tracked in detail (with checkboxes) in **[`PHASES.md`](PHASES.md)**.
+
 1. **Foundation** ✅ tokens, layers, reset, type, layout, dark + multi-brand
-2. Utilities + core UI (buttons, forms, badges, alerts, modal, tabs, accordion, skeletons)
+2. 🚧 **Utilities + core UI** — ✅ spacing/display/flex utilities, ✅ button; forms, badges, alerts, modal, tabs, accordion, skeletons next
 3. E-commerce components (product card, price, rating, swatches, badges, grid, facets)
-4. Commerce flows (navbar/mega-menu/drawer, hero, cart, order summary, checkout stepper, footer)
+4. Commerce flows & layout sections — navbar/mega-menu/drawer, hero, cart, order summary, checkout stepper, footer (multiple variants each)
 5. Variant system (§16)
 6. Motion system (§18)
 7. React parity layer

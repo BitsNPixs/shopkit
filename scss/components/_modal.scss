@@ -1,0 +1,148 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// MODAL · DIALOG  ·  .sk-modal  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Styling for the native <dialog> element. Opened with `dialog.showModal()`,
+// the platform gives you the top layer, the `::backdrop`, focus trapping, the
+// Esc-to-close and inert background — for free. We only paint.
+//
+//   <dialog class="sk-modal">
+//     <form method="dialog" class="sk-modal__panel">
+//       <header class="sk-modal__header">
+//         <h2 class="sk-modal__title">Title</h2>
+//         <button class="sk-modal__close" value="cancel" aria-label="Close">✕</button>
+//       </header>
+//       <div class="sk-modal__body">…</div>
+//       <footer class="sk-modal__footer">
+//         <button class="sk-btn sk-btn--ghost" value="cancel">Cancel</button>
+//         <button class="sk-btn" value="confirm">Confirm</button>
+//       </footer>
+//     </form>
+//   </dialog>
+//
+// MOTION — enter/exit are transitioned from `@starting-style` and gated behind
+// `--sk-dur-base`; reduced-motion users (tokens zeroed) simply get an instant
+// swap. RTL — logical insets + padding; the panel centres itself, so there is
+// nothing direction-specific to mirror.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-modal {
+    --#{$prefix}-modal-width:  32rem;
+    --#{$prefix}-modal-radius: var(--#{$prefix}-radius-lg);
+
+    padding: 0;
+    border: 0;
+    border-radius: var(--#{$prefix}-modal-radius);
+    inline-size: min(var(--#{$prefix}-modal-width), calc(100vw - var(--#{$prefix}-space-8)));
+    max-block-size: min(42rem, calc(100dvh - var(--#{$prefix}-space-12)));
+    overflow: clip;
+    background: var(--#{$prefix}-color-surface);
+    color: var(--#{$prefix}-color-text);
+    box-shadow: var(--#{$prefix}-shadow-xl);
+
+    // Enter transition (open): fade + rise. Exit runs in reverse automatically.
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    transition: opacity var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
+                transform var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
+                overlay var(--#{$prefix}-dur-base) allow-discrete,
+                display var(--#{$prefix}-dur-base) allow-discrete;
+  }
+  .#{$prefix}-modal[open] {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  @starting-style {
+    .#{$prefix}-modal[open] {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+
+  // Backdrop — token-driven scrim, fades with the dialog.
+  .#{$prefix}-modal::backdrop {
+    background: var(--#{$prefix}-color-backdrop);
+    opacity: 0;
+    transition: opacity var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-standard),
+                overlay var(--#{$prefix}-dur-base) allow-discrete,
+                display var(--#{$prefix}-dur-base) allow-discrete;
+  }
+  .#{$prefix}-modal[open]::backdrop { opacity: 1; }
+  @starting-style {
+    .#{$prefix}-modal[open]::backdrop { opacity: 0; }
+  }
+
+  // The inner panel (usually a method=dialog form). Owns the scroll.
+  .#{$prefix}-modal__panel {
+    display: flex;
+    flex-direction: column;
+    max-block-size: inherit;
+  }
+
+  .#{$prefix}-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--#{$prefix}-space-3);
+    padding-block: var(--#{$prefix}-space-5);
+    padding-inline: var(--#{$prefix}-space-6);
+    border-block-end: 1px solid var(--#{$prefix}-color-border);
+  }
+  .#{$prefix}-modal__title {
+    margin: 0;
+    font-size: var(--#{$prefix}-text-lg);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    line-height: var(--#{$prefix}-leading-snug);
+  }
+  .#{$prefix}-modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: 2rem;
+    block-size: 2rem;
+    margin-block-start: -0.25rem;
+    margin-inline-end: calc(var(--#{$prefix}-space-2) * -1);
+    padding: 0;
+    border: 0;
+    border-radius: var(--#{$prefix}-radius-sm);
+    background: transparent;
+    color: var(--#{$prefix}-color-text-muted);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-modal__close:hover {
+    background: var(--#{$prefix}-color-surface-sunken);
+    color: var(--#{$prefix}-color-text);
+  }
+  .#{$prefix}-modal__close:focus-visible { @include focus-ring; }
+
+  // Body scrolls if the content outgrows the dialog's max height.
+  .#{$prefix}-modal__body {
+    padding-block: var(--#{$prefix}-space-5);
+    padding-inline: var(--#{$prefix}-space-6);
+    overflow-y: auto;
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-body);
+  }
+
+  .#{$prefix}-modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--#{$prefix}-space-3);
+    padding-block: var(--#{$prefix}-space-4);
+    padding-inline: var(--#{$prefix}-space-6);
+    border-block-start: 1px solid var(--#{$prefix}-color-border);
+  }
+
+  // ── Size modifiers ──
+  .#{$prefix}-modal--sm { --#{$prefix}-modal-width: 24rem; }
+  .#{$prefix}-modal--lg { --#{$prefix}-modal-width: 46rem; }
+}

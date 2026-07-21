@@ -15,7 +15,5 @@
 @use "tokens";     // 2 · @layer sk.tokens  (+ sk.components control metrics)
 @use "base";       // 3 · @layer sk.reset, sk.base
 @use "layout";     // 4 · @layer sk.layout
-@use "utilities";  // 5 · @layer sk.utilities  (spacing; display/flex next)
-
-// Phase 2+ :
-// @use "components";
+@use "components"; // 5 · @layer sk.components  (button; more in Phase 2)
+@use "utilities";  // 6 · @layer sk.utilities  (spacing · display · flex)

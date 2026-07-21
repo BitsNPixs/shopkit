@@ -1,0 +1,104 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TABS  ·  .sk-tabs  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Styling for the ARIA tabs pattern. CSS covers the visuals + selected state;
+// the roving-tabindex keyboard behaviour (←/→/Home/End, showing the matching
+// panel) is a JS concern — the classes below assume that markup:
+//
+//   <div class="sk-tabs">
+//     <div class="sk-tabs__list" role="tablist">
+//       <button class="sk-tab" role="tab" aria-selected="true"  id="t1" aria-controls="p1">Details</button>
+//       <button class="sk-tab" role="tab" aria-selected="false" id="t2" aria-controls="p2" tabindex="-1">Reviews</button>
+//     </div>
+//     <div class="sk-tabs__panel" role="tabpanel" id="p1" aria-labelledby="t1">…</div>
+//     <div class="sk-tabs__panel" role="tabpanel" id="p2" aria-labelledby="t2" hidden>…</div>
+//   </div>
+//
+// Selected state is driven by `aria-selected` — the source of truth is the ARIA
+// attribute, so the visual can never drift from the semantics. The active
+// underline reads `--sk-tabs-accent`; the whole strip sits on a bottom rule.
+//
+// RTL — logical borders + inset; the underline is a logical block-end border, so
+// the layout mirrors with no extra rules.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-tabs {
+    --#{$prefix}-tabs-accent: var(--#{$prefix}-color-primary);
+    --#{$prefix}-tabs-border: var(--#{$prefix}-color-border);
+  }
+
+  // The tab strip. Sits on a hairline the selected tab's underline overlaps.
+  .#{$prefix}-tabs__list {
+    display: flex;
+    gap: var(--#{$prefix}-space-1);
+    border-block-end: 1px solid var(--#{$prefix}-tabs-border);
+    overflow-x: auto;
+    scrollbar-width: none;                 // horizontal scroll on narrow screens
+  }
+  .#{$prefix}-tabs__list::-webkit-scrollbar { display: none; }
+
+  // A single tab. Transparent underline by default → animates to accent.
+  .#{$prefix}-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    flex: none;
+    min-block-size: var(--#{$prefix}-control-height-sm);
+    padding-block: var(--#{$prefix}-space-2);
+    padding-inline: var(--#{$prefix}-space-3);
+    border: 0;
+    border-block-end: 2px solid transparent;
+    margin-block-end: -1px;                // sit the underline on the strip rule
+    background: transparent;
+    color: var(--#{$prefix}-color-text-muted);
+    font: inherit;
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-medium);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                border-color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-tab:hover { color: var(--#{$prefix}-color-text); }
+  .#{$prefix}-tab:focus-visible {
+    @include focus-ring;
+    border-radius: var(--#{$prefix}-radius-xs);
+  }
+
+  // Selected — ARIA is the source of truth.
+  .#{$prefix}-tab[aria-selected="true"] {
+    color: var(--#{$prefix}-tabs-accent);
+    border-block-end-color: var(--#{$prefix}-tabs-accent);
+  }
+
+  .#{$prefix}-tab:disabled,
+  .#{$prefix}-tab[aria-disabled="true"] {
+    color: var(--#{$prefix}-color-text-subtle);
+    cursor: not-allowed;
+  }
+
+  // Panels.
+  .#{$prefix}-tabs__panel {
+    padding-block-start: var(--#{$prefix}-space-4);
+  }
+  .#{$prefix}-tabs__panel:focus-visible { @include focus-ring; }
+
+  // ── Pill variant — segmented control instead of underline ──
+  .#{$prefix}-tabs--pill .#{$prefix}-tabs__list {
+    gap: var(--#{$prefix}-space-2);
+    border-block-end: 0;
+  }
+  .#{$prefix}-tabs--pill .#{$prefix}-tab {
+    border-block-end: 0;
+    margin-block-end: 0;
+    border-radius: var(--#{$prefix}-radius-pill);
+    padding-inline: var(--#{$prefix}-space-4);
+  }
+  .#{$prefix}-tabs--pill .#{$prefix}-tab[aria-selected="true"] {
+    background: var(--#{$prefix}-tabs-accent);
+    color: var(--#{$prefix}-color-primary-contrast);
+  }
+}

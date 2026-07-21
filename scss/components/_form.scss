@@ -1,0 +1,205 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// FORM CONTROLS  ·  .sk-input / .sk-textarea / .sk-select / .sk-checkbox …
+// @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The full text-entry + choice control set, all sharing the control metrics
+// (`--sk-control-height`, `--sk-control-radius`, …) so they line up with the
+// button on any row. Text controls read a common `--sk-field-*` token surface;
+// a variant/state is a token remap, never a restated box.
+//
+// STATE MODEL
+//   • :focus-visible          → token focus ring (shared mixin)
+//   • [aria-invalid="true"]   → danger border + focus ring (author-set, honest)
+//   • :disabled               → dimmed, not-allowed, sunken fill
+//
+// CHOICE CONTROLS — checkbox + radio use native `accent-color` (adaptive to
+// theme + brand, correct contrast in light AND dark, RTL-safe, zero image
+// payload). The switch is a custom-painted checkbox (no native element exists).
+//
+// RTL — logical properties throughout; the <select> chevron is the one physical
+// bit (a background image), so it gets an explicit `[dir="rtl"]` mirror.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  // ── Vertical field wrapper: label ▸ control ▸ help/error ──
+  .#{$prefix}-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-2);
+  }
+
+  .#{$prefix}-label {
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-medium);
+    color: var(--#{$prefix}-color-text);
+    line-height: var(--#{$prefix}-leading-snug);
+  }
+  // Required marker — add <span class="sk-label__req">*</span> or data-required.
+  .#{$prefix}-label__req { color: var(--#{$prefix}-color-danger); margin-inline-start: 0.15em; }
+
+  // ── Text-entry controls (shared surface) ──
+  .#{$prefix}-input,
+  .#{$prefix}-textarea,
+  .#{$prefix}-select {
+    --#{$prefix}-field-bg:     var(--#{$prefix}-color-surface);
+    --#{$prefix}-field-fg:     var(--#{$prefix}-color-text);
+    --#{$prefix}-field-border: var(--#{$prefix}-color-border-strong);
+    --#{$prefix}-field-radius: var(--#{$prefix}-control-radius);
+    --#{$prefix}-field-height: var(--#{$prefix}-control-height);
+
+    display: block;
+    inline-size: 100%;
+    min-block-size: var(--#{$prefix}-field-height);
+    padding-block: 0;
+    padding-inline: var(--#{$prefix}-control-padding-x);
+    border: 1px solid var(--#{$prefix}-field-border);
+    border-radius: var(--#{$prefix}-field-radius);
+    background: var(--#{$prefix}-field-bg);
+    color: var(--#{$prefix}-field-fg);
+    font-family: inherit;
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-snug);
+    appearance: none;
+    -webkit-appearance: none;
+    transition: border-color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-input::placeholder,
+  .#{$prefix}-textarea::placeholder { color: var(--#{$prefix}-color-text-subtle); opacity: 1; }
+
+  .#{$prefix}-input:focus-visible,
+  .#{$prefix}-textarea:focus-visible,
+  .#{$prefix}-select:focus-visible {
+    border-color: var(--#{$prefix}-color-primary);
+    @include focus-ring;
+  }
+
+  // Textarea grows on the block axis only (logical `resize: block`).
+  .#{$prefix}-textarea {
+    min-block-size: 6rem;
+    padding-block: var(--#{$prefix}-space-3);
+    resize: block;
+    line-height: var(--#{$prefix}-leading-body);
+  }
+
+  // Select — custom chevron; keep room for it on the trailing edge.
+  .#{$prefix}-select {
+    padding-inline-end: var(--#{$prefix}-space-8);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23647186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--#{$prefix}-space-3) center;
+    background-size: 1.1em;
+    cursor: pointer;
+  }
+  [dir="rtl"] .#{$prefix}-select {
+    background-position: left var(--#{$prefix}-space-3) center;
+  }
+
+  // ── Invalid + disabled (apply to every text control) ──
+  .#{$prefix}-input[aria-invalid="true"],
+  .#{$prefix}-textarea[aria-invalid="true"],
+  .#{$prefix}-select[aria-invalid="true"] {
+    --#{$prefix}-field-border: var(--#{$prefix}-color-danger);
+    --#{$prefix}-color-focus:  var(--#{$prefix}-color-danger);
+  }
+  .#{$prefix}-input:disabled,
+  .#{$prefix}-textarea:disabled,
+  .#{$prefix}-select:disabled {
+    background: var(--#{$prefix}-color-surface-sunken);
+    color: var(--#{$prefix}-color-text-subtle);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  // ── Size modifiers (match the button scale) ──
+  .#{$prefix}-input--sm, .#{$prefix}-select--sm { --#{$prefix}-field-height: var(--#{$prefix}-control-height-sm); font-size: var(--#{$prefix}-text-xs); }
+  .#{$prefix}-input--lg, .#{$prefix}-select--lg { --#{$prefix}-field-height: var(--#{$prefix}-control-height-lg); font-size: var(--#{$prefix}-text-md); }
+
+  // ── Help + error text ──
+  .#{$prefix}-help  { font-size: var(--#{$prefix}-text-xs); color: var(--#{$prefix}-color-text-muted); line-height: var(--#{$prefix}-leading-snug); }
+  .#{$prefix}-error { font-size: var(--#{$prefix}-text-xs); color: var(--#{$prefix}-color-danger); font-weight: var(--#{$prefix}-weight-medium); line-height: var(--#{$prefix}-leading-snug); }
+
+  // ═══════════════════════ CHOICE CONTROLS ════════════════════════════
+  // Checkbox + radio: native control, brand-tinted, correctly-contrasted marks.
+  .#{$prefix}-checkbox,
+  .#{$prefix}-radio {
+    inline-size: 1.15em;
+    block-size: 1.15em;
+    margin: 0;
+    accent-color: var(--#{$prefix}-color-primary);
+    cursor: pointer;
+    flex: none;
+  }
+  .#{$prefix}-checkbox:focus-visible,
+  .#{$prefix}-radio:focus-visible { @include focus-ring; }
+  .#{$prefix}-checkbox:disabled,
+  .#{$prefix}-radio:disabled { cursor: not-allowed; opacity: 0.55; }
+
+  // Row wrapper: control + its label text, vertically centred.
+  .#{$prefix}-check {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-snug);
+    cursor: pointer;
+  }
+  .#{$prefix}-check:has(:disabled) { color: var(--#{$prefix}-color-text-subtle); cursor: not-allowed; }
+
+  // ── Switch — custom-painted toggle (no native element) ──
+  .#{$prefix}-switch {
+    --#{$prefix}-switch-w: 2.5rem;
+    --#{$prefix}-switch-h: 1.4rem;
+    --#{$prefix}-switch-pad: 0.15rem;
+
+    position: relative;
+    flex: none;
+    inline-size: var(--#{$prefix}-switch-w);
+    block-size: var(--#{$prefix}-switch-h);
+    margin: 0;
+    border-radius: var(--#{$prefix}-radius-pill);
+    background: var(--#{$prefix}-color-border-strong);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  // The thumb.
+  .#{$prefix}-switch::before {
+    content: "";
+    position: absolute;
+    inset-block-start: var(--#{$prefix}-switch-pad);
+    inset-inline-start: var(--#{$prefix}-switch-pad);
+    inline-size: calc(var(--#{$prefix}-switch-h) - 2 * var(--#{$prefix}-switch-pad));
+    block-size: calc(var(--#{$prefix}-switch-h) - 2 * var(--#{$prefix}-switch-pad));
+    border-radius: 50%;
+    background: var(--#{$prefix}-white);
+    box-shadow: var(--#{$prefix}-shadow-sm);
+    transition: inset-inline-start var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-switch:checked {
+    background: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-switch:checked::before {
+    inset-inline-start: calc(var(--#{$prefix}-switch-w) - var(--#{$prefix}-switch-h) + var(--#{$prefix}-switch-pad));
+  }
+  .#{$prefix}-switch:focus-visible { @include focus-ring; }
+  .#{$prefix}-switch:disabled { cursor: not-allowed; opacity: 0.55; }
+
+  // ── Fieldset + legend ──
+  .#{$prefix}-fieldset {
+    margin: 0;
+    padding-block: var(--#{$prefix}-space-4);
+    padding-inline: var(--#{$prefix}-space-4);
+    border: 1px solid var(--#{$prefix}-color-border);
+    border-radius: var(--#{$prefix}-radius-md);
+  }
+  .#{$prefix}-legend {
+    padding-inline: var(--#{$prefix}-space-2);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    color: var(--#{$prefix}-color-text);
+  }
+}

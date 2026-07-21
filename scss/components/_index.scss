@@ -1,0 +1,12 @@
+// Components — @layer sk.components. Import directly (no barrel re-export of
+// internals); add one @forward per component partial as the layer grows.
+@forward "button";
+@forward "button-group";
+@forward "form";
+@forward "badge";
+@forward "alert";
+@forward "modal";
+@forward "tabs";
+@forward "accordion";
+@forward "skeleton";
+@forward "tooltip";

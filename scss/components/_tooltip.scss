@@ -1,0 +1,98 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TOOLTIP  ·  [data-sk-tooltip]  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A zero-JS tooltip: put the text in the `data-sk-tooltip` attribute on any
+// element and it appears on hover AND keyboard focus (`:focus-visible`), so it
+// is reachable without a pointer. Position with `data-sk-tooltip-pos` =
+// top (default) · bottom · start · end.
+//
+//   <button data-sk-tooltip="Add to wishlist" aria-label="Add to wishlist">♥</button>
+//
+// A11y note — a CSS tooltip is a visual affordance, not an accessible name. The
+// content is NOT exposed to assistive tech, so ALWAYS also provide the real name
+// (`aria-label` / visible text). Treat this as progressive enhancement.
+//
+// RTL — the bubble is centred with a logical translate on the inline axis and
+// `start`/`end` placements use logical insets, so it mirrors correctly. The
+// pop uses `--sk-dur-fast`, so reduced-motion users get an instant show.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.components {
+  [data-#{$prefix}-tooltip] {
+    position: relative;
+  }
+
+  // The bubble. Hidden until hover/focus; content pulled from the attribute.
+  [data-#{$prefix}-tooltip]::after {
+    --#{$prefix}-tooltip-bg: var(--#{$prefix}-color-surface-inverse);
+    --#{$prefix}-tooltip-fg: var(--#{$prefix}-color-text-inverse);
+
+    content: attr(data-#{$prefix}-tooltip);
+    position: absolute;
+    z-index: var(--#{$prefix}-z-tooltip);
+    inset-block-end: calc(100% + 0.5rem);   // default: above
+    inset-inline-start: 50%;
+    inline-size: max-content;
+    max-inline-size: 16rem;
+    padding-block: var(--#{$prefix}-space-1);
+    padding-inline: var(--#{$prefix}-space-2);
+    border-radius: var(--#{$prefix}-radius-sm);
+    background: var(--#{$prefix}-tooltip-bg);
+    color: var(--#{$prefix}-tooltip-fg);
+    font-size: var(--#{$prefix}-text-xs);
+    font-weight: var(--#{$prefix}-weight-medium);
+    line-height: 1.3;
+    text-align: center;
+    white-space: normal;
+    box-shadow: var(--#{$prefix}-shadow-md);
+    opacity: 0;
+    transform: translateX(-50%) translateY(2px);
+    pointer-events: none;
+    transition: opacity var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+
+  [data-#{$prefix}-tooltip]:hover::after,
+  [data-#{$prefix}-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  // Empty attribute → no bubble (lets you toggle it off from markup).
+  [data-#{$prefix}-tooltip=""]::after { content: none; }
+
+  // ── Placements ──
+  [data-#{$prefix}-tooltip-pos="bottom"]::after {
+    inset-block-end: auto;
+    inset-block-start: calc(100% + 0.5rem);
+    transform: translateX(-50%) translateY(-2px);
+  }
+  [data-#{$prefix}-tooltip-pos="bottom"]:hover::after,
+  [data-#{$prefix}-tooltip-pos="bottom"]:focus-visible::after {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-#{$prefix}-tooltip-pos="start"]::after {
+    inset-block-end: auto;
+    inset-block-start: 50%;
+    inset-inline-start: auto;
+    inset-inline-end: calc(100% + 0.5rem);
+    transform: translateY(-50%) translateX(2px);
+  }
+  [data-#{$prefix}-tooltip-pos="start"]:hover::after,
+  [data-#{$prefix}-tooltip-pos="start"]:focus-visible::after {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  [data-#{$prefix}-tooltip-pos="end"]::after {
+    inset-block-end: auto;
+    inset-block-start: 50%;
+    inset-inline-start: calc(100% + 0.5rem);
+    transform: translateY(-50%) translateX(-2px);
+  }
+  [data-#{$prefix}-tooltip-pos="end"]:hover::after,
+  [data-#{$prefix}-tooltip-pos="end"]:focus-visible::after {
+    transform: translateY(-50%) translateX(0);
+  }
+}
