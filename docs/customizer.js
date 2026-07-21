@@ -19,6 +19,9 @@
   var root = document.documentElement;
 
   // Defaults mirror the library's own defaults (see tokens/_semantic.scss).
+  // NOTE: `section` here is only the slider's starting position — the library's
+  // real default is a fluid clamp(), so we must never force this onto <html>
+  // unless the user has actually moved the knob (see `touched` below).
   var DEFAULTS = {
     mode: "system",   // light · dark · system
     brand: "aurora",  // aurora · verde · ember
@@ -29,19 +32,61 @@
     dir: "ltr",       // ltr · rtl
   };
 
-  var state = load();
+  // Validation surface for every knob — used to sanitise anything read back
+  // from localStorage before it can reach the DOM / an innerHTML string.
+  var KNOBS = {
+    mode:    { type: "enum", values: ["light", "dark", "system"] },
+    brand:   { type: "enum", values: ["aurora", "verde", "ember"] },
+    radius:  { type: "num", min: 0, max: 24 },
+    gutter:  { type: "num", min: 8, max: 48 },
+    section: { type: "num", min: 32, max: 128 },
+    motion:  { type: "enum", values: ["on", "off"] },
+    dir:     { type: "enum", values: ["ltr", "rtl"] },
+  };
+
+  var state;         // current values (all keys present, defaults for untouched)
+  var touched;       // { key: true } for knobs the user has explicitly set
+  load();
+
+  // Coerce one persisted value to a safe primitive, or null if unusable.
+  function sanitize(key, raw) {
+    var k = KNOBS[key];
+    if (!k) return null;
+    if (k.type === "enum") {
+      return k.values.indexOf(raw) !== -1 ? raw : null;
+    }
+    var n = parseInt(raw, 10);
+    if (isNaN(n)) return null;
+    if (n < k.min) n = k.min;
+    if (n > k.max) n = k.max;
+    return n;
+  }
 
   // ── Persistence ──
+  // Only keys the user actually touched are persisted; on load only those keys
+  // are marked touched, so untouched knobs fall back to the stylesheet default
+  // instead of being pinned to the JS defaults (esp. the fluid `section`).
   function load() {
-    try {
-      var saved = JSON.parse(localStorage.getItem(KEY) || "{}");
-      return Object.assign({}, DEFAULTS, saved);
-    } catch (e) {
-      return Object.assign({}, DEFAULTS);
-    }
+    state = {};
+    touched = {};
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { saved = {}; }
+    if (!saved || typeof saved !== "object") saved = {};
+    Object.keys(KNOBS).forEach(function (key) {
+      state[key] = DEFAULTS[key];
+      if (!Object.prototype.hasOwnProperty.call(saved, key)) return;
+      var v = sanitize(key, saved[key]);
+      if (v === null) return;           // invalid/unknown → keep default, untouched
+      state[key] = v;
+      touched[key] = true;
+    });
   }
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+    try {
+      var out = {};
+      Object.keys(touched).forEach(function (k) { out[k] = state[k]; });
+      localStorage.setItem(KEY, JSON.stringify(out));
+    } catch (e) { /* ignore */ }
   }
 
   // ── Apply state → the page (only public theming hooks) ──
@@ -55,9 +100,16 @@
     if (state.motion === "off") root.setAttribute("data-motion", "off");
     else root.removeAttribute("data-motion");
 
-    root.style.setProperty("--sk-radius", state.radius + "px");
-    root.style.setProperty("--sk-space-gutter", state.gutter + "px");
-    root.style.setProperty("--sk-space-section", state.section + "px");
+    // Custom properties are inline overrides: only write them for knobs the
+    // user has actually changed. Untouched knobs are removed so the library's
+    // own default (a fluid clamp for section) stays in force.
+    applyVar("--sk-radius", "radius", state.radius + "px");
+    applyVar("--sk-space-gutter", "gutter", state.gutter + "px");
+    applyVar("--sk-space-section", "section", state.section + "px");
+  }
+  function applyVar(prop, key, val) {
+    if (touched[key]) root.style.setProperty(prop, val);
+    else root.style.removeProperty(prop);
   }
 
   // The paste-ready override block (only non-default values).
@@ -139,12 +191,14 @@
     fab.type = "button";
     fab.setAttribute("aria-label", "Open theme customizer");
     fab.setAttribute("aria-expanded", "false");
+    fab.setAttribute("aria-controls", "skc-panel");
     fab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
       '<circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17" cy="14.5" r="2.5"/>' +
       '<circle cx="9.5" cy="18.5" r="2.5"/><path d="M12 2a10 10 0 1 0 0 20"/></svg>';
 
     var panel = document.createElement("section");
     panel.className = "skc-panel";
+    panel.id = "skc-panel";
     panel.setAttribute("aria-label", "Theme customizer");
     panel.innerHTML =
       '<div class="skc-head"><h2>Customize</h2><button type="button" class="skc-x" aria-label="Close">✕</button></div>' +
@@ -175,11 +229,44 @@
     if (out) out.textContent = themeCss();
   }
 
+  // Best-effort synchronous copy for insecure / file:// contexts with no
+  // Clipboard API. Returns true only if the copy actually succeeded.
+  function legacyCopy(text) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.insetBlockStart = "-9999px";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) { return false; }
+  }
+
   function wire(fab, panel) {
+    var lastFocus = null;
     function open(o) {
-      if (o) panel.setAttribute("data-open", ""); else panel.removeAttribute("data-open");
-      fab.setAttribute("aria-expanded", String(o));
-      fab.style.display = o ? "none" : "inline-flex";
+      if (o) {
+        lastFocus = document.activeElement;
+        panel.setAttribute("data-open", "");
+        fab.setAttribute("aria-expanded", "true");
+        // Move focus into the panel; the FAB stays visible & reachable (its
+        // aria-expanded lives on a rendered control, not a display:none one).
+        var first = panel.querySelector(".skc-x") ||
+          panel.querySelector("button, input, [tabindex]");
+        if (first && typeof first.focus === "function") first.focus();
+      } else {
+        panel.removeAttribute("data-open");
+        fab.setAttribute("aria-expanded", "false");
+        // Return focus to the trigger (or wherever it was before opening).
+        var back = fab && typeof fab.focus === "function" ? fab : lastFocus;
+        if (back && typeof back.focus === "function") back.focus();
+      }
     }
     fab.addEventListener("click", function () { open(true); });
     panel.querySelector(".skc-x").addEventListener("click", function () { open(false); });
@@ -191,6 +278,7 @@
     panel.querySelectorAll(".skc-seg button").forEach(function (b) {
       b.addEventListener("click", function () {
         state[b.dataset.key] = b.dataset.value;
+        touched[b.dataset.key] = true;
         apply(); save(); refreshSegs(panel); refreshOut(panel);
       });
     });
@@ -199,6 +287,7 @@
       r.addEventListener("input", function () {
         var key = r.dataset.range;
         state[key] = parseInt(r.value, 10);
+        touched[key] = true;
         var out = panel.querySelector('[data-out="' + key + '"]');
         if (out) out.textContent = state[key] + "px";
         apply(); save(); refreshOut(panel);
@@ -206,13 +295,21 @@
     });
     // Actions
     panel.querySelector('[data-act="copy"]').addEventListener("click", function (e) {
+      var btn = e.currentTarget;
       var txt = themeCss();
-      var done = function () { e.target.textContent = "Copied ✓"; setTimeout(function () { e.target.textContent = "Copy CSS"; }, 1400); };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
-      else done();
+      var done = function () { btn.textContent = "Copied ✓"; setTimeout(function () { btn.textContent = "Copy CSS"; }, 1400); };
+      var fail = function () { btn.textContent = "Press Ctrl+C"; setTimeout(function () { btn.textContent = "Copy CSS"; }, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(done, function () {
+          if (legacyCopy(txt)) done(); else fail();
+        });
+      } else {
+        if (legacyCopy(txt)) done(); else fail();
+      }
     });
     panel.querySelector('[data-act="reset"]').addEventListener("click", function () {
       state = Object.assign({}, DEFAULTS);
+      touched = {};
       apply(); save();
       panel.querySelectorAll("input[data-range]").forEach(function (r) {
         r.value = state[r.dataset.range];

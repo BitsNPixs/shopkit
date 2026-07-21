@@ -340,7 +340,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   <hr class="sk-container" style="border:0;block-size:1px;background:var(--sk-color-border)">
 
   <!-- ══════════════════ TOKEN INSPECTOR ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="tokens">
     <div class="head">
       <div>
         <h2>Semantic tokens</h2>
@@ -384,7 +384,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
 
       <div class="sk-product-grid" style="--sk-product-min:15rem">
         <article class="sk-product-card">
-          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">👕
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem"><span aria-hidden="true">👕</span>
             <div class="sk-product-card__badges">
               <span class="sk-badge sk-badge--sale">-25%</span>
             </div>
@@ -414,7 +414,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </article>
 
         <article class="sk-product-card">
-          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">🎒
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem"><span aria-hidden="true">🎒</span>
             <div class="sk-product-card__badges">
               <span class="sk-badge sk-badge--new">New</span>
               <span class="sk-badge sk-badge--bestseller">Bestseller</span>
@@ -444,7 +444,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </article>
 
         <article class="sk-product-card">
-          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">☕
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem"><span aria-hidden="true">☕</span>
             <div class="sk-product-card__wishlist">
               <button type="button" class="sk-wishlist" aria-pressed="false" aria-label="Add to wishlist">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
@@ -472,7 +472,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </article>
 
         <article class="sk-product-card">
-          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">👔
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem"><span aria-hidden="true">👔</span>
             <div class="sk-product-card__badges">
               <span class="sk-badge sk-badge--sale">Sale</span>
             </div>
@@ -986,7 +986,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
 
     <p class="ey sk-mt-7 sk-mb-3">horizontal card — cart line / list view</p>
     <article class="sk-product-card sk-product-card--horizontal" style="max-inline-size:34rem">
-      <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:2.6rem">🎒</div>
+      <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:2.6rem"><span aria-hidden="true">🎒</span></div>
       <div class="sk-product-card__body">
         <h3 class="sk-product-card__title">Trailhead Canvas Backpack</h3>
         <p class="sk-price"><span class="sk-price__now">$148</span></p>
@@ -1197,7 +1197,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ MOTION SYSTEM (PHASE 6) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="motion">
     <div class="head">
       <div><h2>Motion system <span class="tag">new · phase 6</span></h2>
         <p class="lede">Every transition and animation reads a <code>--sk-dur-*</code> token, so
@@ -1459,9 +1459,25 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   /* ---- copy button ---- */
   document.getElementById("copybtn").addEventListener("click", function () {
     var txt = document.getElementById("theme-out").textContent;
-    var done = function () { var b = document.getElementById("copybtn"); var t = b.textContent; b.textContent = "Copied ✓"; setTimeout(function(){ b.textContent = t; }, 1400); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
-    else done();
+    var b = document.getElementById("copybtn");
+    var orig = b.textContent;
+    var flash = function (msg, ms) { b.textContent = msg; setTimeout(function(){ b.textContent = orig; }, ms); };
+    var done = function () { flash("Copied ✓", 1400); };
+    var fail = function () { flash("Press Ctrl+C", 1800); };
+    var legacyCopy = function (text) {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.insetBlockStart = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+        var ok = document.execCommand("copy"); document.body.removeChild(ta); return ok;
+      } catch (e) { return false; }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done, function () { if (legacyCopy(txt)) done(); else fail(); });
+    } else {
+      if (legacyCopy(txt)) done(); else fail();
+    }
   });
 
   /* ---- init ---- */

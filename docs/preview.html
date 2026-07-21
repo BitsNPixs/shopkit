@@ -152,13 +152,13 @@
     --sk-text-xs: 0.75rem;
     --sk-text-sm: 0.875rem;
     --sk-text-base: 1rem;
-    --sk-text-md: clamp(1.0625rem, 1.025rem0.0078125vw, 1.125rem);
-    --sk-text-lg: clamp(1.1875rem, 1.1125rem0.015625vw, 1.3125rem);
-    --sk-text-xl: clamp(1.375rem, 1.225rem0.03125vw, 1.625rem);
-    --sk-text-2xl: clamp(1.625rem, 1.325rem0.0625vw, 2.125rem);
-    --sk-text-3xl: clamp(2rem, 1.4375rem0.1171875vw, 2.9375rem);
-    --sk-text-4xl: clamp(2.5rem, 1.675rem0.171875vw, 3.875rem);
-    --sk-text-5xl: clamp(3.125rem, 2rem0.234375vw, 5rem);
+    --sk-text-md: clamp(1.0625rem, 1.025rem + 0.0078125vw, 1.125rem);
+    --sk-text-lg: clamp(1.1875rem, 1.1125rem + 0.015625vw, 1.3125rem);
+    --sk-text-xl: clamp(1.375rem, 1.225rem + 0.03125vw, 1.625rem);
+    --sk-text-2xl: clamp(1.625rem, 1.325rem + 0.0625vw, 2.125rem);
+    --sk-text-3xl: clamp(2rem, 1.4375rem + 0.1171875vw, 2.9375rem);
+    --sk-text-4xl: clamp(2.5rem, 1.675rem + 0.171875vw, 3.875rem);
+    --sk-text-5xl: clamp(3.125rem, 2rem + 0.234375vw, 5rem);
     --sk-leading-tight: 1.14;
     --sk-leading-snug: 1.35;
     --sk-leading-body: 1.6;
@@ -1841,9 +1841,25 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   /* ---- copy button ---- */
   document.getElementById("copybtn").addEventListener("click", function () {
     var txt = document.getElementById("theme-out").textContent;
-    var done = function () { var b = document.getElementById("copybtn"); var t = b.textContent; b.textContent = "Copied ✓"; setTimeout(function(){ b.textContent = t; }, 1400); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
-    else done();
+    var b = document.getElementById("copybtn");
+    var orig = b.textContent;
+    var flash = function (msg, ms) { b.textContent = msg; setTimeout(function(){ b.textContent = orig; }, ms); };
+    var done = function () { flash("Copied ✓", 1400); };
+    var fail = function () { flash("Press Ctrl+C", 1800); };
+    var legacyCopy = function (text) {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.insetBlockStart = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+        var ok = document.execCommand("copy"); document.body.removeChild(ta); return ok;
+      } catch (e) { return false; }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done, function () { if (legacyCopy(txt)) done(); else fail(); });
+    } else {
+      if (legacyCopy(txt)) done(); else fail();
+    }
   });
 
   /* ---- init ---- */
