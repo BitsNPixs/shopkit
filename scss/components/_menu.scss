@@ -50,6 +50,9 @@
     border-radius: var(--#{$prefix}-menu-radius);
     background: var(--#{$prefix}-menu-bg);
     box-shadow: var(--#{$prefix}-menu-shadow);
+    // Inert until the author establishes a stacking context (the panel is
+    // statically positioned here); kept so an anchored/positioned menu layers
+    // above page content without restating the token.
     z-index: var(--#{$prefix}-z-dropdown);
 
     // Enter transition (fade + rise). Exit runs in reverse automatically.

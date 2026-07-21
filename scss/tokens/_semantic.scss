@@ -89,14 +89,14 @@ $brands: (
     --#{$prefix}-color-star:             var(--#{$prefix}-amber-400);
     --#{$prefix}-color-badge-new:        var(--#{$prefix}-emerald-600);
     --#{$prefix}-color-badge-sale:       var(--#{$prefix}-rose-600);
-    --#{$prefix}-color-badge-bestseller: var(--#{$prefix}-amber-500);
+    --#{$prefix}-color-badge-bestseller: var(--#{$prefix}-amber-700); // WCAG AA: amber-700 (#9E560D) fill, white text ≈5.6:1 (amber-500 failed ~2.5:1)
     --#{$prefix}-color-badge-contrast:   var(--#{$prefix}-white);
     --#{$prefix}-color-out-of-stock:     var(--#{$prefix}-neutral-400);
 
     // status
     --#{$prefix}-color-success: var(--#{$prefix}-emerald-600);
     --#{$prefix}-color-danger:  var(--#{$prefix}-red-600);
-    --#{$prefix}-color-warning: var(--#{$prefix}-amber-500);
+    --#{$prefix}-color-warning: var(--#{$prefix}-amber-700); // WCAG AA: amber-700 (#9E560D); white-on-fill ≈5.6:1, amber-700-on-soft-tint text passes (amber-500 failed)
     --#{$prefix}-color-info:    var(--#{$prefix}-sky-600);
     --#{$prefix}-color-success-soft: color-mix(in srgb, var(--#{$prefix}-emerald-500) 14%, transparent);
     --#{$prefix}-color-danger-soft:  color-mix(in srgb, var(--#{$prefix}-red-500) 14%, transparent);
@@ -114,7 +114,7 @@ $brands: (
 
     --#{$prefix}-color-text:           color-mix(in srgb, var(--#{$prefix}-white), var(--#{$prefix}-neutral-300) 12%);
     --#{$prefix}-color-text-muted:     var(--#{$prefix}-neutral-400);
-    --#{$prefix}-color-text-subtle:    var(--#{$prefix}-neutral-500);
+    --#{$prefix}-color-text-subtle:    var(--#{$prefix}-neutral-400); // WCAG AA: neutral-400 (#8A98AE) ≈5.9:1 on dark surface; neutral-500 failed
     --#{$prefix}-color-text-inverse:   var(--#{$prefix}-neutral-900);
 
     --#{$prefix}-color-border:         color-mix(in srgb, var(--#{$prefix}-neutral-800), var(--#{$prefix}-neutral-600) 45%);

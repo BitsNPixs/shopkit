@@ -48,6 +48,7 @@
   .#{$prefix}-steps {
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
     --#{$prefix}-steps-marker-size: 2rem;
+    --#{$prefix}-steps-line-width:  2px;
     --#{$prefix}-steps-line:        var(--#{$prefix}-color-border);
     --#{$prefix}-steps-line-done:   var(--#{$prefix}-color-primary);
 
@@ -78,7 +79,7 @@
     inset-block-start: calc(var(--#{$prefix}-steps-marker-size) / 2);
     inset-inline-start: -50%;
     inline-size: 100%;
-    block-size: 2px;
+    block-size: var(--#{$prefix}-steps-line-width);
     background: var(--#{$prefix}-steps-line);
     z-index: 0;
   }
@@ -91,7 +92,7 @@
     place-items: center;
     inline-size: var(--#{$prefix}-steps-marker-size);
     block-size: var(--#{$prefix}-steps-marker-size);
-    border: 2px solid var(--#{$prefix}-color-border);
+    border: var(--#{$prefix}-steps-line-width) solid var(--#{$prefix}-color-border);
     border-radius: 50%;
     background: var(--#{$prefix}-color-surface);
     color: var(--#{$prefix}-color-text-muted);

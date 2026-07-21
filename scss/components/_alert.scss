@@ -23,6 +23,7 @@
     --#{$prefix}-alert-bg:     var(--#{$prefix}-color-info-soft);
     --#{$prefix}-alert-fg:     var(--#{$prefix}-color-text);
     --#{$prefix}-alert-accent: var(--#{$prefix}-color-info);
+    --#{$prefix}-alert-accent-width: 3px;
     --#{$prefix}-alert-radius: var(--#{$prefix}-radius-md);
 
     display: flex;
@@ -31,7 +32,7 @@
     padding-block: var(--#{$prefix}-space-4);
     padding-inline: var(--#{$prefix}-space-4);
     border-radius: var(--#{$prefix}-alert-radius);
-    border-inline-start: 3px solid var(--#{$prefix}-alert-accent);
+    border-inline-start: var(--#{$prefix}-alert-accent-width) solid var(--#{$prefix}-alert-accent);
     background: var(--#{$prefix}-alert-bg);
     color: var(--#{$prefix}-alert-fg);
     font-size: var(--#{$prefix}-text-sm);

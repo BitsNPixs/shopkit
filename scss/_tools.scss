@@ -26,8 +26,9 @@
   $slope-vw: $slope * 100;                 // rem change per 100vw i.e. per vw*100
   $intercept: $min - $slope * $min-vw;     // rem
 
-  $pref: #{$intercept}rem + #{$slope-vw}vw;
-  @return clamp(#{$min}rem, #{$pref}, #{$max}rem);
+  // Emit the whole clamp() as ONE literal string so the `+` stays a literal
+  // character (not Sass string concatenation, which would consume it).
+  @return string.unquote("clamp(#{$min}rem, #{$intercept}rem + #{$slope-vw}vw, #{$max}rem)");
 }
 
 // token name -> full custom property name, e.g. sk("color-primary")

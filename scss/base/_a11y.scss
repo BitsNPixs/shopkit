@@ -38,4 +38,34 @@
     transform: translateY(calc(-100% - var(--#{$prefix}-space-4)));
   }
   .#{$prefix}-skip-link:focus { transform: translateY(0); }
+
+  // ── Forced-colors (Windows High Contrast) ──────────────────────────────────
+  // In forced-colors mode UA flattens backgrounds/box-shadows to system colors,
+  // so any state ShopKit conveys purely via fill or ring silently disappears.
+  // Restore it with system-color borders/outlines that survive the override.
+  @media (forced-colors: active) {
+    // Selected swatches: their selected ring is box-shadow-only → give a real
+    // outline in the system "selected item" colour.
+    .#{$prefix}-swatch[aria-pressed="true"],
+    .#{$prefix}-swatch--selected,
+    .#{$prefix}-swatch[aria-checked="true"] {
+      outline: 2px solid SelectedItem;
+      outline-offset: 2px;
+    }
+
+    // Badges: status is carried by the background fill (flattened here) →
+    // outline the shape so it stays legible as a discrete label.
+    .#{$prefix}-badge { border: 1px solid currentColor; }
+
+    // Pressed / current controls: their active state is fill/shadow-driven →
+    // mark them with a Highlight outline. Scoped to specific controls to avoid
+    // a blanket attribute selector over-reaching.
+    .#{$prefix}-tab[aria-selected="true"],
+    .#{$prefix}-pagination__link[aria-current],
+    .#{$prefix}-swatch[aria-pressed="true"],
+    .#{$prefix}-swatch[aria-checked="true"] {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
 }

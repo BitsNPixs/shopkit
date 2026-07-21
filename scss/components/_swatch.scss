@@ -43,9 +43,16 @@
     font: inherit;
     font-size: var(--#{$prefix}-text-sm);
     cursor: pointer;
-    transition: box-shadow var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+    transition: box-shadow var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
   .#{$prefix}-swatch:focus-visible { @include focus-ring; }
+
+  // Hover — a subtle lift (scale) that reads as interactive without competing
+  // with the selected ring. Duration token → reduced-motion zeroes it (snaps).
+  .#{$prefix}-swatch:not(:disabled):not([aria-disabled="true"]):hover {
+    transform: scale(1.08);
+  }
 
   // Selected — a brand ring floating just off the chip.
   .#{$prefix}-swatch[aria-pressed="true"],

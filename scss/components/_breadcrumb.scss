@@ -59,7 +59,7 @@
 
   // Separator sits before every item except the first.
   .#{$prefix}-breadcrumb__item + .#{$prefix}-breadcrumb__item::before {
-    content: var(--#{$prefix}-breadcrumb-sep, "/");
+    content: var(--#{$prefix}-breadcrumb-sep);
     margin-inline-end: var(--#{$prefix}-space-2);
     color: var(--#{$prefix}-color-text-subtle);
   }

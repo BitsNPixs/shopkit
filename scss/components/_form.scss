@@ -85,9 +85,13 @@
   }
 
   // Select — custom chevron; keep room for it on the trailing edge.
+  // A background-image data-URI can't inherit `currentColor`, so the chevron is
+  // exposed as a token and the stroke is swapped per mode (light = neutral-500,
+  // dark = neutral-400) so it tracks the theme like the accordion marker does.
   .#{$prefix}-select {
+    --#{$prefix}-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23647186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
     padding-inline-end: var(--#{$prefix}-space-8);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23647186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-image: var(--#{$prefix}-select-chevron);
     background-repeat: no-repeat;
     background-position: right var(--#{$prefix}-space-3) center;
     background-size: 1.1em;
@@ -95,6 +99,15 @@
   }
   [dir="rtl"] .#{$prefix}-select {
     background-position: left var(--#{$prefix}-space-3) center;
+  }
+  // Dark chevron (explicit theme + system dark when not forced light).
+  [data-theme="dark"] .#{$prefix}-select {
+    --#{$prefix}-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238A98AE' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .#{$prefix}-select {
+      --#{$prefix}-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238A98AE' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    }
   }
 
   // ── Invalid + disabled (apply to every text control) ──

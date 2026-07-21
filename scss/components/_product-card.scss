@@ -41,9 +41,9 @@
 // a compact/flat variant is just a knob remap and never restates structure.
 //
 // STRUCTURE — a flex column: a fixed-ratio media box on top, then a body that
-// flexes to fill height. `__meta` uses `margin-block-start:auto` to pin the
-// price/rating to the bottom edge regardless of title length, so a grid of
-// cards keeps its price row aligned.
+// flexes to fill height. `__actions` uses `margin-block-start:auto` to pin the
+// CTA row to the bottom edge regardless of title length, so a grid of
+// cards keeps its button row aligned.
 //
 // A11y — the `<img>` MUST carry a real `alt`. For a whole-card link, put the
 // anchor in the title and let `.sk-product-card__link::after` stretch over the

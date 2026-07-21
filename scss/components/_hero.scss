@@ -58,6 +58,7 @@
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
     --#{$prefix}-hero-min:     60vh;
     --#{$prefix}-hero-measure: 46ch;
+    --#{$prefix}-hero-title-measure: 18ch;
 
     // ── Structure ──
     display: flex;
@@ -93,7 +94,7 @@
 
   .#{$prefix}-hero__title {
     margin: 0;
-    max-inline-size: 18ch;
+    max-inline-size: var(--#{$prefix}-hero-title-measure);
     color: var(--#{$prefix}-color-text);
     font-family: var(--#{$prefix}-font-heading);
     font-size: var(--#{$prefix}-text-4xl);

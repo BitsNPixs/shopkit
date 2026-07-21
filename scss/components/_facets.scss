@@ -36,6 +36,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 @use "../base/mixins" as *;
+@use "../base/variants" as *;
 
 @layer sk.components {
   .#{$prefix}-facets {
@@ -75,6 +76,11 @@
     list-style: none;
   }
 
+  // Option rows go full-width so the trailing count's auto margin has free
+  // space to consume (`.sk-check` is inline-flex by default and would otherwise
+  // shrink-wrap, leaving nothing for `margin-inline-start:auto` to push against).
+  .#{$prefix}-facet__list .#{$prefix}-check { display: flex; }
+
   // ── Trailing result count on an option row ──
   .#{$prefix}-facet__count {
     margin-inline-start: auto;
@@ -91,6 +97,7 @@
     font: inherit;
     font-size: var(--#{$prefix}-text-sm);
     cursor: pointer;
+    @include disabled;
   }
   .#{$prefix}-facets__clear:hover {
     text-decoration: underline;

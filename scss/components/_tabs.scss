@@ -28,6 +28,7 @@
   .#{$prefix}-tabs {
     --#{$prefix}-tabs-accent: var(--#{$prefix}-color-primary);
     --#{$prefix}-tabs-border: var(--#{$prefix}-color-border);
+    --#{$prefix}-tabs-underline: 2px;
   }
 
   // The tab strip. Sits on a hairline the selected tab's underline overlaps.
@@ -36,6 +37,10 @@
     gap: var(--#{$prefix}-space-1);
     border-block-end: 1px solid var(--#{$prefix}-tabs-border);
     overflow-x: auto;
+    // `overflow-x:auto` forces `overflow-y:auto` too, which would clip the tab's
+    // :focus-visible ring and the -1px underline overlap on the block edges. A
+    // little block padding keeps both off the scroll-clipped axis.
+    padding-block: 2px;
     scrollbar-width: none;                 // horizontal scroll on narrow screens
   }
   .#{$prefix}-tabs__list::-webkit-scrollbar { display: none; }
@@ -50,7 +55,7 @@
     padding-block: var(--#{$prefix}-space-2);
     padding-inline: var(--#{$prefix}-space-3);
     border: 0;
-    border-block-end: 2px solid transparent;
+    border-block-end: var(--#{$prefix}-tabs-underline) solid transparent;
     margin-block-end: -1px;                // sit the underline on the strip rule
     background: transparent;
     color: var(--#{$prefix}-color-text-muted);
