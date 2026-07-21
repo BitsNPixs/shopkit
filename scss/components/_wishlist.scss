@@ -26,6 +26,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 @use "../base/mixins" as *;
+@use "../base/variants" as *;
 
 @layer sk.components {
   .#{$prefix}-wishlist {
@@ -66,12 +67,13 @@
     stroke-width: 2;
   }
 
-  // ── Interaction (guarded so disabled buttons don't react) ──
-  .#{$prefix}-wishlist:not(:disabled):not([aria-disabled="true"]):hover {
-    color: var(--#{$prefix}-wishlist-fg-hover);
-  }
-  .#{$prefix}-wishlist:not(:disabled):not([aria-disabled="true"]):active {
-    transform: scale(0.92);
+  // ── Interaction — `enabled` guard + uniform `disabled` (see base/variants) ──
+  .#{$prefix}-wishlist {
+    @include enabled {
+      &:hover  { color: var(--#{$prefix}-wishlist-fg-hover); }
+      &:active { transform: scale(0.92); }
+    }
+    @include disabled;
   }
   .#{$prefix}-wishlist:focus-visible { @include focus-ring; }
 
@@ -81,13 +83,5 @@
   }
   .#{$prefix}-wishlist[aria-pressed="true"] svg {
     fill: currentColor;
-  }
-
-  // ── Disabled (native + ARIA) ──
-  .#{$prefix}-wishlist:disabled,
-  .#{$prefix}-wishlist[disabled],
-  .#{$prefix}-wishlist[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.55;
   }
 }

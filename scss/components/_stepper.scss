@@ -33,6 +33,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 @use "../base/mixins" as *;
+@use "../base/variants" as *;
 
 @layer sk.components {
   .#{$prefix}-stepper {
@@ -77,18 +78,15 @@
     -webkit-appearance: none;
     transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
-  .#{$prefix}-stepper__btn:not(:disabled):not([aria-disabled="true"]):hover {
-    background: var(--#{$prefix}-color-surface-sunken);
+  .#{$prefix}-stepper__btn {
+    @include enabled {
+      &:hover { background: var(--#{$prefix}-color-surface-sunken); }
+    }
+    @include disabled(0.5);
   }
   .#{$prefix}-stepper__btn:focus-visible {
     @include focus-ring;
     outline-offset: calc(var(--#{$prefix}-focus-ring-offset) * -1);
-  }
-  .#{$prefix}-stepper__btn:disabled,
-  .#{$prefix}-stepper__btn[disabled],
-  .#{$prefix}-stepper__btn[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.5;
   }
 
   // ── The number field — centred, hairline dividers, no native spinners ──

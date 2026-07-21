@@ -1,0 +1,80 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// VARIANT SYSTEM  ·  the formal variant / size / state contract (Sass-only)
+// ───────────────────────────────────────────────────────────────────────────
+// This module emits NO CSS of its own. It codifies the conventions every
+// ShopKit component follows so they can't drift, and so new components (and the
+// Phase-7 React layer) have one place to read the contract from. Components
+// `@use "../base/variants" as *;` and call these helpers.
+//
+// THE CONTRACT — three axes, one predictable shape per axis:
+//
+//   1. VARIANT  `.sk-<cmp>--<name>`   — remaps the component's Tier-3 COLOUR
+//      tokens only (never restates structure). Status variants draw from the
+//      shared `$status` palette below so "success/danger/warning/info" mean the
+//      same thing on every component that offers them.
+//
+//   2. SIZE     `.sk-<cmp>--sm|--lg`  — remaps the component's METRIC tokens
+//      (height / padding / font) to the shared control-size scale in `$sizes`.
+//      Base (unsuffixed) is the medium size.
+//
+//   3. STATE    driven by the real DOM signal, never a styling-only class:
+//        hover / active …… guarded by `enabled` so disabled controls stay inert
+//        focus ………………… `:focus-visible { @include focus-ring; }` (see _mixins)
+//        disabled ………… `disabled()` — native (:disabled/[disabled]) AND ARIA
+//                          ([aria-disabled]) so it covers <button>/<input> and
+//                          <a>/custom alike
+//        selected ……… `[aria-pressed|aria-selected|aria-checked="true"]`
+//        current ……… `[aria-current="page|step"]`
+//        invalid ……… `[aria-invalid="true"]`
+//        open ………… `[open]` (dialog/details) · `:not([hidden])` (menus)
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "../config" as *;
+
+// ── The shared control-size scale (axis 2) ──────────────────────────────────
+// Each size maps to the primitive control tokens a sized component remaps onto
+// its own `--<cmp>-height` / `--<cmp>-font-size`. Kept as a map so the scale is
+// declared once and documented; components opt in via `control-sizes()`.
+$sizes: (
+  "sm": ("height": "control-height-sm", "font": "text-xs"),
+  "lg": ("height": "control-height-lg", "font": "text-md"),
+) !default;
+
+// ── The shared status palette (axis 1) ──────────────────────────────────────
+// The canonical status intents. A component that offers status variants names
+// them from this list so `--danger` is `--danger` everywhere.
+$status: ("primary", "success", "danger", "warning", "info") !default;
+
+// ── STATE · interactive guard ───────────────────────────────────────────────
+// Wrap hover / active declarations so a disabled control never reacts.
+//   .sk-btn { @include enabled { &:hover { … } } }  →  .sk-btn:not(:disabled):not([aria-disabled="true"]):hover
+@mixin enabled {
+  &:not(:disabled):not([aria-disabled="true"]) { @content; }
+}
+
+// ── STATE · disabled treatment ──────────────────────────────────────────────
+// The uniform disabled block: dim + not-allowed, across native + ARIA signals.
+// Pass extra declarations via @content (e.g. a sunken field background).
+//   .sk-btn { @include disabled; }
+@mixin disabled($opacity: 0.55) {
+  &:disabled,
+  &[disabled],
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: $opacity;
+    @content;
+  }
+}
+
+// ── SIZE · emit the --sm / --lg metric remaps for a component ────────────────
+// Remaps the component's height + font tokens to the shared scale. Components
+// with extra per-size metrics (button's padding/gap) add those separately.
+//   @include control-sizes("input");  →  .sk-input--sm { --sk-input-height: … }
+@mixin control-sizes($cmp) {
+  @each $key, $spec in $sizes {
+    .#{$prefix}-#{$cmp}--#{$key} {
+      --#{$prefix}-#{$cmp}-height:    var(--#{$prefix}-#{map.get($spec, "height")});
+      --#{$prefix}-#{$cmp}-font-size: var(--#{$prefix}-#{map.get($spec, "font")});
+    }
+  }
+}

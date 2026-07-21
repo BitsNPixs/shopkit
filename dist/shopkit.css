@@ -1192,15 +1192,13 @@
     background: var(--sk-btn-bg-active);
     transform: translateY(1px);
   }
+  .sk-btn:disabled, .sk-btn[disabled], .sk-btn[aria-disabled=true] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
   .sk-btn:focus-visible {
     outline: var(--sk-focus-ring-width) solid var(--sk-color-focus, var(--sk-color-primary));
     outline-offset: var(--sk-focus-ring-offset);
-  }
-  .sk-btn:disabled,
-  .sk-btn[disabled],
-  .sk-btn[aria-disabled=true] {
-    cursor: not-allowed;
-    opacity: 0.55;
   }
   .sk-btn--accent {
     --sk-btn-bg: var(--sk-color-accent);
@@ -2259,16 +2257,14 @@
   .sk-stepper__btn:not(:disabled):not([aria-disabled=true]):hover {
     background: var(--sk-color-surface-sunken);
   }
+  .sk-stepper__btn:disabled, .sk-stepper__btn[disabled], .sk-stepper__btn[aria-disabled=true] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
   .sk-stepper__btn:focus-visible {
     outline: var(--sk-focus-ring-width) solid var(--sk-color-focus, var(--sk-color-primary));
     outline-offset: var(--sk-focus-ring-offset);
     outline-offset: calc(var(--sk-focus-ring-offset) * -1);
-  }
-  .sk-stepper__btn:disabled,
-  .sk-stepper__btn[disabled],
-  .sk-stepper__btn[aria-disabled=true] {
-    cursor: not-allowed;
-    opacity: 0.5;
   }
   .sk-stepper__input {
     flex: none;
@@ -2347,6 +2343,10 @@
   .sk-wishlist:not(:disabled):not([aria-disabled=true]):active {
     transform: scale(0.92);
   }
+  .sk-wishlist:disabled, .sk-wishlist[disabled], .sk-wishlist[aria-disabled=true] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
   .sk-wishlist:focus-visible {
     outline: var(--sk-focus-ring-width) solid var(--sk-color-focus, var(--sk-color-primary));
     outline-offset: var(--sk-focus-ring-offset);
@@ -2356,12 +2356,6 @@
   }
   .sk-wishlist[aria-pressed=true] svg {
     fill: currentColor;
-  }
-  .sk-wishlist:disabled,
-  .sk-wishlist[disabled],
-  .sk-wishlist[aria-disabled=true] {
-    cursor: not-allowed;
-    opacity: 0.55;
   }
 }
 @layer sk.components {

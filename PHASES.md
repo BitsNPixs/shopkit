@@ -13,7 +13,7 @@ file is the *plan & checklist*. Update the checkboxes here whenever a piece ship
 | | |
 |---|---|
 | **Date** | 2026-07-21 |
-| **Current phase** | Phase 4 — Commerce flows & layout sections (✅ complete) · Phase 5 next |
+| **Current phase** | Phase 5 — Variant system (✅ complete) · Phase 6 next |
 | **Compiled core** | **18.6 KB gzip** (min) · budget 30 KB · **62% used** |
 | **Guards passing** | `npm run lint` (logical-props) ✅ · `npm run size` (budget) ✅ |
 
@@ -47,7 +47,7 @@ scss/
 ├── _tools.scss       Sass helpers (fluid clamp, v(), cls()) — no CSS output
 ├── _layers.scss      @layer order (emitted first): reset→tokens→base→layout→components→utilities
 ├── tokens/           Tier 1 primitives · Tier 2 semantic · Tier 3 component metrics
-├── base/             reset · typography · a11y · _mixins (focus-ring, visually-hidden…)
+├── base/             reset · typography · a11y · _mixins (focus-ring…) · _variants (variant/size/state contract)
 ├── layout/           container · grid · section · stack · cluster
 ├── components/       ✅ Core UI: button · button-group · form · badge · alert · modal · tabs · accordion · skeleton · tooltip
 │                      ✅ Commerce: price · rating · swatch · stepper · wishlist · product-card · breadcrumb · pagination · facets · empty
@@ -112,8 +112,16 @@ Cascade layer order (later wins; all library CSS is layered so unlayered consume
 - [x] **Footer** (`.sk-footer`) — variants `--minimal` · multi-column (default) · `--newsletter` · `--inverse`
 - [x] **Announcement bar** (`.sk-announcement` + `--primary`) · **Account/profile menu** (`.sk-menu`)
 
-### Phase 5 — Variant system ⬜
-- [ ] Formalise the variant/size/state token API across all components (§16)
+### Phase 5 — Variant system ✅
+- [x] Formalise the variant/size/state token API across all components — the contract is
+      codified as a Sass toolkit [`scss/base/_variants.scss`](scss/base/_variants.scss)
+      (`$sizes`, `$status`, `enabled`, `disabled`, `control-sizes`) and written up in
+      [`VARIANT-API.md`](VARIANT-API.md) with a per-component matrix
+- [x] Audit confirmed conformance (focus ring on every interactive element; disabled guards
+      match element type); adopted the `enabled`/`disabled` mixins in button/wishlist/stepper
+      with **byte-identical** compiled output (verified against the pre-refactor build)
+- [x] Docs: "Variant · size · state system" section — one status intent across components, one
+      aligned size scale
 
 ### Phase 6 — Motion system ⬜
 - [ ] Full transition/animation system on `--sk-dur-*` / `--sk-ease-*`, reduced-motion first (§18)

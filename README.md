@@ -5,12 +5,13 @@ with token-driven **runtime theming**, first-class **dark mode**, and **multi-br
 support on a single page — no recompile. An optional React layer (later phase) reuses
 the exact same tokens and class names.
 
-> **Status: Phase 2 — Utilities + Core UI (in progress).** Foundation (Phase 1) is
-> complete. Now shipping: spacing / display / flex utilities and the first components
-> (button live). Everything drops into the cascade layers already declared in Phase 1.
+> **Status: Phases 1–5 complete.** Foundation, utilities, the full Core-UI + e-commerce
+> component set, the storefront layout sections (navbar/hero/cart/checkout/footer), and the
+> formal variant/size/state API ([`VARIANT-API.md`](VARIANT-API.md)) all ship. Motion system
+> (Phase 6) and the React parity layer (Phase 7) are next.
 > **Full plan & progress → [`PHASES.md`](PHASES.md).**
 
-Compiled core today: **11.0 KB gzip** (min) — 37% of the 30 KB budget.
+Compiled core today: **18.6 KB gzip** (min) — 62% of the 30 KB budget, ~28 components.
 
 ---
 
@@ -220,10 +221,10 @@ in this preview.
 Tracked in detail (with checkboxes) in **[`PHASES.md`](PHASES.md)**.
 
 1. **Foundation** ✅ tokens, layers, reset, type, layout, dark + multi-brand
-2. 🚧 **Utilities + core UI** — ✅ spacing/display/flex utilities, ✅ button; forms, badges, alerts, modal, tabs, accordion, skeletons next
-3. E-commerce components (product card, price, rating, swatches, badges, grid, facets)
-4. Commerce flows & layout sections — navbar/mega-menu/drawer, hero, cart, order summary, checkout stepper, footer (multiple variants each)
-5. Variant system (§16)
+2. **Utilities + core UI** ✅ spacing/display/flex utilities · button, button-group, forms, badge, alert, modal, tabs, accordion, skeleton, tooltip
+3. **E-commerce components** ✅ product card, price, rating, swatches, stepper, wishlist, breadcrumb, pagination, facets, empty
+4. **Commerce flows & layout sections** ✅ navbar/mega-menu/drawer, hero, cart + order summary, checkout stepper, footer, announcement, menu (multiple variants each)
+5. **Variant system** ✅ formal variant/size/state API — [`VARIANT-API.md`](VARIANT-API.md) + `base/_variants.scss`
 6. Motion system (§18)
 7. React parity layer
 8. Docs site + landing + floating theme customizer (§17)

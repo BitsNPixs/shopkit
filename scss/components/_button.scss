@@ -26,6 +26,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 @use "../base/mixins" as *;
+@use "../base/variants" as *;
 
 @layer sk.components {
   .#{$prefix}-btn {
@@ -81,23 +82,16 @@
     flex: none;
   }
 
-  // ── Interaction (guarded so disabled buttons don't react) ──
-  .#{$prefix}-btn:not(:disabled):not([aria-disabled="true"]):hover {
-    background: var(--#{$prefix}-btn-bg-hover);
-  }
-  .#{$prefix}-btn:not(:disabled):not([aria-disabled="true"]):active {
-    background: var(--#{$prefix}-btn-bg-active);
-    transform: translateY(1px);
+  // ── Interaction — `enabled` guards hover/active so disabled buttons stay
+  //    inert; `disabled` emits the uniform native+ARIA dim (see base/variants). ──
+  .#{$prefix}-btn {
+    @include enabled {
+      &:hover  { background: var(--#{$prefix}-btn-bg-hover); }
+      &:active { background: var(--#{$prefix}-btn-bg-active); transform: translateY(1px); }
+    }
+    @include disabled;
   }
   .#{$prefix}-btn:focus-visible { @include focus-ring; }
-
-  // ── Disabled (native + ARIA, for <a>) ──
-  .#{$prefix}-btn:disabled,
-  .#{$prefix}-btn[disabled],
-  .#{$prefix}-btn[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.55;
-  }
 
   // ═════════════════════════════ VARIANTS ═════════════════════════════
   // Each only remaps colour tokens — structure is inherited from .sk-btn.
