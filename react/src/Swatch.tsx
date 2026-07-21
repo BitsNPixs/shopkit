@@ -6,10 +6,22 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 import { cls } from "./classes.js";
 import { cx } from "./cx.js";
 
-export const Swatches = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  function Swatches({ className, role, children, ...rest }, ref) {
+export interface SwatchesProps extends HTMLAttributes<HTMLDivElement> {
+  /** Accessible name for the swatch group (maps to `aria-label`). */
+  label?: string;
+}
+
+export const Swatches = forwardRef<HTMLDivElement, SwatchesProps>(
+  function Swatches({ className, role, label, children, ...rest }, ref) {
     return (
-      <div ref={ref} className={cx(cls.swatches, className)} role={role ?? "group"} {...rest}>
+      <div
+        ref={ref}
+        className={cx(cls.swatches, className)}
+        role={role ?? "group"}
+        // Explicit `aria-label` in `rest` wins over the `label` shorthand.
+        aria-label={label}
+        {...rest}
+      >
         {children}
       </div>
     );
@@ -35,7 +47,7 @@ export const Swatch = forwardRef<HTMLButtonElement, SwatchProps>(function Swatch
       ref={ref}
       type={type ?? "button"}
       className={cx(cls.swatch, text && cls.swatchSize, className)}
-      aria-pressed={selected}
+      aria-pressed={!!selected}
       style={color ? ({ ["--sk-swatch-color"]: color, ...style } as React.CSSProperties) : style}
       {...rest}
     >

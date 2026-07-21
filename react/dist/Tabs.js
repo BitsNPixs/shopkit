@@ -6,6 +6,17 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { forwardRef, useRef, useState, useId, useCallback, createContext, useContext } from "react";
 import { cls } from "./classes.js";
 import { cx } from "./cx.js";
+/** Merge multiple refs (callback or object) into one callback ref. */
+function mergeRefs(...refs) {
+    return (node) => {
+        for (const ref of refs) {
+            if (typeof ref === "function")
+                ref(node);
+            else if (ref)
+                ref.current = node;
+        }
+    };
+}
 const TabsContext = createContext(null);
 function useTabsContext(component) {
     const ctx = useContext(TabsContext);
@@ -25,7 +36,7 @@ export function Tabs({ value, defaultValue, onValueChange, pill, className, chil
     }, [isControlled, onValueChange]);
     return (_jsx(TabsContext.Provider, { value: { selected, setSelected, baseId }, children: _jsx("div", { className: cx(cls.tabs, pill && cls.tabsPill, className), ...rest, children: children }) }));
 }
-export const TabsList = forwardRef(function TabsList({ className, children, onKeyDown, ...rest }, _ref) {
+export const TabsList = forwardRef(function TabsList({ className, children, onKeyDown, ...rest }, ref) {
     const listRef = useRef(null);
     const handleKeyDown = useCallback((e) => {
         onKeyDown?.(e);
@@ -59,7 +70,7 @@ export const TabsList = forwardRef(function TabsList({ className, children, onKe
         target.focus();
         target.click();
     }, [onKeyDown]);
-    return (_jsx("div", { ref: listRef, role: "tablist", className: cx(cls.tabsList, className), onKeyDown: handleKeyDown, ...rest, children: children }));
+    return (_jsx("div", { ref: mergeRefs(listRef, ref), role: "tablist", className: cx(cls.tabsList, className), onKeyDown: handleKeyDown, ...rest, children: children }));
 });
 export const Tab = forwardRef(function Tab({ value, className, children, onClick, ...rest }, ref) {
     const ctx = useTabsContext("Tab");

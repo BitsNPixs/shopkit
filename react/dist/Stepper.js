@@ -6,9 +6,6 @@ import { forwardRef, useState } from "react";
 import { cls } from "./classes.js";
 import { cx } from "./cx.js";
 export const Stepper = forwardRef(function Stepper({ value, defaultValue, min = 1, max, step = 1, onValueChange, size, label, className, ...rest }, ref) {
-    const [state, setState] = useState(defaultValue ?? min);
-    const isControlled = value !== undefined;
-    const val = isControlled ? value : state;
     const clamp = (n) => {
         let out = n;
         if (out < min)
@@ -17,6 +14,12 @@ export const Stepper = forwardRef(function Stepper({ value, defaultValue, min = 
             out = max;
         return out;
     };
+    // Clamp the initial uncontrolled value so an out-of-range `defaultValue`
+    // (e.g. 0 with min=1) never seeds an invalid state. Lazy init keeps it to
+    // the first render.
+    const [state, setState] = useState(() => clamp(defaultValue ?? min));
+    const isControlled = value !== undefined;
+    const val = isControlled ? value : state;
     const commit = (next) => {
         const clamped = clamp(next);
         if (!isControlled)

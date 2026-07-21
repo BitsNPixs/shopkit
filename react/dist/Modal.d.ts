@@ -12,7 +12,7 @@ export interface ModalProps extends HTMLAttributes<HTMLDialogElement> {
     /** Size preset on the modal scale. Omit for the base size. */
     size?: ModalSize;
 }
-export declare function Modal({ open, onClose, size, className, children, ...rest }: ModalProps): import("react").JSX.Element;
+export declare function Modal({ open, onClose, size, className, children, onClick, ...rest }: ModalProps): import("react").JSX.Element;
 export declare const ModalPanel: import("react").ForwardRefExoticComponent<FormHTMLAttributes<HTMLFormElement> & import("react").RefAttributes<HTMLFormElement>>;
 export declare const ModalHeader: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & import("react").RefAttributes<HTMLElement>>;
 export declare const ModalTitle: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLHeadingElement> & import("react").RefAttributes<HTMLHeadingElement>>;

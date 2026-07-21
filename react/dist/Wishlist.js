@@ -9,7 +9,7 @@ export const Wishlist = forwardRef(function Wishlist({ pressed, defaultPressed, 
     const [state, setState] = useState(defaultPressed ?? false);
     const isControlled = pressed !== undefined;
     const on = isControlled ? pressed : state;
-    return (_jsx("button", { ref: ref, type: "button", className: cx(cls.wishlist, className), "aria-pressed": on, "aria-label": label, onClick: (e) => {
+    return (_jsx("button", { ref: ref, type: "button", className: cx(cls.wishlist, className), "aria-pressed": on, "aria-label": label ?? (on ? "Remove from wishlist" : "Add to wishlist"), onClick: (e) => {
             const next = !on;
             if (!isControlled)
                 setState(next);

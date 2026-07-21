@@ -41,16 +41,19 @@ export const Stepper = forwardRef<HTMLDivElement, StepperProps>(function Stepper
   },
   ref,
 ) {
-  const [state, setState] = useState(defaultValue ?? min);
-  const isControlled = value !== undefined;
-  const val = isControlled ? value : state;
-
   const clamp = (n: number): number => {
     let out = n;
     if (out < min) out = min;
     if (max != null && out > max) out = max;
     return out;
   };
+
+  // Clamp the initial uncontrolled value so an out-of-range `defaultValue`
+  // (e.g. 0 with min=1) never seeds an invalid state. Lazy init keeps it to
+  // the first render.
+  const [state, setState] = useState<number>(() => clamp(defaultValue ?? min));
+  const isControlled = value !== undefined;
+  const val = isControlled ? value : state;
 
   const commit = (next: number): void => {
     const clamped = clamp(next);

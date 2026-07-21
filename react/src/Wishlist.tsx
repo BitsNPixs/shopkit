@@ -32,7 +32,7 @@ export const Wishlist = forwardRef<HTMLButtonElement, WishlistProps>(function Wi
       type="button"
       className={cx(cls.wishlist, className)}
       aria-pressed={on}
-      aria-label={label}
+      aria-label={label ?? (on ? "Remove from wishlist" : "Add to wishlist")}
       onClick={(e) => {
         const next = !on;
         if (!isControlled) setState(next);

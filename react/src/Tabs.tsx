@@ -3,9 +3,19 @@
 // classes. Supports controlled (`value`+`onValueChange`) and uncontrolled
 // (`defaultValue`) usage.
 import { forwardRef, useRef, useState, useId, useCallback, createContext, useContext } from "react";
-import type { HTMLAttributes, KeyboardEvent } from "react";
+import type { HTMLAttributes, KeyboardEvent, Ref } from "react";
 import { cls } from "./classes.js";
 import { cx } from "./cx.js";
+
+/** Merge multiple refs (callback or object) into one callback ref. */
+function mergeRefs<T>(...refs: Array<Ref<T> | undefined>): (node: T | null) => void {
+  return (node) => {
+    for (const ref of refs) {
+      if (typeof ref === "function") ref(node);
+      else if (ref) (ref as { current: T | null }).current = node;
+    }
+  };
+}
 
 interface TabsContextValue {
   selected: string | undefined;
@@ -67,7 +77,7 @@ export interface TabsListProps extends HTMLAttributes<HTMLDivElement> {}
 
 export const TabsList = forwardRef<HTMLDivElement, TabsListProps>(function TabsList(
   { className, children, onKeyDown, ...rest },
-  _ref,
+  ref,
 ) {
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -110,7 +120,7 @@ export const TabsList = forwardRef<HTMLDivElement, TabsListProps>(function TabsL
 
   return (
     <div
-      ref={listRef}
+      ref={mergeRefs(listRef, ref)}
       role="tablist"
       className={cx(cls.tabsList, className)}
       onKeyDown={handleKeyDown}
