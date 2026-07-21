@@ -75,8 +75,8 @@ input[type=range] { accent-color: var(--sk-color-primary); inline-size: 8.5rem; 
     linear-gradient(-45deg, color-mix(in srgb,var(--sk-color-text) 8%, transparent) 25%, transparent 25%);
   background-size:8px 8px; background-position:0 0,4px 4px; } /* checker peeks through transparents */
 .tok .sw > i { display:block; inline-size:100%; block-size:100%; border-radius:inherit; }
-.tok .m { min-inline-size:0; }
-.tok .n { font-family: var(--sk-font-mono); font-size:.72rem; color: var(--sk-color-text);
+.tok .m { min-inline-size:0; flex:1 1 auto; display:flex; flex-direction:column; gap:.1rem; }
+.tok .n { display:block; max-inline-size:100%; font-family: var(--sk-font-mono); font-size:.72rem; color: var(--sk-color-text);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .tok .v { font-family: var(--sk-font-mono); font-size:.66rem; color: var(--sk-color-text-subtle); }
 .grouplbl { font-family: var(--sk-font-mono); text-transform:uppercase; letter-spacing:.14em;

@@ -170,19 +170,20 @@
     z-index: 1;
   }
 
-  // Pin price/rating to the bottom edge regardless of title length.
+  // Rating + price sit directly under the name (cohesive product info).
   .#{$prefix}-product-card__meta {
     display: flex;
     flex-direction: column;
     gap: var(--#{$prefix}-space-1);
-    margin-block-start: auto;
   }
 
-  // Buttons / steppers row.
+  // Buttons / steppers row — pinned to the bottom edge (auto margin) so the CTA
+  // aligns across a grid of cards no matter how tall each card's info block is.
   .#{$prefix}-product-card__actions {
     display: flex;
     gap: var(--#{$prefix}-space-2);
-    margin-block-start: var(--#{$prefix}-space-2);
+    margin-block-start: auto;
+    padding-block-start: var(--#{$prefix}-space-2);
     // Sit above a stretched card link so the controls stay clickable.
     position: relative;
     z-index: 2;
