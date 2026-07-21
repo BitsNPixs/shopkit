@@ -1,0 +1,245 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TIER 2 · SEMANTIC  (the public theming API)
+// ───────────────────────────────────────────────────────────────────────────
+// Maps primitives → intent. Components reference ONLY these tokens, never a
+// raw ramp. Re-theming = remapping this layer.
+//
+// Theming model
+// -------------
+//  • SURFACES / text / borders / shadow / commerce-state colors depend on the
+//    MODE (light|dark) and are brand-independent.
+//  • BRAND colors (primary/accent/link) depend on both BRAND and MODE. They are
+//    derived from *pointer* ramps `--sk-brand-*` / `--sk-accent-*`, which each
+//    brand scope re-aliases. Because the derivation is re-declared in every
+//    scope (and reads the pointers present at that element), brand × mode
+//    combinations resolve correctly even when nested — CSS custom properties
+//    substitute var() at the element where the declaration lives, so the
+//    semantic layer must be (and is) re-emitted per scope rather than relying
+//    on a single root declaration.
+// ═══════════════════════════════════════════════════════════════════════════
+
+@use "sass:map";
+@use "../config" as *;
+
+// Which primitive ramp each brand points its brand/accent pointers at.
+$brands: (
+  "aurora": ("brand": "indigo",  "accent": "violet"),
+  "verde":  ("brand": "emerald", "accent": "teal"),
+  "ember":  ("brand": "rose",    "accent": "amber"),
+);
+
+// ── Re-point a pointer ramp (e.g. `brand`) at a concrete ramp (e.g. `indigo`)
+@mixin alias($to, $from) {
+  @each $step in (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950) {
+    --#{$prefix}-#{$to}-#{$step}: var(--#{$prefix}-#{$from}-#{$step});
+  }
+}
+
+// ── Brand-derived colors (depend on mode). Derive from pointer ramps.
+@mixin brand($mode) {
+  @if $mode == "light" {
+    --#{$prefix}-color-primary:          var(--#{$prefix}-brand-600);
+    --#{$prefix}-color-primary-hover:    var(--#{$prefix}-brand-700);
+    --#{$prefix}-color-primary-active:   var(--#{$prefix}-brand-800);
+    --#{$prefix}-color-primary-contrast: var(--#{$prefix}-white);
+    --#{$prefix}-color-primary-soft:     color-mix(in srgb, var(--#{$prefix}-brand-500) 12%, transparent);
+    --#{$prefix}-color-accent:           var(--#{$prefix}-accent-600);
+    --#{$prefix}-color-accent-hover:     var(--#{$prefix}-accent-700);
+    --#{$prefix}-color-accent-contrast:  var(--#{$prefix}-white);
+    --#{$prefix}-color-link:             var(--#{$prefix}-brand-600);
+    --#{$prefix}-color-link-hover:       var(--#{$prefix}-brand-700);
+  } @else {
+    --#{$prefix}-color-primary:          var(--#{$prefix}-brand-400);
+    --#{$prefix}-color-primary-hover:    var(--#{$prefix}-brand-300);
+    --#{$prefix}-color-primary-active:   var(--#{$prefix}-brand-200);
+    --#{$prefix}-color-primary-contrast: var(--#{$prefix}-neutral-950);
+    --#{$prefix}-color-primary-soft:     color-mix(in srgb, var(--#{$prefix}-brand-400) 20%, transparent);
+    --#{$prefix}-color-accent:           var(--#{$prefix}-accent-400);
+    --#{$prefix}-color-accent-hover:     var(--#{$prefix}-accent-300);
+    --#{$prefix}-color-accent-contrast:  var(--#{$prefix}-neutral-950);
+    --#{$prefix}-color-link:             var(--#{$prefix}-brand-400);
+    --#{$prefix}-color-link-hover:       var(--#{$prefix}-brand-300);
+  }
+}
+
+// ── Surfaces / text / borders / shadow / commerce colors (depend on mode)
+@mixin surface($mode) {
+  @if $mode == "light" {
+    --#{$prefix}-color-bg:             var(--#{$prefix}-neutral-25);
+    --#{$prefix}-color-surface:        var(--#{$prefix}-white);
+    --#{$prefix}-color-surface-alt:    var(--#{$prefix}-neutral-50);
+    --#{$prefix}-color-surface-sunken: var(--#{$prefix}-neutral-100);
+    --#{$prefix}-color-surface-inverse:var(--#{$prefix}-neutral-900);
+
+    --#{$prefix}-color-text:           var(--#{$prefix}-neutral-900);
+    --#{$prefix}-color-text-muted:     var(--#{$prefix}-neutral-600);
+    --#{$prefix}-color-text-subtle:    var(--#{$prefix}-neutral-500);
+    --#{$prefix}-color-text-inverse:   var(--#{$prefix}-neutral-25);
+
+    --#{$prefix}-color-border:         var(--#{$prefix}-neutral-200);
+    --#{$prefix}-color-border-strong:  var(--#{$prefix}-neutral-300);
+    --#{$prefix}-color-border-subtle:  var(--#{$prefix}-neutral-100);
+
+    --#{$prefix}-shadow-rgb: 20 29 48;
+    --#{$prefix}-shadow-strength: 1;
+
+    // commerce
+    --#{$prefix}-color-price:            var(--#{$prefix}-neutral-900);
+    --#{$prefix}-color-sale:             var(--#{$prefix}-rose-600);
+    --#{$prefix}-color-star:             var(--#{$prefix}-amber-400);
+    --#{$prefix}-color-badge-new:        var(--#{$prefix}-emerald-600);
+    --#{$prefix}-color-badge-sale:       var(--#{$prefix}-rose-600);
+    --#{$prefix}-color-badge-bestseller: var(--#{$prefix}-amber-500);
+    --#{$prefix}-color-badge-contrast:   var(--#{$prefix}-white);
+    --#{$prefix}-color-out-of-stock:     var(--#{$prefix}-neutral-400);
+
+    // status
+    --#{$prefix}-color-success: var(--#{$prefix}-emerald-600);
+    --#{$prefix}-color-danger:  var(--#{$prefix}-red-600);
+    --#{$prefix}-color-warning: var(--#{$prefix}-amber-500);
+    --#{$prefix}-color-info:    var(--#{$prefix}-sky-600);
+    --#{$prefix}-color-success-soft: color-mix(in srgb, var(--#{$prefix}-emerald-500) 14%, transparent);
+    --#{$prefix}-color-danger-soft:  color-mix(in srgb, var(--#{$prefix}-red-500) 14%, transparent);
+    --#{$prefix}-color-warning-soft: color-mix(in srgb, var(--#{$prefix}-amber-500) 18%, transparent);
+    --#{$prefix}-color-info-soft:    color-mix(in srgb, var(--#{$prefix}-sky-500) 14%, transparent);
+
+    --#{$prefix}-color-overlay:  rgb(12 19 32 / .55);
+    --#{$prefix}-color-backdrop: rgb(12 19 32 / .45);
+  } @else {
+    --#{$prefix}-color-bg:             var(--#{$prefix}-neutral-950);
+    --#{$prefix}-color-surface:        var(--#{$prefix}-neutral-900);
+    --#{$prefix}-color-surface-alt:    color-mix(in srgb, var(--#{$prefix}-neutral-900), var(--#{$prefix}-neutral-700) 55%);
+    --#{$prefix}-color-surface-sunken: var(--#{$prefix}-neutral-950);
+    --#{$prefix}-color-surface-inverse:var(--#{$prefix}-neutral-50);
+
+    --#{$prefix}-color-text:           color-mix(in srgb, var(--#{$prefix}-white), var(--#{$prefix}-neutral-300) 12%);
+    --#{$prefix}-color-text-muted:     var(--#{$prefix}-neutral-400);
+    --#{$prefix}-color-text-subtle:    var(--#{$prefix}-neutral-500);
+    --#{$prefix}-color-text-inverse:   var(--#{$prefix}-neutral-900);
+
+    --#{$prefix}-color-border:         color-mix(in srgb, var(--#{$prefix}-neutral-800), var(--#{$prefix}-neutral-600) 45%);
+    --#{$prefix}-color-border-strong:  var(--#{$prefix}-neutral-700);
+    --#{$prefix}-color-border-subtle:  color-mix(in srgb, var(--#{$prefix}-neutral-900), var(--#{$prefix}-neutral-700) 30%);
+
+    --#{$prefix}-shadow-rgb: 0 0 0;
+    --#{$prefix}-shadow-strength: 2.4;
+
+    // commerce
+    --#{$prefix}-color-price:            var(--#{$prefix}-neutral-50);
+    --#{$prefix}-color-sale:             var(--#{$prefix}-rose-400);
+    --#{$prefix}-color-star:             var(--#{$prefix}-amber-400);
+    --#{$prefix}-color-badge-new:        var(--#{$prefix}-emerald-500);
+    --#{$prefix}-color-badge-sale:       var(--#{$prefix}-rose-500);
+    --#{$prefix}-color-badge-bestseller: var(--#{$prefix}-amber-400);
+    --#{$prefix}-color-badge-contrast:   var(--#{$prefix}-neutral-950);
+    --#{$prefix}-color-out-of-stock:     var(--#{$prefix}-neutral-500);
+
+    // status
+    --#{$prefix}-color-success: var(--#{$prefix}-emerald-400);
+    --#{$prefix}-color-danger:  var(--#{$prefix}-red-400);
+    --#{$prefix}-color-warning: var(--#{$prefix}-amber-300);
+    --#{$prefix}-color-info:    var(--#{$prefix}-sky-400);
+    --#{$prefix}-color-success-soft: color-mix(in srgb, var(--#{$prefix}-emerald-400) 20%, transparent);
+    --#{$prefix}-color-danger-soft:  color-mix(in srgb, var(--#{$prefix}-red-400) 20%, transparent);
+    --#{$prefix}-color-warning-soft: color-mix(in srgb, var(--#{$prefix}-amber-300) 22%, transparent);
+    --#{$prefix}-color-info-soft:    color-mix(in srgb, var(--#{$prefix}-sky-400) 20%, transparent);
+
+    --#{$prefix}-color-overlay:  rgb(0 0 0 / .62);
+    --#{$prefix}-color-backdrop: rgb(0 0 0 / .6);
+  }
+}
+
+// ── Theme-independent semantic knobs (typography, radius, layout, rhythm) ──
+@mixin knobs {
+  --#{$prefix}-font-body:    var(--#{$prefix}-font-sans);
+  --#{$prefix}-font-heading: var(--#{$prefix}-font-display);
+
+  --#{$prefix}-radius:          var(--#{$prefix}-radius-md);   // global radius knob
+  --#{$prefix}-container-max:   #{$container-max};
+  --#{$prefix}-container-narrow:#{$container-narrow};
+
+  // Section rhythm + gutter — the two spacing knobs the customizer drives.
+  --#{$prefix}-space-section: clamp(2.75rem, 1.6rem + 4.8vw, 6rem);
+  --#{$prefix}-space-gutter:  var(--#{$prefix}-space-6);
+
+  // Focus ring geometry (colour resolves live from --sk-color-primary).
+  --#{$prefix}-focus-ring-width:  3px;
+  --#{$prefix}-focus-ring-offset: 2px;
+
+  // Layout ergonomics
+  --#{$prefix}-product-min: 15rem;  // auto-fit product-grid min column width
+  --#{$prefix}-tap-target:  44px;   // min interactive hit area (WCAG 2.2 AA)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// EMIT THE CASCADE
+// ═══════════════════════════════════════════════════════════════════════════
+@layer sk.tokens {
+
+  // ── Root defaults: knobs + default brand (aurora) pointers + LIGHT theme ──
+  :root {
+    @include knobs;
+    @include alias(brand, indigo);
+    @include alias(accent, violet);
+    @include surface("light");
+    @include brand("light");
+  }
+
+  // ── System preference (only when no explicit data-theme anywhere in scope) ─
+  // Generic: brand() reads whatever pointers are in scope, so this one block
+  // correctly darkens the default brand AND any nested brand.
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) { @include surface("dark"); }
+    :root:not([data-theme]),
+    :root:not([data-theme]) [data-brand]:not([data-theme="light"]) {
+      @include brand("dark");
+    }
+  }
+
+  // ── Explicit theme (works at root or on any nested wrapper) ──
+  [data-theme="light"] { @include surface("light"); }
+  [data-theme="dark"]  { @include surface("dark"); }
+
+  // Default-brand colour under an explicit theme on a wrapper w/o its own brand.
+  [data-theme="light"]:not([data-brand]) { @include brand("light"); }
+  [data-theme="dark"]:not([data-brand])  { @include brand("dark"); }
+
+  // ── Per-brand scopes (attribute OR class). Aliases are unconditional; the
+  //    light derivation is the default, dark is overridden at higher specificity
+  //    when the brand sits in / carries a dark theme. ──
+  @each $name, $ramps in $brands {
+    $b: map.get($ramps, "brand");
+    $a: map.get($ramps, "accent");
+
+    [data-brand="#{$name}"],
+    .theme-#{$name} {
+      @include alias(brand, $b);
+      @include alias(accent, $a);
+      @include brand("light");
+    }
+
+    :is([data-brand="#{$name}"], .theme-#{$name}):is([data-theme="dark"]),
+    [data-theme="dark"] :is([data-brand="#{$name}"], .theme-#{$name}) {
+      @include brand("dark");
+    }
+  }
+
+  // ── Motion kill switches (token-driven → no !important needed) ──
+  // Every animation/transition in ShopKit reads a duration token, so zeroing
+  // the tokens disables motion globally. `[data-motion="full"]` opts a subtree
+  // back in even when the OS prefers reduced motion.
+  @media (prefers-reduced-motion: reduce) {
+    :root:not([data-motion="full"]) {
+      --#{$prefix}-dur-instant: 0ms;
+      --#{$prefix}-dur-fast: 0ms;
+      --#{$prefix}-dur-base: 0ms;
+      --#{$prefix}-dur-slow: 0ms;
+    }
+  }
+  [data-motion="off"] {
+    --#{$prefix}-dur-instant: 0ms;
+    --#{$prefix}-dur-fast: 0ms;
+    --#{$prefix}-dur-base: 0ms;
+    --#{$prefix}-dur-slow: 0ms;
+  }
+}

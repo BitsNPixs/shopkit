@@ -1,0 +1,24 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// SECTION  ·  @layer sk.layout
+// One primitive that applies consistent vertical rhythm site-wide. Modifiers
+// retune the LOCAL --sk-space-section, so density stays token-driven.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.layout {
+  .#{$prefix}-section {
+    padding-block: var(--#{$prefix}-space-section);
+  }
+
+  .#{$prefix}-section--tight { --#{$prefix}-space-section: clamp(1.5rem, 1rem + 2vw, 3rem); }
+  .#{$prefix}-section--loose { --#{$prefix}-space-section: clamp(4rem, 2rem + 6vw, 8rem); }
+  .#{$prefix}-section--flush { padding-block: 0; }
+
+  // Surfaces you can drop a section onto
+  .#{$prefix}-section--alt     { background-color: var(--#{$prefix}-color-surface-alt); }
+  .#{$prefix}-section--sunken  { background-color: var(--#{$prefix}-color-surface-sunken); }
+  .#{$prefix}-section--inverse {
+    background-color: var(--#{$prefix}-color-surface-inverse);
+    color: var(--#{$prefix}-color-text-inverse);
+  }
+}

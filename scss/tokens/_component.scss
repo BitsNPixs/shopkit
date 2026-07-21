@@ -1,0 +1,40 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TIER 3 · COMPONENT TOKENS  (per-component override surface)
+// ───────────────────────────────────────────────────────────────────────────
+// Every component reads the semantic layer but exposes its own tokens so it can
+// be retuned in isolation without touching global theme. The convention:
+//
+//   @layer sk.components {
+//     .sk-btn {
+//       --sk-btn-radius:      var(--sk-radius);           // ← default = semantic
+//       --sk-btn-padding-y:   var(--sk-space-3);
+//       --sk-btn-bg:          var(--sk-color-primary);
+//       border-radius: var(--sk-btn-radius);
+//       padding-block: var(--sk-btn-padding-y);
+//       background:    var(--sk-btn-bg);
+//     }
+//   }
+//
+// A consumer overrides one component by setting its token in their own CSS:
+//   .sk-btn { --sk-btn-radius: 0; }            // square buttons, this component only
+//
+// Because every component default *falls back to a semantic token*, changing a
+// semantic token reskins everything at once, while a component token narrows the
+// change to one component. Component tokens are therefore defined alongside each
+// component partial (layout/, components/) from Phase 2 onward — this file marks
+// the tier and holds only cross-component defaults that several components share.
+// ═══════════════════════════════════════════════════════════════════════════
+
+@use "../config" as *;
+
+@layer sk.components {
+  :root {
+    // Shared control metrics — reused by buttons, inputs, selects, steppers…
+    --#{$prefix}-control-height:    2.75rem;   // 44px — meets min tap target
+    --#{$prefix}-control-height-sm: 2.25rem;
+    --#{$prefix}-control-height-lg: 3.25rem;
+    --#{$prefix}-control-padding-x: var(--#{$prefix}-space-4);
+    --#{$prefix}-control-radius:    var(--#{$prefix}-radius);
+    --#{$prefix}-control-border:    1px solid var(--#{$prefix}-color-border);
+  }
+}

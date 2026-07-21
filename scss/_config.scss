@@ -1,0 +1,124 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ShopKit · _config.scss
+// ───────────────────────────────────────────────────────────────────────────
+// BUILD-TIME knobs only. Edit these and recompile to change structural
+// defaults (breakpoints, grid columns, the numeric scales that get emitted
+// as tokens). Everything a consumer needs to RE-THEME at runtime lives in
+// CSS custom properties — see tokens/_semantic.scss. These two surfaces are
+// the entire public customization API.
+// ═══════════════════════════════════════════════════════════════════════════
+
+@use "sass:map";
+
+// ── Namespace ──────────────────────────────────────────────────────────────
+// Every class and token is prefixed with this to guarantee zero collisions
+// with a consumer's own CSS. Changing it here changes it everywhere.
+$prefix: "sk" !default;
+
+// ── Type ───────────────────────────────────────────────────────────────────
+$font-size-root: 100% !default;      // = 16px on default UA; 1rem anchor
+$type-ratio:     1.2   !default;     // modular scale (minor third)
+$leading-body:   1.6   !default;
+$leading-tight:  1.14  !default;     // headings
+$leading-snug:   1.35  !default;
+
+// ── Layout ─────────────────────────────────────────────────────────────────
+$container-max:    1240px !default;
+$container-narrow: 760px  !default;
+$grid-columns:     12     !default;
+
+// Mobile-first, min-width breakpoints. Keys are used to generate responsive
+// class suffixes (e.g. `.sk-col-md-6`) and to scale section rhythm.
+$breakpoints: (
+  "sm":  480px,
+  "md":  768px,
+  "lg":  1024px,
+  "xl":  1280px,
+  "2xl": 1536px,
+) !default;
+
+// ── Spacing scale ──────────────────────────────────────────────────────────
+// Numeric keys read as "4px units": key × 0.25rem. So `space-6` = 24px.
+// Emitted as `--sk-space-{key}` tokens.
+$space-scale: (
+  0:  0,
+  1:  0.25rem,
+  2:  0.5rem,
+  3:  0.75rem,
+  4:  1rem,
+  5:  1.25rem,
+  6:  1.5rem,
+  7:  1.75rem,
+  8:  2rem,
+  10: 2.5rem,
+  12: 3rem,
+  14: 3.5rem,
+  16: 4rem,
+  20: 5rem,
+  24: 6rem,
+  28: 7rem,
+  32: 8rem,
+  40: 10rem,
+) !default;
+
+// ── Utilities ────────────────────────────────────────────────────────────
+// Emit only the utility groups you use ("you pay only for what you use").
+// Flip a group to `false` and its partial outputs nothing — the class matrix
+// disappears from the build. Each utility partial guards its own output on the
+// matching key here.
+$utilities-enabled: (
+  "spacing": true,
+  "display": true,   // Phase 2 · next
+  "flex":    true,   // Phase 2 · next
+) !default;
+
+// Curated subset of spacing keys that ALSO get responsive variants
+// (e.g. `.sk-mt-md-8`). A subset — not the whole scale — so the responsive
+// matrix stays small. Every entry must be a key of $space-scale.
+$space-responsive: (0, 2, 3, 4, 6, 8, 12, 16) !default;
+
+// Spacing keys that get NEGATIVE margin utilities (e.g. `.sk-mt-n4`). Margins
+// only (padding can't be negative). Base breakpoint only. Keys of $space-scale.
+$space-negative: (1, 2, 3, 4, 6, 8) !default;
+
+// ── Radius scale ───────────────────────────────────────────────────────────
+$radius-scale: (
+  "none": 0,
+  "xs":   0.25rem,
+  "sm":   0.375rem,
+  "md":   0.625rem,
+  "lg":   0.875rem,
+  "xl":   1.25rem,
+  "2xl":  1.75rem,
+  "pill": 999px,
+  "circle": 50%,
+) !default;
+
+// ── Modular type scale ─────────────────────────────────────────────────────
+// name : [ min (rem), max (rem) ]. When min == max the size is fixed;
+// otherwise it is emitted as a fluid clamp() between sm and xl viewports.
+$type-scale: (
+  "2xs": (0.6875, 0.6875),
+  "xs":  (0.75,   0.75),
+  "sm":  (0.875,  0.875),
+  "base":(1,      1),
+  "md":  (1.0625, 1.125),
+  "lg":  (1.1875, 1.3125),
+  "xl":  (1.375,  1.625),
+  "2xl": (1.625,  2.125),
+  "3xl": (2,      2.9375),
+  "4xl": (2.5,    3.875),
+  "5xl": (3.125,  5),
+) !default;
+
+// ── Fluid clamp viewport bounds (px, for the type + rhythm interpolation) ──
+$fluid-min-vw: 480px  !default;
+$fluid-max-vw: 1280px !default;
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+@function bp($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error "Unknown breakpoint `#{$name}`.";
+  }
+  @return map.get($breakpoints, $name);
+}

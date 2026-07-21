@@ -1,0 +1,80 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// RESET  ·  @layer sk.reset  (weakest library layer → easiest to override)
+// A small, modern, opinionated reset. RTL-safe (logical properties), no
+// !important anywhere.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.reset {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  * { margin: 0; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -moz-tab-size: 4;
+    tab-size: 4;
+    line-height: var(--#{$prefix}-leading-body);
+  }
+
+  body {
+    min-block-size: 100svh;
+    font-family: var(--#{$prefix}-font-body);
+    font-size: var(--#{$prefix}-text-base);
+    line-height: var(--#{$prefix}-leading-body);
+    color: var(--#{$prefix}-color-text);
+    background-color: var(--#{$prefix}-color-bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-synthesis-weight: none;
+  }
+
+  // Media defaults
+  img, picture, video, canvas, svg {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  // Forms inherit typography instead of using UA defaults
+  input, button, textarea, select, optgroup {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
+  button { background: none; border: 0; cursor: pointer; }
+  button, [role="button"] { touch-action: manipulation; }
+  textarea { resize: vertical; }
+  ::placeholder { color: var(--#{$prefix}-color-text-subtle); opacity: 1; }
+
+  // Wrapping / overflow
+  p, h1, h2, h3, h4, h5, h6, li, figcaption { overflow-wrap: break-word; }
+  h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  // Lists tagged as role=list drop their markers (Safari a11y quirk fix)
+  ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
+
+  // Links reset — styled in base/typography
+  a { color: inherit; text-decoration: none; }
+
+  table { border-collapse: collapse; border-spacing: 0; }
+
+  hr {
+    border: 0;
+    block-size: 1px;
+    background-color: var(--#{$prefix}-color-border);
+  }
+
+  :target { scroll-margin-block-start: 6ex; }
+
+  // Respect users who pin scroll behaviour off
+  @media (prefers-reduced-motion: no-preference) {
+    html:focus-within { scroll-behavior: smooth; }
+  }
+
+  // Note: `[hidden]` is honoured without !important. Display utilities (Phase 2)
+  // are authored so they never override `[hidden]`, preserving zero-!important.
+  [hidden] { display: none; }
+}

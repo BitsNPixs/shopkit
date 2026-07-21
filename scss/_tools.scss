@@ -1,0 +1,40 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ShopKit · _tools.scss  —  Sass-side helpers (no CSS output)
+// ═══════════════════════════════════════════════════════════════════════════
+
+@use "sass:math";
+@use "sass:map";
+@use "sass:string";
+@use "config" as *;
+
+// Strip the unit from a value (16px -> 16).
+@function strip-unit($v) {
+  @return math.div($v, ($v * 0 + 1));
+}
+
+// Build a responsive clamp() that interpolates $min→$max (rem) across the
+// $fluid-min-vw→$fluid-max-vw window, using vw + a rem offset. Preferred value
+// is expressed in rem so it scales with the user's root font size.
+@function fluid($min, $max) {
+  @if $min == $max { @return #{$min}rem; }
+
+  $min-vw: strip-unit($fluid-min-vw);
+  $max-vw: strip-unit($fluid-max-vw);
+
+  // slope in rem-per-px, then per-vw
+  $slope: math.div($max - $min, $max-vw - $min-vw);
+  $slope-vw: $slope * 100;                 // rem change per 100vw i.e. per vw*100
+  $intercept: $min - $slope * $min-vw;     // rem
+
+  $pref: #{$intercept}rem + #{$slope-vw}vw;
+  @return clamp(#{$min}rem, #{$pref}, #{$max}rem);
+}
+
+// token name -> full custom property name, e.g. sk("color-primary")
+@function var-name($name) { @return --#{$prefix}-#{$name}; }
+
+// full var() reference, e.g. v("color-primary")
+@function v($name) { @return var(--#{$prefix}-#{$name}); }
+
+// class selector string, e.g. cls("btn") -> ".sk-btn"
+@function cls($name) { @return "." + $prefix + "-" + $name; }

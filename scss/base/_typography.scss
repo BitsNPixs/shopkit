@@ -1,0 +1,71 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TYPOGRAPHY  ·  @layer sk.base
+// Space Grotesk display + Inter body + JetBrains Mono for data/labels.
+// The type treatment (tight display tracking, mono eyebrows) is the house voice.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.base {
+  html { font-size: $font-size-root; }
+
+  body {
+    font-weight: var(--#{$prefix}-weight-regular);
+    letter-spacing: -0.006em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--#{$prefix}-font-heading);
+    font-weight: var(--#{$prefix}-weight-bold);
+    line-height: var(--#{$prefix}-leading-tight);
+    color: var(--#{$prefix}-color-text);
+    letter-spacing: -0.02em;
+  }
+
+  h1 { font-size: var(--#{$prefix}-text-4xl); letter-spacing: -0.028em; }
+  h2 { font-size: var(--#{$prefix}-text-3xl); letter-spacing: -0.022em; }
+  h3 { font-size: var(--#{$prefix}-text-2xl); }
+  h4 { font-size: var(--#{$prefix}-text-xl);  line-height: var(--#{$prefix}-leading-snug); }
+  h5 { font-size: var(--#{$prefix}-text-lg);  line-height: var(--#{$prefix}-leading-snug); }
+  h6 { font-size: var(--#{$prefix}-text-md);  line-height: var(--#{$prefix}-leading-snug); }
+
+  p, ul, ol, blockquote, figure, table { margin-block: 0; }
+
+  a {
+    color: var(--#{$prefix}-color-link);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.18em;
+    transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                text-decoration-color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  a:hover { color: var(--#{$prefix}-color-link-hover); text-decoration-color: currentColor; }
+
+  strong, b { font-weight: var(--#{$prefix}-weight-semibold); }
+  small { font-size: var(--#{$prefix}-text-sm); }
+
+  :where(ul, ol):not([role="list"]) { padding-inline-start: 1.4em; }
+  :where(ul, ol):not([role="list"]) li { margin-block: 0.25em; }
+
+  code, kbd, samp, pre {
+    font-family: var(--#{$prefix}-font-mono);
+    font-size: 0.875em;
+    font-feature-settings: "liga" 0;
+  }
+  :not(pre) > code {
+    padding: 0.12em 0.38em;
+    border-radius: var(--#{$prefix}-radius-xs);
+    background: var(--#{$prefix}-color-surface-alt);
+    color: var(--#{$prefix}-color-text);
+  }
+
+  blockquote {
+    padding-inline-start: var(--#{$prefix}-space-4);
+    border-inline-start: 3px solid var(--#{$prefix}-color-primary);
+    color: var(--#{$prefix}-color-text-muted);
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--#{$prefix}-color-primary) 22%, transparent);
+  }
+}

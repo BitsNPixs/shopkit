@@ -1,0 +1,52 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// DISPLAY UTILITIES  ·  @layer sk.utilities
+// ───────────────────────────────────────────────────────────────────────────
+// Single-purpose `display` helpers, base + responsive (mobile-first). Enables
+// the classic responsive show/hide pattern:  `class="sk-hidden sk-md-flex"`.
+//
+// Responsive form inserts the breakpoint right after the prefix — `.sk-md-flex`
+// — because the display value is a standalone token (no base name to sit before
+// the breakpoint, unlike `.sk-mt-md-8`).
+//
+// NOTE: `.sk-grid` is intentionally NOT emitted here — it is the 12-column
+// layout primitive (scss/layout/_grid.scss). Use that, `.sk-product-grid`, or
+// author your own grid container.
+//
+// `[hidden]` is re-asserted LAST in this layer so a display utility can never
+// force a `hidden` element visible: a bare `[hidden]` and `.sk-flex` share
+// specificity (0,1,0), so the later source wins within the same cascade layer.
+// That keeps the reset's zero-`!important` promise intact.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "../config" as *;
+
+@if map.get($utilities-enabled, "display") {
+  $-values: (
+    "block":        block,
+    "inline":       inline,
+    "inline-block": inline-block,
+    "flex":         flex,
+    "inline-flex":  inline-flex,
+    "contents":     contents,
+    "hidden":       none,
+  );
+
+  @layer #{$prefix}.utilities {
+    // ── base ──
+    @each $name, $val in $-values {
+      .#{$prefix}-#{$name} { display: $val; }
+    }
+
+    // ── responsive (mobile-first, min-width): .sk-md-flex ──
+    @each $bp, $min in $breakpoints {
+      @media (min-width: $min) {
+        @each $name, $val in $-values {
+          .#{$prefix}-#{$bp}-#{$name} { display: $val; }
+        }
+      }
+    }
+
+    // ── guard: a display utility must never override [hidden] ──
+    [hidden] { display: none; }
+  }
+}

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopKit · Foundation (Phase 1)</title>
+<meta name="description" content="ShopKit — the e-commerce design system you can copy-paste. Phase 1: tokens, layers, dark + multi-brand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- ShopKit library (compiled). In the standalone preview this is inlined. -->
+<link id="sk-css" rel="stylesheet" href="../dist/shopkit.css">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DOCS-PAGE CHROME — built ENTIRELY from ShopKit semantic tokens, so every
+   pixel below re-themes live when you touch the control deck. Not part of the
+   library; it's a consumer of it (which is the whole point of Phase 1).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ey { font-family: var(--sk-font-mono); text-transform: uppercase; letter-spacing:.18em;
+      font-size:.72rem; color: var(--sk-color-text-muted); font-weight:500; }
+
+/* ---- control deck (sticky) ---- */
+.deck { position: sticky; inset-block-start:0; z-index: var(--sk-z-sticky);
+  background: color-mix(in srgb, var(--sk-color-surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+  border-block-end:1px solid var(--sk-color-border); }
+.deck__in { display:flex; flex-wrap:wrap; align-items:center; gap: var(--sk-space-5);
+  padding-block: var(--sk-space-3); }
+.brandmark { display:flex; align-items:center; gap:.55rem; font-family: var(--sk-font-heading);
+  font-weight:700; font-size:1.15rem; letter-spacing:-.03em; }
+.brandmark .dot { inline-size:.85rem; block-size:.85rem; border-radius: calc(var(--sk-radius) * .5);
+  background: linear-gradient(135deg, var(--sk-color-primary), var(--sk-color-accent)); }
+.brandmark small { font-family: var(--sk-font-mono); font-size:.6rem; letter-spacing:.1em;
+  color: var(--sk-color-text-subtle); text-transform:uppercase; align-self:flex-start; margin-block-start:.1rem; }
+.controls { display:flex; flex-wrap:wrap; align-items:flex-end; gap: var(--sk-space-5);
+  margin-inline-start:auto; }
+.ctl { display:flex; flex-direction:column; gap:.32rem; }
+.ctl > .ey { font-size:.58rem; letter-spacing:.14em; }
+
+/* segmented control */
+.seg { display:inline-flex; padding:2px; gap:2px; background: var(--sk-color-surface-alt);
+  border:1px solid var(--sk-color-border); border-radius: var(--sk-radius); }
+.seg button { font: inherit; font-weight:600; font-size:.8rem; padding:.34rem .62rem; color: var(--sk-color-text-muted);
+  border-radius: calc(var(--sk-radius) - 2px); }
+.seg button[aria-pressed="true"] { background: var(--sk-color-surface); color: var(--sk-color-text);
+  box-shadow: var(--sk-shadow-sm); }
+
+/* range */
+.range-row { display:flex; align-items:center; gap:.55rem; }
+input[type=range] { accent-color: var(--sk-color-primary); inline-size: 8.5rem; block-size:1.1rem; }
+.range-val { font-family: var(--sk-font-mono); font-size:.72rem; color: var(--sk-color-text-muted);
+  min-inline-size:3.4rem; }
+
+/* ---- section scaffolding ---- */
+.head { display:flex; align-items:baseline; gap: var(--sk-space-4); flex-wrap:wrap;
+  margin-block-end: var(--sk-space-6); }
+.head h2 { font-size: var(--sk-text-2xl); }
+.head .ey { margin-inline-start:auto; }
+.lede { color: var(--sk-color-text-muted); max-inline-size: 60ch; }
+
+/* ---- token inspector (the signature) ---- */
+.tok-grid { display:grid; gap: var(--sk-space-3);
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); }
+.tok { display:flex; align-items:center; gap:.7rem; padding:.65rem .75rem;
+  border:1px solid var(--sk-color-border); border-radius: var(--sk-radius);
+  background: var(--sk-color-surface); }
+.tok .sw { inline-size:2.3rem; block-size:2.3rem; flex:none;
+  border-radius: calc(var(--sk-radius) * .55);
+  border:1px solid color-mix(in srgb, var(--sk-color-text) 14%, transparent);
+  background-image:
+    linear-gradient(45deg, color-mix(in srgb,var(--sk-color-text) 8%, transparent) 25%, transparent 25%),
+    linear-gradient(-45deg, color-mix(in srgb,var(--sk-color-text) 8%, transparent) 25%, transparent 25%);
+  background-size:8px 8px; background-position:0 0,4px 4px; } /* checker peeks through transparents */
+.tok .sw > i { display:block; inline-size:100%; block-size:100%; border-radius:inherit; }
+.tok .m { min-inline-size:0; }
+.tok .n { font-family: var(--sk-font-mono); font-size:.72rem; color: var(--sk-color-text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tok .v { font-family: var(--sk-font-mono); font-size:.66rem; color: var(--sk-color-text-subtle); }
+.grouplbl { font-family: var(--sk-font-mono); text-transform:uppercase; letter-spacing:.14em;
+  font-size:.64rem; color: var(--sk-color-text-subtle); margin-block:var(--sk-space-5) var(--sk-space-3);
+  display:flex; align-items:center; gap:.6rem; }
+.grouplbl::after { content:""; flex:1; block-size:1px; background: var(--sk-color-border); }
+
+/* ---- proto product card (PREVIEW of Phase 3) ---- */
+.pcard { background: var(--sk-color-surface); border:1px solid var(--sk-color-border);
+  border-radius: var(--sk-radius); overflow:hidden; box-shadow: var(--sk-shadow-sm);
+  display:flex; flex-direction:column;
+  transition: transform var(--sk-dur-base) var(--sk-ease-out),
+              box-shadow var(--sk-dur-base) var(--sk-ease-out); }
+.pcard:hover { transform: translateY(-5px); box-shadow: var(--sk-shadow-lg); }
+.pcard .media { position:relative; aspect-ratio:4/5; overflow:hidden;
+  background:
+    radial-gradient(120% 95% at 78% 12%, var(--sk-color-primary-soft), transparent 58%),
+    linear-gradient(150deg, var(--sk-color-surface-alt), var(--sk-color-surface)); }
+.pcard .media::after { content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 28% 72%, color-mix(in srgb, var(--sk-color-accent) 30%, transparent), transparent 42%),
+    repeating-linear-gradient(45deg, color-mix(in srgb,var(--sk-color-text) 5%, transparent) 0 2px, transparent 2px 13px);
+  transition: transform var(--sk-dur-base) var(--sk-ease-out); }
+.pcard:hover .media::after { transform: scale(1.06); }
+.pcard.b .media { background:
+    radial-gradient(110% 90% at 20% 18%, var(--sk-color-accent), transparent 55%),
+    linear-gradient(150deg, var(--sk-color-surface), var(--sk-color-surface-alt)); }
+.pcard.c .media { background:
+    conic-gradient(from 210deg at 70% 30%, var(--sk-color-primary-soft), var(--sk-color-surface-alt) 60%),
+    var(--sk-color-surface); }
+.badge { position:absolute; inset-block-start:.6rem; inset-inline-start:.6rem;
+  font-family: var(--sk-font-mono); font-weight:700; font-size:.58rem; letter-spacing:.05em;
+  text-transform:uppercase; padding:.24rem .48rem; border-radius: calc(var(--sk-radius) * .5);
+  background: var(--sk-color-badge-sale); color: var(--sk-color-badge-contrast); z-index:1; }
+.badge.new { background: var(--sk-color-badge-new); }
+.wish { position:absolute; inset-block-start:.5rem; inset-inline-end:.5rem; inline-size:2rem; block-size:2rem;
+  display:grid; place-items:center; border-radius:999px; z-index:1;
+  background: color-mix(in srgb, var(--sk-color-surface) 78%, transparent);
+  border:1px solid var(--sk-color-border); color: var(--sk-color-text-muted);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  transition: transform var(--sk-dur-fast) var(--sk-ease-spring), color var(--sk-dur-fast); }
+.wish:hover { color: var(--sk-color-sale); transform: scale(1.12); }
+.pcard .body { padding: var(--sk-space-4); display:flex; flex-direction:column; gap:.5rem; flex:1; }
+.pcard .title { font-weight:600; font-size:.98rem; line-height:1.3; }
+.stars { display:inline-flex; gap:1px; color: var(--sk-color-star); font-size:.8rem; letter-spacing:.05em; }
+.stars .off { color: var(--sk-color-border-strong); }
+.stars small { color: var(--sk-color-text-subtle); font-family: var(--sk-font-mono); font-size:.62rem;
+  margin-inline-start:.3rem; align-self:center; }
+.price { display:flex; align-items:baseline; gap:.5rem; margin-block-start:auto; }
+.price .now { font-family: var(--sk-font-heading); font-weight:700; font-size:1.08rem; color: var(--sk-color-price); }
+.price .now.sale { color: var(--sk-color-sale); }
+.price .was { font-size:.85rem; color: var(--sk-color-text-subtle); text-decoration: line-through; }
+
+/* proto buttons */
+.btn { font: inherit; font-weight:600; font-size:.9rem; display:inline-flex; align-items:center;
+  justify-content:center; gap:.45rem; padding:.62rem 1.05rem; border-radius: var(--sk-radius);
+  background: var(--sk-color-primary); color: var(--sk-color-primary-contrast); border:1px solid transparent;
+  transition: background var(--sk-dur-fast) var(--sk-ease-standard), transform var(--sk-dur-fast) var(--sk-ease-standard); }
+.btn:hover { background: var(--sk-color-primary-hover); }
+.btn:active { transform: translateY(1px); }
+.btn.ghost { background: transparent; color: var(--sk-color-primary); border-color: var(--sk-color-border-strong); }
+.btn.ghost:hover { background: var(--sk-color-primary-soft); }
+.btn.block { inline-size:100%; }
+
+/* multi-brand panels */
+.brands { display:grid; gap: var(--sk-space-5);
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); }
+.brandcard { border:1px solid var(--sk-color-border); border-radius: var(--sk-radius);
+  padding: var(--sk-space-5); background: var(--sk-color-surface); }
+.brandcard h3 { font-size: var(--sk-text-lg); display:flex; align-items:center; gap:.5rem; }
+.brandcard h3 .dot { inline-size:.85rem; block-size:.85rem; border-radius: calc(var(--sk-radius) * .5);
+  background: linear-gradient(135deg, var(--sk-color-primary), var(--sk-color-accent)); }
+
+/* scales */
+.type-row { display:flex; align-items:baseline; gap: var(--sk-space-4); padding-block:.5rem;
+  border-block-end:1px dashed var(--sk-color-border); }
+.type-row .n { min-inline-size:3.4rem; }
+.type-row .samp { line-height:1; color: var(--sk-color-text); white-space:nowrap; overflow:hidden; }
+.type-row .v { margin-inline-start:auto; }
+.space-row { display:grid; grid-template-columns: 4.5rem 1fr 3.5rem; align-items:center; gap: var(--sk-space-3);
+  padding-block:.28rem; }
+.space-bar { block-size:.7rem; border-radius:4px;
+  background: linear-gradient(90deg, var(--sk-color-primary), var(--sk-color-accent)); }
+.chips { display:flex; flex-wrap:wrap; gap: var(--sk-space-4); align-items:flex-end; }
+.radchip { inline-size:4.6rem; block-size:3rem; background: var(--sk-color-surface-alt);
+  border:1px solid var(--sk-color-border-strong); display:grid; place-items:end center; padding-block-end:.22rem;
+  font-family: var(--sk-font-mono); font-size:.58rem; color: var(--sk-color-text-muted); }
+.shadowchip { inline-size:5.6rem; block-size:4rem; background: var(--sk-color-surface);
+  border-radius: var(--sk-radius); display:grid; place-items:end center; padding-block-end:.3rem;
+  font-family: var(--sk-font-mono); font-size:.58rem; color: var(--sk-color-text-muted); }
+
+/* contrast strip */
+.ctable { display:grid; gap: var(--sk-space-2);
+  grid-template-columns: repeat(auto-fill, minmax(15rem,1fr)); }
+.crow { display:flex; align-items:center; gap:.6rem; padding:.5rem .7rem; border:1px solid var(--sk-color-border);
+  border-radius: var(--sk-radius); background: var(--sk-color-surface); font-size:.8rem; }
+.crow .chip { inline-size:2.2rem; block-size:1.5rem; border-radius: calc(var(--sk-radius)*.5);
+  display:grid; place-items:center; font-family:var(--sk-font-mono); font-size:.6rem; font-weight:700; flex:none; }
+.crow .lab { color: var(--sk-color-text-muted); font-family: var(--sk-font-mono); font-size:.68rem; }
+.crow .res { margin-inline-start:auto; font-family: var(--sk-font-mono); font-size:.72rem; font-weight:700;
+  display:flex; align-items:center; gap:.35rem; }
+.pass { color: var(--sk-color-success); }
+.fail { color: var(--sk-color-danger); }
+
+/* copy theme */
+.copy { position:relative; }
+.copy pre { font-family: var(--sk-font-mono); font-size:.74rem; line-height:1.65; margin:0;
+  background: var(--sk-color-surface-inverse); color: var(--sk-color-text-inverse);
+  padding: var(--sk-space-5); border-radius: var(--sk-radius); overflow:auto; }
+.copy .btn { position:absolute; inset-block-start:.75rem; inset-inline-end:.75rem; }
+.tag { font-family: var(--sk-font-mono); font-size:.6rem; text-transform:uppercase; letter-spacing:.12em;
+  color: var(--sk-color-warning); border:1px solid color-mix(in srgb,var(--sk-color-warning) 45%,transparent);
+  padding:.14rem .42rem; border-radius:5px; }
+.pill { font-family: var(--sk-font-mono); font-size:.66rem; letter-spacing:.04em; padding:.28rem .6rem;
+  border:1px solid var(--sk-color-border); border-radius:999px; color: var(--sk-color-text-muted);
+  background: var(--sk-color-surface); }
+
+/* hero */
+.hero { padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) var(--sk-space-12); }
+.hero h1 { font-size: var(--sk-text-5xl); max-inline-size: 16ch; }
+.hero .sub { font-size: var(--sk-text-lg); color: var(--sk-color-text-muted); max-inline-size: 54ch;
+  margin-block-start: var(--sk-space-5); }
+.hero .pills { margin-block-start: var(--sk-space-6); }
+.hero .accent { color: var(--sk-color-primary); }
+
+/* one-time entrance (killed by reduced-motion via zeroed duration tokens) */
+@media (prefers-reduced-motion: no-preference) {
+  .rise { opacity:0; transform: translateY(18px); animation: rise var(--sk-dur-slow) var(--sk-ease-out) forwards; }
+  .rise.d1 { animation-delay: 60ms; } .rise.d2 { animation-delay: 130ms; }
+  .rise.d3 { animation-delay: 210ms; } .rise.d4 { animation-delay: 300ms; }
+}
+@keyframes rise { to { opacity:1; transform:none; } }
+
+/* ---- spacing-utility demo (phase 2) ---- */
+.u-grid { display:grid; gap: var(--sk-space-5);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.u-demo > .ey { margin-block-end: var(--sk-space-3); }
+.u-demo > .ey code { font-size:.72rem; letter-spacing:0; text-transform:none; color: var(--sk-color-text); }
+.u-frame { border:1px solid var(--sk-color-border); border-radius: var(--sk-radius);
+  background: var(--sk-color-surface); padding: var(--sk-space-4); }
+/* padding boxes: the token space shows as the gap between the dashed edge and the label */
+.u-pad { display:inline-block; background: var(--sk-color-primary-soft);
+  border:1px dashed color-mix(in srgb, var(--sk-color-primary) 55%, transparent);
+  border-radius: calc(var(--sk-radius) * .6); }
+.u-pad > i { display:block; background: var(--sk-color-surface); color: var(--sk-color-text-muted);
+  font-family: var(--sk-font-mono); font-size:.66rem; font-style:normal;
+  padding:.28rem .5rem; border-radius: calc(var(--sk-radius) * .4); }
+/* margin bars: filled bars separated purely by the .sk-mb-* utility */
+.u-bar { display:block; background: var(--sk-color-surface-alt);
+  border:1px solid var(--sk-color-border); border-radius: calc(var(--sk-radius) * .6);
+  padding:.42rem .6rem; font-family: var(--sk-font-mono); font-size:.68rem; color: var(--sk-color-text-muted); }
+.u-row { display:flex; align-items:center; }
+.u-chip { background: var(--sk-color-accent); color: var(--sk-color-accent-contrast);
+  border-radius: calc(var(--sk-radius) * .5); padding:.34rem .55rem;
+  font-family: var(--sk-font-mono); font-size:.66rem; }
+.u-chip.sk-ps-6, .u-chip--alt { background: var(--sk-color-primary); color: var(--sk-color-primary-contrast); }
+
+.footnote { color: var(--sk-color-text-subtle); font-size:.82rem; }
+mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25em; border-radius:4px; }
+</style>
+</head>
+<body>
+<a class="sk-skip-link" href="#main">Skip to content</a>
+
+<!-- ══════════════════ CONTROL DECK ══════════════════ -->
+<header class="deck">
+  <div class="sk-container deck__in">
+    <div class="brandmark"><span class="dot"></span> ShopKit <small>v0.1 · phase 1</small></div>
+
+    <div class="controls">
+      <div class="ctl">
+        <span class="ey">Mode</span>
+        <div class="seg" id="seg-mode" role="group" aria-label="Colour mode">
+          <button data-v="light" aria-pressed="true">Light</button>
+          <button data-v="dark" aria-pressed="false">Dark</button>
+          <button data-v="system" aria-pressed="false">System</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ey">Brand</span>
+        <div class="seg" id="seg-brand" role="group" aria-label="Brand">
+          <button data-v="aurora" aria-pressed="true">Aurora</button>
+          <button data-v="verde" aria-pressed="false">Verde</button>
+          <button data-v="ember" aria-pressed="false">Ember</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ey">Radius</span>
+        <div class="range-row">
+          <input type="range" id="r-radius" min="0" max="26" step="1" value="10" aria-label="Global radius">
+          <span class="range-val" id="v-radius">10px</span>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ey">Gutter</span>
+        <div class="range-row">
+          <input type="range" id="r-gutter" min="8" max="40" step="1" value="24" aria-label="Layout gutter">
+          <span class="range-val" id="v-gutter">24px</span>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ey">Section</span>
+        <div class="range-row">
+          <input type="range" id="r-section" min="32" max="128" step="2" value="72" aria-label="Section padding">
+          <span class="range-val" id="v-section">72px</span>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ey">Motion</span>
+        <div class="seg" id="seg-motion" role="group" aria-label="Motion">
+          <button data-v="on" aria-pressed="true">On</button>
+          <button data-v="off" aria-pressed="false">Off</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ey">Dir</span>
+        <div class="seg" id="seg-dir" role="group" aria-label="Text direction">
+          <button data-v="ltr" aria-pressed="true">LTR</button>
+          <button data-v="rtl" aria-pressed="false">RTL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ══════════════════ HERO ══════════════════ -->
+  <section class="sk-container hero">
+    <p class="ey rise d1">ShopKit · design system — foundation</p>
+    <h1 class="rise d2">The e-commerce design system you can <span class="accent">copy-paste</span>.</h1>
+    <p class="sub rise d3">One source of truth. Three token tiers. Light, dark and any number of
+      brands on a single page — no recompile. This whole page is drawn from the tokens; grab the
+      control deck above and watch it re-skin.</p>
+    <div class="sk-cluster pills rise d4">
+      <span class="pill">3-tier tokens</span>
+      <span class="pill">@layer cascade</span>
+      <span class="pill">0 !important</span>
+      <span class="pill">dark + system</span>
+      <span class="pill">multi-brand</span>
+      <span class="pill">RTL-ready</span>
+      <span class="pill">WCAG 2.2 AA</span>
+      <span class="pill" id="pill-size">core ~5.3 KB gzip</span>
+    </div>
+  </section>
+
+  <hr class="sk-container" style="border:0;block-size:1px;background:var(--sk-color-border)">
+
+  <!-- ══════════════════ TOKEN INSPECTOR ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <div>
+        <h2>Semantic tokens</h2>
+        <p class="lede">The public theming API. Components read only these — never a raw ramp. Each value
+          below is resolved live from the cascade; change mode or brand and they remap.</p>
+      </div>
+      <span class="ey">tier 2 · live</span>
+    </div>
+
+    <div class="grouplbl">surface &amp; border</div>
+    <div class="tok-grid" data-group="surface"></div>
+    <div class="grouplbl">text</div>
+    <div class="tok-grid" data-group="text"></div>
+    <div class="grouplbl">brand</div>
+    <div class="tok-grid" data-group="brand"></div>
+    <div class="grouplbl">commerce</div>
+    <div class="tok-grid" data-group="commerce"></div>
+    <div class="grouplbl">status</div>
+    <div class="tok-grid" data-group="status"></div>
+  </section>
+
+  <section class="sk-container sk-section sk-section--tight" style="padding-block-start:0">
+    <div class="head"><div><h2>Contrast, live</h2>
+      <p class="lede">The theme picks colour <em>steps</em> per mode so key pairings stay legible in both.
+      Ratios recompute as you switch — AA needs 4.5 for text, 3.0 for large/UI.</p></div>
+      <span class="ey">wcag · live</span></div>
+    <div class="ctable" id="ctable"></div>
+  </section>
+
+  <!-- ══════════════════ PROTO COMPONENTS ══════════════════ -->
+  <section class="sk-section sk-section--alt">
+    <div class="sk-container">
+      <div class="head">
+        <div><h2>Components, previewed <span class="tag">preview · phase 3</span></h2>
+          <p class="lede">These aren't shipped components yet — they're drawn from the same semantic
+            tokens to prove the plumbing. Real product cards, buttons and price displays arrive in
+            Phase 3 and will inherit exactly this behaviour.</p></div>
+        <span class="ey">token-driven</span>
+      </div>
+
+      <div class="sk-product-grid" style="--sk-product-min:15rem">
+        <article class="pcard">
+          <div class="media"><span class="badge">-25%</span>
+            <button class="wish" aria-label="Add to wishlist">♥</button></div>
+          <div class="body">
+            <div class="stars">★★★★<span class="off">★</span><small>124</small></div>
+            <div class="title">Featherweight Merino Crew</div>
+            <div class="price"><span class="now sale">$63</span><span class="was">$84</span></div>
+            <button class="btn block" style="margin-block-start:.6rem">Add to cart</button>
+          </div>
+        </article>
+
+        <article class="pcard b">
+          <div class="media"><span class="badge new">New</span>
+            <button class="wish" aria-label="Add to wishlist">♥</button></div>
+          <div class="body">
+            <div class="stars">★★★★★<small>38</small></div>
+            <div class="title">Trailhead Canvas Backpack</div>
+            <div class="price"><span class="now">$148</span></div>
+            <button class="btn ghost block" style="margin-block-start:.6rem">Add to cart</button>
+          </div>
+        </article>
+
+        <article class="pcard c">
+          <div class="media"><button class="wish" aria-label="Add to wishlist">♥</button></div>
+          <div class="body">
+            <div class="stars">★★★★<span class="off">★</span><small>206</small></div>
+            <div class="title">Ceramic Pour-Over Set</div>
+            <div class="price"><span class="now">$52</span></div>
+            <button class="btn block" style="margin-block-start:.6rem">Add to cart</button>
+          </div>
+        </article>
+
+        <article class="pcard">
+          <div class="media"><span class="badge">Sale</span>
+            <button class="wish" aria-label="Add to wishlist">♥</button></div>
+          <div class="body">
+            <div class="stars">★★★<span class="off">★★</span><small>17</small></div>
+            <div class="title">Linen Weekend Shirt</div>
+            <div class="price"><span class="now sale">$39</span><span class="was">$59</span></div>
+            <button class="btn block" style="margin-block-start:.6rem">Add to cart</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ MULTI-BRAND ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <div><h2>Three brands, one page, zero recompile</h2>
+        <p class="lede">Each panel is scoped with a single <code>data-brand</code> attribute. They ignore the
+          global brand selector above — that's the point: independent tenants, live, from the same CSS.</p></div>
+      <span class="ey">§4 multi-brand</span>
+    </div>
+    <div class="brands">
+      <div class="brandcard" data-brand="aurora">
+        <h3><span class="dot"></span> Aurora <code style="font-size:.7rem;color:var(--sk-color-text-subtle)">indigo</code></h3>
+        <p class="footnote" style="margin-block:.4rem 1rem">data-brand="aurora"</p>
+        <div class="sk-cluster"><button class="btn">Primary</button><button class="btn ghost">Ghost</button></div>
+        <div class="price" style="margin-block-start:1rem"><span class="now sale">$63</span><span class="was">$84</span></div>
+      </div>
+      <div class="brandcard" data-brand="verde">
+        <h3><span class="dot"></span> Verde <code style="font-size:.7rem;color:var(--sk-color-text-subtle)">emerald</code></h3>
+        <p class="footnote" style="margin-block:.4rem 1rem">data-brand="verde"</p>
+        <div class="sk-cluster"><button class="btn">Primary</button><button class="btn ghost">Ghost</button></div>
+        <div class="price" style="margin-block-start:1rem"><span class="now sale">$63</span><span class="was">$84</span></div>
+      </div>
+      <div class="brandcard" data-brand="ember">
+        <h3><span class="dot"></span> Ember <code style="font-size:.7rem;color:var(--sk-color-text-subtle)">rose</code></h3>
+        <p class="footnote" style="margin-block:.4rem 1rem">data-brand="ember"</p>
+        <div class="sk-cluster"><button class="btn">Primary</button><button class="btn ghost">Ghost</button></div>
+        <div class="price" style="margin-block-start:1rem"><span class="now sale">$63</span><span class="was">$84</span></div>
+      </div>
+    </div>
+    <p class="footnote" style="margin-block-start:var(--sk-space-4)">Tip: switch <mark class="k">Mode → Dark</mark>
+      and every brand panel adapts its own primary step for dark surfaces — brand × mode composes automatically.</p>
+  </section>
+
+  <!-- ══════════════════ SCALES ══════════════════ -->
+  <section class="sk-container sk-section sk-section--tight">
+    <div class="sk-grid">
+      <div class="sk-col-12 sk-col-lg-6">
+        <div class="head" style="margin-block-end:var(--sk-space-4)"><div><h2 style="font-size:var(--sk-text-xl)">Type scale</h2></div><span class="ey">modular · fluid</span></div>
+        <div id="type-list"></div>
+      </div>
+      <div class="sk-col-12 sk-col-lg-6">
+        <div class="head" style="margin-block-end:var(--sk-space-4)"><div><h2 style="font-size:var(--sk-text-xl)">Spacing scale</h2></div><span class="ey">key × 4px</span></div>
+        <div id="space-list"></div>
+
+        <div class="head" style="margin-block:var(--sk-space-7) var(--sk-space-4)"><div><h2 style="font-size:var(--sk-text-xl)">Radius &amp; elevation</h2></div><span class="ey">reacts to deck</span></div>
+        <div class="chips" style="margin-block-end:var(--sk-space-5)">
+          <div class="radchip" style="border-radius:var(--sk-radius-xs)">xs</div>
+          <div class="radchip" style="border-radius:var(--sk-radius-sm)">sm</div>
+          <div class="radchip" style="border-radius:var(--sk-radius)">--radius</div>
+          <div class="radchip" style="border-radius:var(--sk-radius-lg)">lg</div>
+          <div class="radchip" style="border-radius:var(--sk-radius-xl)">xl</div>
+          <div class="radchip" style="border-radius:var(--sk-radius-pill)">pill</div>
+        </div>
+        <div class="chips">
+          <div class="shadowchip" style="box-shadow:var(--sk-shadow-xs)">xs</div>
+          <div class="shadowchip" style="box-shadow:var(--sk-shadow-sm)">sm</div>
+          <div class="shadowchip" style="box-shadow:var(--sk-shadow-md)">md</div>
+          <div class="shadowchip" style="box-shadow:var(--sk-shadow-lg)">lg</div>
+          <div class="shadowchip" style="box-shadow:var(--sk-shadow-xl)">xl</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ SPACING UTILITIES (PHASE 2) ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <div><h2>Spacing utilities <span class="tag">new · phase 2</span></h2>
+        <p class="lede">Single-purpose margin &amp; padding helpers generated from the spacing scale, authored
+          with <strong>logical properties</strong> — so <code>ms</code>/<code>me</code> (inline-start/end) flip
+          when you switch <mark class="k">Dir&nbsp;→&nbsp;RTL</mark> in the deck, with no extra CSS.</p></div>
+      <span class="ey">@layer sk.utilities</span>
+    </div>
+
+    <div class="u-grid">
+      <!-- padding scale -->
+      <div class="u-demo">
+        <p class="ey">padding · <code>.sk-p-{n}</code></p>
+        <div class="sk-cluster" style="align-items:flex-start">
+          <span class="u-pad sk-p-2"><i>.sk-p-2</i></span>
+          <span class="u-pad sk-p-4"><i>.sk-p-4</i></span>
+          <span class="u-pad sk-p-6"><i>.sk-p-6</i></span>
+          <span class="u-pad sk-p-8"><i>.sk-p-8</i></span>
+        </div>
+      </div>
+
+      <!-- margin stack -->
+      <div class="u-demo">
+        <p class="ey">margin-block · <code>.sk-mb-{n}</code></p>
+        <div class="u-frame">
+          <span class="u-bar sk-mb-2">.sk-mb-2</span>
+          <span class="u-bar sk-mb-4">.sk-mb-4</span>
+          <span class="u-bar sk-mb-6">.sk-mb-6</span>
+          <span class="u-bar">last (no margin)</span>
+        </div>
+      </div>
+
+      <!-- logical inline padding + auto margin -->
+      <div class="u-demo">
+        <p class="ey">logical inline · <code>.sk-ps-6</code> · <code>.sk-me-auto</code></p>
+        <div class="u-frame">
+          <div class="u-row">
+            <span class="u-chip sk-ps-6">.sk-ps-6 — inline-start pad</span>
+          </div>
+          <div class="u-row" style="margin-block-start:var(--sk-space-3)">
+            <span class="u-chip sk-me-auto">.sk-me-auto</span>
+            <span class="u-chip">pushed to inline-end →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="footnote sk-mt-4">Every class maps to a <code>--sk-space-*</code> token and lives in the
+      <code>sk.utilities</code> layer, so your own unlayered CSS overrides it with zero specificity fights and
+      zero <code>!important</code>.</p>
+  </section>
+
+  <!-- ══════════════════ FLEX & DISPLAY UTILITIES (PHASE 2) ══════════════════ -->
+  <section class="sk-container sk-section sk-section--tight" style="padding-block-start:0">
+    <div class="head">
+      <div><h2>Flex &amp; display utilities <span class="tag">new · phase 2</span></h2>
+        <p class="lede">Composable flex helpers — direction, alignment, gap — plus responsive
+          <code>display</code> for show/hide. Alignment uses flex-relative keywords, so a row stays
+          correct in <mark class="k">Dir&nbsp;→&nbsp;RTL</mark>. The classes below are the real library
+          utilities, not demo chrome.</p></div>
+      <span class="ey">@layer sk.utilities</span>
+    </div>
+
+    <p class="ey sk-mb-3">
+      <code>.sk-flex .sk-items-center .sk-justify-between .sk-gap-4</code></p>
+    <div class="u-frame sk-flex sk-flex-wrap sk-items-center sk-justify-between sk-gap-4">
+      <span class="u-chip">.sk-flex</span>
+      <span class="u-chip">.sk-items-center</span>
+      <span class="u-chip">.sk-justify-between</span>
+      <span class="u-chip">.sk-gap-4</span>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">
+      <code>.sk-grow</code> fills remaining space · <code>.sk-shrink-0</code> holds its size</p>
+    <div class="u-frame sk-flex sk-flex-wrap sk-gap-3">
+      <span class="u-chip sk-grow">.sk-grow</span>
+      <span class="u-chip">.sk-shrink-0</span>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">responsive display — resize across 768px</p>
+    <div class="u-frame sk-flex sk-flex-wrap sk-gap-3 sk-items-center">
+      <span class="u-chip sk-hidden sk-md-inline-block">.sk-hidden .sk-md-inline-block → shows ≥ md</span>
+      <span class="u-chip u-chip--alt sk-md-hidden">.sk-md-hidden → hides ≥ md</span>
+    </div>
+  </section>
+
+  <!-- ══════════════════ COPY THEME ══════════════════ -->
+  <section class="sk-section sk-section--sunken">
+    <div class="sk-container">
+      <div class="head">
+        <div><h2>Copy your theme <span class="tag">seed · phase 8</span></h2>
+          <p class="lede">The floating customizer in Phase 8 grows out of this: the deck already emits a paste-ready
+            <code>:root</code> override block. No rebuild, no build tools — just CSS variables.</p></div>
+        <span class="ey">runtime theming</span>
+      </div>
+      <div class="copy">
+        <button class="btn" id="copybtn" type="button">Copy</button>
+        <pre id="theme-out">:root { }</pre>
+      </div>
+    </div>
+  </section>
+
+  <footer class="sk-container sk-section sk-section--tight">
+    <p class="footnote">ShopKit Phase 1 — Foundation. Everything here is the compiled library plus a token-driven
+      demo page; the demo itself uses no styling the tokens don't provide. Persistence (localStorage) is
+      intentionally omitted in this preview. Next: utilities + core UI (buttons, forms, modal, tabs, skeletons).</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+
+  /* offscreen probe to RESOLVE custom properties to real computed values */
+  var probe = document.createElement("span");
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText = "position:absolute;left:-9999px;top:-9999px;width:0;height:0;pointer-events:none";
+  document.body.appendChild(probe);
+
+  function resolveColor(varName) {
+    probe.style.color = "";
+    probe.style.color = "var(" + varName + ")";
+    var c = getComputedStyle(probe).color;                 // -> rgb()/rgba()
+    return c;
+  }
+  function resolveLenPx(varName) {
+    probe.style.width = "";
+    probe.style.width = "var(" + varName + ")";
+    return parseFloat(getComputedStyle(probe).width) || 0;
+  }
+  function resolveFontPx(varName) {
+    probe.style.fontSize = "";
+    probe.style.fontSize = "var(" + varName + ")";
+    return parseFloat(getComputedStyle(probe).fontSize) || 0;
+  }
+  function rgbToArr(str) {
+    var m = str.match(/[\d.]+/g); if (!m) return [0,0,0,1];
+    return [ +m[0], +m[1], +m[2], m[3] === undefined ? 1 : +m[3] ];
+  }
+  function toHex(str) {
+    var a = rgbToArr(str);
+    if (a[3] < 1) return "rgba(" + a[0] + "," + a[1] + "," + a[2] + "," + (Math.round(a[3]*100)/100) + ")";
+    function h(n){ return ("0" + Math.round(n).toString(16)).slice(-2); }
+    return ("#" + h(a[0]) + h(a[1]) + h(a[2])).toUpperCase();
+  }
+  function lum(str) {
+    var a = rgbToArr(str);
+    var c = [a[0], a[1], a[2]].map(function (v) {
+      v /= 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+    });
+    return 0.2126*c[0] + 0.7152*c[1] + 0.0722*c[2];
+  }
+  function contrast(c1, c2) {
+    var l1 = lum(c1), l2 = lum(c2);
+    var hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  /* ---- token inspector ---- */
+  var GROUPS = {
+    surface: ["color-bg","color-surface","color-surface-alt","color-surface-sunken","color-border","color-border-strong"],
+    text: ["color-text","color-text-muted","color-text-subtle","color-text-inverse"],
+    brand: ["color-primary","color-primary-hover","color-primary-contrast","color-accent","color-link"],
+    commerce: ["color-price","color-sale","color-star","color-badge-new","color-badge-sale","color-out-of-stock"],
+    status: ["color-success","color-danger","color-warning","color-info"]
+  };
+  function buildInspector() {
+    Object.keys(GROUPS).forEach(function (g) {
+      var wrap = document.querySelector('.tok-grid[data-group="' + g + '"]');
+      wrap.innerHTML = "";
+      GROUPS[g].forEach(function (name) {
+        var el = document.createElement("div");
+        el.className = "tok";
+        el.innerHTML = '<span class="sw"><i></i></span><span class="m">' +
+          '<span class="n">--sk-' + name + '</span><span class="v" data-var="' + name + '">—</span></span>';
+        wrap.appendChild(el);
+      });
+    });
+  }
+  function refreshInspector() {
+    document.querySelectorAll(".tok").forEach(function (t) {
+      var vEl = t.querySelector(".v");
+      var name = vEl.getAttribute("data-var");
+      var raw = resolveColor("--sk-" + name);
+      t.querySelector(".sw > i").style.background = raw;
+      vEl.textContent = toHex(raw);
+    });
+  }
+
+  /* ---- contrast strip ---- */
+  var PAIRS = [
+    ["Text on bg", "color-text", "color-bg", 4.5, "Aa"],
+    ["Muted on bg", "color-text-muted", "color-bg", 4.5, "Aa"],
+    ["Primary label", "color-primary-contrast", "color-primary", 4.5, "Buy"],
+    ["Link on surface", "color-link", "color-surface", 4.5, "link"],
+    ["Sale on surface", "color-sale", "color-surface", 3.0, "-25%"],
+    ["Badge label", "color-badge-contrast", "color-badge-sale", 4.5, "Sale"]
+  ];
+  function buildContrast() {
+    var t = document.getElementById("ctable"); t.innerHTML = "";
+    PAIRS.forEach(function (p, i) {
+      var row = document.createElement("div"); row.className = "crow";
+      row.innerHTML = '<span class="chip" data-i="' + i + '"></span><span class="lab">' + p[0] +
+        '</span><span class="res" data-i="' + i + '"></span>';
+      t.appendChild(row);
+    });
+  }
+  function refreshContrast() {
+    PAIRS.forEach(function (p, i) {
+      var fg = resolveColor("--sk-" + p[1]), bg = resolveColor("--sk-" + p[2]);
+      var ratio = contrast(fg, bg);
+      var chip = document.querySelector('.chip[data-i="' + i + '"]');
+      chip.style.background = bg; chip.style.color = fg; chip.textContent = p[4];
+      var res = document.querySelector('.res[data-i="' + i + '"]');
+      var ok = ratio >= p[3];
+      res.className = "res " + (ok ? "pass" : "fail");
+      res.innerHTML = ratio.toFixed(2) + ":1 <span>" + (ok ? "✓" : "✕") + "</span>";
+    });
+  }
+
+  /* ---- type + space scales ---- */
+  var TYPES = ["2xs","xs","sm","base","md","lg","xl","2xl","3xl","4xl","5xl"];
+  function buildTypes() {
+    var host = document.getElementById("type-list"); host.innerHTML = "";
+    TYPES.forEach(function (t) {
+      var px = Math.round(resolveFontPx("--sk-text-" + t));
+      var row = document.createElement("div"); row.className = "type-row";
+      row.innerHTML = '<span class="n">' + t + '</span>' +
+        '<span class="samp" style="font-size:var(--sk-text-' + t + ');font-family:var(--sk-font-heading);font-weight:600">Storefront</span>' +
+        '<span class="v">' + px + 'px</span>';
+      host.appendChild(row);
+    });
+  }
+  var SPACES = [1,2,3,4,5,6,8,10,12,16,20,24];
+  function buildSpaces() {
+    var host = document.getElementById("space-list"); host.innerHTML = "";
+    var maxpx = resolveLenPx("--sk-space-24");
+    SPACES.forEach(function (k) {
+      var px = resolveLenPx("--sk-space-" + k);
+      var row = document.createElement("div"); row.className = "space-row";
+      row.innerHTML = '<span class="n" style="font-family:var(--sk-font-mono);font-size:.7rem;color:var(--sk-color-text-muted)">space-' + k + '</span>' +
+        '<span class="space-bar" style="inline-size:' + (px / maxpx * 100) + '%"></span>' +
+        '<span class="v" style="font-family:var(--sk-font-mono);font-size:.7rem;color:var(--sk-color-text-subtle);text-align:end">' + px + 'px</span>';
+      host.appendChild(row);
+    });
+  }
+
+  /* ---- copy-theme block ---- */
+  function currentMode() {
+    var m = root.getAttribute("data-theme");
+    return m ? m : "system";
+  }
+  function buildThemeBlock() {
+    var brand = root.getAttribute("data-brand") || "aurora";
+    var lines = [];
+    lines.push("/* ShopKit theme — brand:" + brand + " · mode:" + currentMode() + " */");
+    lines.push(":root {");
+    // resolved brand ramp anchors (what a rebrand would set)
+    ["500","600","700"].forEach(function (s) {
+      lines.push("  --sk-brand-" + s + ": " + toHex(resolveColor("--sk-brand-" + s)) + ";");
+    });
+    lines.push("  --sk-accent-600: " + toHex(resolveColor("--sk-accent-600")) + ";");
+    // structural knobs from the deck
+    lines.push("  --sk-radius: " + document.getElementById("r-radius").value + "px;");
+    lines.push("  --sk-space-gutter: " + document.getElementById("r-gutter").value + "px;");
+    lines.push("  --sk-space-section: " + document.getElementById("r-section").value + "px;");
+    lines.push("}");
+    var out = lines.join("\n");
+    if (currentMode() !== "system") {
+      out = '<html data-theme="' + currentMode() + '"' +
+        (brand !== "aurora" ? ' data-brand="' + brand + '"' : "") + '>\n\n' + out;
+    }
+    document.getElementById("theme-out").textContent = out;
+  }
+
+  /* ---- refresh everything after any change (rAF so the cascade settles) ---- */
+  function refreshAll() {
+    requestAnimationFrame(function () {
+      refreshInspector(); refreshContrast(); buildTypes(); buildSpaces(); buildThemeBlock();
+    });
+  }
+
+  /* ---- wire segmented controls ---- */
+  function wireSeg(id, apply) {
+    var seg = document.getElementById(id);
+    seg.addEventListener("click", function (e) {
+      var btn = e.target.closest("button"); if (!btn) return;
+      seg.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+      apply(btn.getAttribute("data-v"));
+      refreshAll();
+    });
+  }
+  wireSeg("seg-mode", function (v) {
+    if (v === "system") root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", v);
+  });
+  wireSeg("seg-brand", function (v) {
+    if (v === "aurora") root.removeAttribute("data-brand");
+    else root.setAttribute("data-brand", v);
+  });
+  wireSeg("seg-motion", function (v) {
+    if (v === "off") root.setAttribute("data-motion", "off");
+    else root.removeAttribute("data-motion");
+  });
+  wireSeg("seg-dir", function (v) { root.setAttribute("dir", v); });
+
+  /* ---- wire sliders ---- */
+  function wireRange(id, cssVar, valId, unit) {
+    var r = document.getElementById(id), out = document.getElementById(valId);
+    r.addEventListener("input", function () {
+      root.style.setProperty(cssVar, r.value + unit);
+      out.textContent = r.value + unit;
+      refreshAll();
+    });
+  }
+  wireRange("r-radius", "--sk-radius", "v-radius", "px");
+  wireRange("r-gutter", "--sk-space-gutter", "v-gutter", "px");
+  wireRange("r-section", "--sk-space-section", "v-section", "px");
+
+  /* ---- copy button ---- */
+  document.getElementById("copybtn").addEventListener("click", function () {
+    var txt = document.getElementById("theme-out").textContent;
+    var done = function () { var b = document.getElementById("copybtn"); var t = b.textContent; b.textContent = "Copied ✓"; setTimeout(function(){ b.textContent = t; }, 1400); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
+    else done();
+  });
+
+  /* ---- init ---- */
+  buildInspector(); buildContrast();
+  // set slider defaults onto root so the copy block + everything matches immediately
+  root.style.setProperty("--sk-radius", "10px");
+  root.style.setProperty("--sk-space-gutter", "24px");
+  root.style.setProperty("--sk-space-section", "72px");
+  refreshAll();
+})();
+</script>
+</body>
+</html>

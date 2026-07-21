@@ -1,0 +1,15 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// LAYER ORDER  —  this must be the first thing in the compiled output.
+// Later layers win over earlier ones; ALL library styles are layered, so any
+// UNLAYERED consumer CSS automatically beats ShopKit with zero specificity
+// hacks and zero !important. Namespaced under `sk.` to never clash with a
+// consumer's own @layer names.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "config" as *;
+
+@layer #{$prefix}.reset,
+       #{$prefix}.tokens,
+       #{$prefix}.base,
+       #{$prefix}.layout,
+       #{$prefix}.components,
+       #{$prefix}.utilities;

@@ -1,0 +1,41 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ACCESSIBILITY BASE  ·  @layer sk.base
+// A visible, token-driven focus ring on every interactive element by default —
+// authored at zero specificity (:where) so components and consumers override
+// effortlessly, but nothing is ever left without a ring.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "mixins" as *;
+
+@layer sk.base {
+  :where(a, button, input, select, textarea, summary,
+         [tabindex]:not([tabindex="-1"])):focus-visible {
+    @include focus-ring;
+  }
+
+  // Suppress the UA outline for pointer focus (keyboard keeps the ring above).
+  :where(a, button, input, select, textarea, summary,
+         [tabindex]):focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  .#{$prefix}-sr-only { @include visually-hidden; }
+  .#{$prefix}-sr-only-focusable:not(:focus):not(:focus-within) {
+    @include visually-hidden;
+  }
+
+  // Skip-link helper (revealed on focus) — used by page templates.
+  .#{$prefix}-skip-link {
+    position: fixed;
+    inset-block-start: var(--#{$prefix}-space-3);
+    inset-inline-start: var(--#{$prefix}-space-3);
+    z-index: var(--#{$prefix}-z-tooltip);
+    padding: var(--#{$prefix}-space-2) var(--#{$prefix}-space-4);
+    border-radius: var(--#{$prefix}-radius-sm);
+    background: var(--#{$prefix}-color-primary);
+    color: var(--#{$prefix}-color-primary-contrast);
+    text-decoration: none;
+    transform: translateY(calc(-100% - var(--#{$prefix}-space-4)));
+  }
+  .#{$prefix}-skip-link:focus { transform: translateY(0); }
+}

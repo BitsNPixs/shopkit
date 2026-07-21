@@ -1,0 +1,93 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// SPACING UTILITIES  ·  @layer sk.utilities
+// ───────────────────────────────────────────────────────────────────────────
+// Single-purpose margin & padding helpers, generated from the $space-scale.
+// LOGICAL properties throughout, so every helper flips automatically under
+// `dir="rtl"` and vertical writing modes — no physical top/left anywhere.
+//
+//   suffix   axis / side (logical)          physical (LTR) analogue
+//   ──────   ───────────────────────        ────────────────────────
+//   (none)   all four sides                 margin / padding
+//   x        inline axis                     left + right
+//   y        block axis                      top + bottom
+//   t        block-start                     top
+//   b        block-end                       bottom
+//   s        inline-start                    left
+//   e        inline-end                      right
+//
+//   .sk-mt-4        base           block-start margin, --sk-space-4
+//   .sk-mt-md-8     responsive     from the `md` breakpoint up (curated subset)
+//   .sk-mt-n4       negative       margins only, calc(token * -1)
+//   .sk-mx-auto     auto           margins only
+//
+// Values reference the spacing TOKENS (`--sk-space-{k}`), never raw lengths, so
+// utilities track the scale and re-skin at runtime. Everything sits in the
+// `sk.utilities` cascade layer — the last ShopKit layer — so a consumer's own
+// unlayered CSS still wins with zero specificity battles and zero `!important`.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "../config" as *;
+
+@if map.get($utilities-enabled, "spacing") {
+  // abbreviation → logical CSS property it sets
+  $-props: (
+    "m":  margin,
+    "mx": margin-inline,
+    "my": margin-block,
+    "mt": margin-block-start,
+    "mb": margin-block-end,
+    "ms": margin-inline-start,
+    "me": margin-inline-end,
+    "p":  padding,
+    "px": padding-inline,
+    "py": padding-block,
+    "pt": padding-block-start,
+    "pb": padding-block-end,
+    "ps": padding-inline-start,
+    "pe": padding-inline-end,
+  );
+  // margin-only abbreviations (padding can't be auto or negative)
+  $-margins: ("m", "mx", "my", "mt", "mb", "ms", "me");
+  // Props that get RESPONSIVE variants — the common axis / block-side helpers.
+  // The per-inline-side ones (ms/me/ps/pe) stay base-only: rarely set per
+  // breakpoint, and dropping them keeps the responsive matrix ~30% smaller.
+  $-responsive-props: ("m", "mx", "my", "mt", "mb", "p", "px", "py", "pt", "pb");
+
+  @layer #{$prefix}.utilities {
+    // ── Base: every prop × the full scale ──
+    @each $abbr, $prop in $-props {
+      @each $k, $_val in $space-scale {
+        .#{$prefix}-#{$abbr}-#{$k} { #{$prop}: var(--#{$prefix}-space-#{$k}); }
+      }
+    }
+
+    // ── Auto margins (centering / pushing apart) ──
+    @each $abbr in $-margins {
+      .#{$prefix}-#{$abbr}-auto { #{map.get($-props, $abbr)}: auto; }
+    }
+
+    // ── Negative margins (base breakpoint only) ──
+    @each $abbr in $-margins {
+      $prop: map.get($-props, $abbr);
+      @each $k in $space-negative {
+        .#{$prefix}-#{$abbr}-n#{$k} { #{$prop}: calc(var(--#{$prefix}-space-#{$k}) * -1); }
+      }
+    }
+
+    // ── Responsive variants: curated props × curated steps (mobile-first) ──
+    @each $bp, $min in $breakpoints {
+      @media (min-width: $min) {
+        @each $abbr in $-responsive-props {
+          $prop: map.get($-props, $abbr);
+          @each $k in $space-responsive {
+            .#{$prefix}-#{$abbr}-#{$bp}-#{$k} { #{$prop}: var(--#{$prefix}-space-#{$k}); }
+          }
+        }
+        // auto only on the responsive margin props (mx/my/m most useful here)
+        @each $abbr in ("m", "mx", "my", "mt", "mb") {
+          .#{$prefix}-#{$abbr}-#{$bp}-auto { #{map.get($-props, $abbr)}: auto; }
+        }
+      }
+    }
+  }
+}

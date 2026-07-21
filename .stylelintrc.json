@@ -1,0 +1,8 @@
+{
+  "customSyntax": "postcss-scss",
+  "plugins": ["stylelint-use-logical"],
+  "rules": {
+    "csstools/use-logical": "always"
+  },
+  "ignoreFiles": ["dist/**", "node_modules/**"]
+}

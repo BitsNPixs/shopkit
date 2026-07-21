@@ -1,0 +1,18 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// CONTAINER  ·  @layer sk.layout
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.layout {
+  .#{$prefix}-container,
+  .#{$prefix}-container-fluid,
+  .#{$prefix}-container-narrow {
+    inline-size: 100%;
+    margin-inline: auto;
+    padding-inline: var(--#{$prefix}-space-gutter);
+  }
+
+  .#{$prefix}-container        { max-inline-size: var(--#{$prefix}-container-max); }
+  .#{$prefix}-container-narrow { max-inline-size: var(--#{$prefix}-container-narrow); }
+  .#{$prefix}-container-fluid  { max-inline-size: none; }
+}

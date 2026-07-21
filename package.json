@@ -1,0 +1,39 @@
+{
+  "name": "shopkit",
+  "version": "0.1.0",
+  "description": "The e-commerce design system you can copy-paste. HTML + CSS (SCSS) with token-driven runtime theming, dark mode, and multi-brand.",
+  "scripts": {
+    "build": "sass scss/shopkit.scss dist/shopkit.css --style=expanded --no-source-map && sass scss/shopkit.scss dist/shopkit.min.css --style=compressed --no-source-map",
+    "watch": "sass --watch scss/shopkit.scss dist/shopkit.css",
+    "lint": "stylelint \"scss/**/*.scss\"",
+    "lint:fix": "stylelint \"scss/**/*.scss\" --fix",
+    "size": "node scripts/size.cjs",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "css",
+    "scss",
+    "design-system",
+    "ecommerce",
+    "components",
+    "design-tokens",
+    "dark-mode",
+    "theming"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "sass": "^1.101.0"
+  },
+  "type": "module",
+  "style": "dist/shopkit.min.css",
+  "files": [
+    "dist/",
+    "scss/"
+  ],
+  "devDependencies": {
+    "postcss-scss": "^4.0.9",
+    "stylelint": "^17.14.1",
+    "stylelint-use-logical": "^2.1.3"
+  }
+}

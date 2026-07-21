@@ -1,0 +1,56 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// GRID + FLEX PRIMITIVES  ·  @layer sk.layout
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.layout {
+  // ── 12-column grid ──
+  .#{$prefix}-grid {
+    display: grid;
+    grid-template-columns: repeat(#{$grid-columns}, minmax(0, 1fr));
+    gap: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
+  }
+
+  @for $i from 1 through $grid-columns {
+    .#{$prefix}-col-#{$i} { grid-column: span #{$i} / span #{$i}; }
+  }
+  .#{$prefix}-col-auto { grid-column: auto; }
+  .#{$prefix}-col-full { grid-column: 1 / -1; }
+
+  @each $bp, $min in $breakpoints {
+    @media (min-width: $min) {
+      @for $i from 1 through $grid-columns {
+        .#{$prefix}-col-#{$bp}-#{$i} { grid-column: span #{$i} / span #{$i}; }
+      }
+      .#{$prefix}-col-#{$bp}-auto { grid-column: auto; }
+      .#{$prefix}-col-#{$bp}-full { grid-column: 1 / -1; }
+    }
+  }
+
+  // ── Auto-fit product grid (no breakpoint soup) ──
+  .#{$prefix}-product-grid {
+    display: grid;
+    gap: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
+    grid-template-columns:
+      repeat(auto-fill, minmax(min(var(--#{$prefix}-product-min), 100%), 1fr));
+  }
+  // --fit stretches the final row to fill; default (auto-fill) keeps card width steady.
+  .#{$prefix}-product-grid--fit {
+    grid-template-columns:
+      repeat(auto-fit, minmax(min(var(--#{$prefix}-product-min), 100%), 1fr));
+  }
+
+  // ── Flex primitives ──
+  .#{$prefix}-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-gap, var(--#{$prefix}-space-4));
+  }
+  .#{$prefix}-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--#{$prefix}-gap, var(--#{$prefix}-space-3));
+  }
+  .#{$prefix}-cluster--between { justify-content: space-between; }
+}
