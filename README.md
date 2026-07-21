@@ -5,11 +5,12 @@ with token-driven **runtime theming**, first-class **dark mode**, and **multi-br
 support on a single page — no recompile. An optional React layer (later phase) reuses
 the exact same tokens and class names.
 
-> **Status: Phases 1–7 complete.** Foundation, utilities, the full Core-UI + e-commerce
+> **Status: Phases 1–8 complete.** Foundation, utilities, the full Core-UI + e-commerce
 > component set, the storefront layout sections, the formal variant/size/state API
 > ([`VARIANT-API.md`](VARIANT-API.md)), the token-driven motion system ([`MOTION.md`](MOTION.md)),
-> and a drift-guarded **React parity layer** ([`@shopkit/react`](react/)) all ship. Docs site +
-> floating customizer (Phase 8) is next. **Full plan & progress → [`PHASES.md`](PHASES.md).**
+> a drift-guarded **React parity layer** ([`@shopkit/react`](react/)), and a **docs site + floating
+> theme customizer** ([`docs/landing.html`](docs/landing.html)) all ship. Release infra (Phase 9) is
+> next. **Full plan & progress → [`PHASES.md`](PHASES.md).**
 
 Compiled core today: **18.9 KB gzip** (min) — 63% of the 30 KB budget, ~28 components +
 a typed React layer.
@@ -233,7 +234,7 @@ Tracked in detail (with checkboxes) in **[`PHASES.md`](PHASES.md)**.
 5. **Variant system** ✅ formal variant/size/state API — [`VARIANT-API.md`](VARIANT-API.md) + `base/_variants.scss`
 6. **Motion system** ✅ token-driven transitions + `.sk-animate-*` utilities, reduced-motion first — [`MOTION.md`](MOTION.md)
 7. **React parity layer** ✅ [`@shopkit/react`](react/) — same classes + tokens, a `parity` guard proves no drift
-8. Docs site + landing + floating theme customizer (§17)
+8. **Docs site + floating customizer** ✅ [landing page](docs/landing.html) + drop-in [`customizer.js`](docs/customizer.js) (persisted, copy-CSS)
 9. GitHub Pages + npm/jsDelivr + size CI + full storefront demo
 
 ## License

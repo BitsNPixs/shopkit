@@ -13,7 +13,7 @@ file is the *plan & checklist*. Update the checkboxes here whenever a piece ship
 | | |
 |---|---|
 | **Date** | 2026-07-21 |
-| **Current phase** | Phase 7 — React parity layer (✅ complete) · Phase 8 next |
+| **Current phase** | Phase 8 — Docs site + floating customizer (✅ complete) · Phase 9 next |
 | **Compiled core** | **18.9 KB gzip** (min) · budget 30 KB · **63% used** |
 | **Guards passing** | `lint` (logical-props) ✅ · `size` (budget) ✅ · `parity` (React↔CSS) ✅ |
 
@@ -145,8 +145,15 @@ Cascade layer order (later wins; all library CSS is layered so unlayered consume
       uncontrolled state where relevant. Verified by a server-render smoke test.
 - [x] `npm run verify` runs build · lint · size · react:build · parity end-to-end
 
-### Phase 8 — Docs site + floating customizer ⬜
-- [ ] Docs site, landing page, live floating theme customizer grown from the demo deck (§17)
+### Phase 8 — Docs site + floating customizer ✅
+- [x] **Floating theme customizer** ([`docs/customizer.js`](docs/customizer.js)) — a self-injecting,
+      zero-dependency drop-in: FAB → panel controlling mode · brand · radius · gutter · section ·
+      motion · direction, persisted to `localStorage`, with a paste-ready copy-CSS block. Writes only
+      the public theming hooks (`data-theme`/`data-brand`/`data-motion`/`dir` + a few semantic vars).
+- [x] **Landing page** ([`docs/landing.html`](docs/landing.html)) — marketing page that dogfoods only
+      real `sk-` components (navbar, hero, product cards, multi-brand panels, footer) + embeds the
+      customizer; offline-safe (emoji/gradient placeholders).
+- [x] Docs site wired: landing ⇄ [component showcase](docs/index.html) cross-linked.
 
 ### Phase 9 — Release infrastructure ⬜
 - [ ] GitHub Pages · npm/jsDelivr publish · size CI gate · full storefront demo

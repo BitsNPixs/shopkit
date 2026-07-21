@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopKit — the e-commerce design system you can copy-paste</title>
+<meta name="description" content="ShopKit is an e-commerce design system you can copy-paste: 3-tier tokens, first-class dark + multi-brand, RTL-safe logical properties, ~19 KB and zero !important. Real storefront components, ready to ship.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- ShopKit library (compiled). In the standalone preview this is inlined. -->
+<link id="sk-css" rel="stylesheet" href="../dist/shopkit.css">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   LANDING-PAGE NICETIES ONLY. Everything structural is a real .sk-* class;
+   this block is limited to page-local decoration, and every value is a
+   ShopKit token so the whole page re-skins live with the customizer.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* eyebrow / kicker */
+.ey { font-family: var(--sk-font-mono); text-transform: uppercase; letter-spacing:.18em;
+      font-size:.72rem; color: var(--sk-color-text-muted); font-weight:500; margin:0; }
+
+/* section heading block */
+.head { margin-block-end: var(--sk-space-7); max-inline-size: 60ch; }
+.head h2 { font-size: var(--sk-text-3xl); letter-spacing:-.02em; }
+.head p { color: var(--sk-color-text-muted); margin-block-start: var(--sk-space-3); }
+
+/* muted paragraph helper */
+.muted { color: var(--sk-color-text-muted); }
+
+/* hero media placeholder — pure gradient + emoji, no external asset */
+.hero-media { aspect-ratio: 4 / 3; border-radius: var(--sk-radius-lg);
+  background: linear-gradient(135deg, var(--sk-color-primary), var(--sk-color-accent));
+  display:grid; place-items:center; box-shadow: var(--sk-shadow-lg); overflow:hidden; }
+.hero-media span { font-size: clamp(4rem, 3rem + 8vw, 8rem); line-height:1;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.25)); }
+
+/* feature card — page-local bordered box per the brief */
+.feat { block-size:100%; border:1px solid var(--sk-color-border-subtle);
+  border-radius: var(--sk-radius-lg); padding: var(--sk-space-6);
+  background: var(--sk-color-surface); display:flex; flex-direction:column;
+  gap: var(--sk-space-3);
+  transition: border-color var(--sk-dur-base) var(--sk-ease-out),
+              transform var(--sk-dur-base) var(--sk-ease-out); }
+.feat:hover { border-color: var(--sk-color-border-strong); transform: translateY(-3px); }
+.feat__emoji { font-size:2rem; line-height:1; }
+.feat h3 { font-size: var(--sk-text-lg); }
+.feat p { color: var(--sk-color-text-muted); font-size:.92rem; margin:0; }
+
+/* brand panel — a titled frame that scopes data-brand */
+.brandpanel { block-size:100%; border:1px solid var(--sk-color-border);
+  border-radius: var(--sk-radius-lg); padding: var(--sk-space-6);
+  background: var(--sk-color-surface); }
+.brandpanel__head { display:flex; align-items:center; gap:.55rem;
+  margin-block-end: var(--sk-space-5); }
+.brandpanel__dot { inline-size:.85rem; block-size:.85rem; flex:none;
+  border-radius: calc(var(--sk-radius) * .5);
+  background: linear-gradient(135deg, var(--sk-color-primary), var(--sk-color-accent)); }
+.brandpanel__name { font-family: var(--sk-font-heading); font-weight:700;
+  font-size: var(--sk-text-lg); }
+.brandpanel__tag { font-family: var(--sk-font-mono); font-size:.62rem; letter-spacing:.04em;
+  color: var(--sk-color-text-subtle); margin-inline-start:auto; }
+
+/* code block — sunken, mono, page-local per the brief */
+.code { margin:0; font-family: var(--sk-font-mono); font-size:.8rem; line-height:1.7;
+  background: var(--sk-color-surface-sunken); color: var(--sk-color-text);
+  border:1px solid var(--sk-color-border);
+  padding: var(--sk-space-5); border-radius: var(--sk-radius-md); overflow:auto; }
+.code .tok-tag  { color: var(--sk-color-primary); }
+.code .tok-str  { color: var(--sk-color-accent); }
+.code .tok-com  { color: var(--sk-color-text-subtle); }
+.codelabel { font-family: var(--sk-font-mono); text-transform:uppercase; letter-spacing:.12em;
+  font-size:.62rem; color: var(--sk-color-text-subtle); margin-block-end: var(--sk-space-3); }
+</style>
+</head>
+<body>
+<a class="sk-skip-link" href="#main">Skip to content</a>
+
+<!-- ══════════════════ ANNOUNCEMENT ══════════════════ -->
+<div class="sk-announcement sk-announcement--primary" id="promo">
+  v0.1 · 28 components · 18.9&nbsp;KB gzip · copy-paste ready ·
+  <a class="sk-announcement__link" href="index.html">Browse the kit →</a>
+  <button class="sk-announcement__close" type="button" aria-label="Dismiss announcement"
+          onclick="document.getElementById('promo').hidden=true">✕</button>
+</div>
+
+<!-- ══════════════════ NAVBAR ══════════════════ -->
+<header class="sk-navbar sk-navbar--sticky">
+  <a class="sk-navbar__brand" href="landing.html">ShopKit</a>
+  <ul class="sk-navbar__nav">
+    <li><a class="sk-navbar__link" href="index.html">Components</a></li>
+    <li><a class="sk-navbar__link" href="index.html#main">Tokens</a></li>
+    <li><a class="sk-navbar__link" href="index.html#main">Motion</a></li>
+    <li><a class="sk-navbar__link" href="https://github.com" rel="noopener">GitHub</a></li>
+  </ul>
+  <div class="sk-navbar__actions">
+    <a class="sk-btn" href="index.html">Get started</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ══════════════════ HERO ══════════════════ -->
+  <section class="sk-hero sk-hero--split">
+    <div class="sk-hero__inner">
+      <div class="sk-hero__content">
+        <p class="sk-hero__eyebrow">E-commerce design system</p>
+        <h1 class="sk-hero__title">The storefront UI you can copy-paste.</h1>
+        <p class="sk-hero__lede">Product cards, buttons, pricing, ratings, navbars and footers — real,
+          accessible components drawn entirely from three tiers of design tokens. Ship a store in an
+          afternoon, reskin the whole thing by moving one variable.</p>
+        <div class="sk-hero__actions">
+          <a class="sk-btn sk-btn--lg" href="index.html">Browse components</a>
+          <a class="sk-btn sk-btn--ghost sk-btn--lg" href="#get-started">Copy the CSS</a>
+        </div>
+      </div>
+      <div class="sk-hero__media">
+        <div class="hero-media"><span role="img" aria-label="Shopping bag">🛍️</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ FEATURES ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <p class="ey">Why ShopKit</p>
+      <h2>A system, not a pile of snippets</h2>
+      <p>Every component reads from the same semantic tokens, so consistency is the default and
+        theming is a one-line change. No build step required to consume it.</p>
+    </div>
+
+    <div class="sk-grid">
+      <div class="sk-col-12 sk-col-md-6 sk-col-lg-3">
+        <div class="feat">
+          <span class="feat__emoji" aria-hidden="true">🎨</span>
+          <h3>3-tier tokens</h3>
+          <p class="muted">A raw ramp, a semantic layer, and per-component knobs. Components only ever
+            read the middle tier, so restyling never means editing components.</p>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-6 sk-col-lg-3">
+        <div class="feat">
+          <span class="feat__emoji" aria-hidden="true">🌗</span>
+          <h3>First-class dark + multi-brand</h3>
+          <p class="muted">Light, dark, system, and any number of brands on a single page — each scoped
+            with one attribute, composing cleanly with mode.</p>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-6 sk-col-lg-3">
+        <div class="feat">
+          <span class="feat__emoji" aria-hidden="true">🔁</span>
+          <h3>RTL-safe, logical properties</h3>
+          <p class="muted">Authored with inline/block logical properties throughout, so the entire UI
+            mirrors correctly under <code>dir="rtl"</code> with zero extra CSS.</p>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-6 sk-col-lg-3">
+        <div class="feat">
+          <span class="feat__emoji" aria-hidden="true">⚡</span>
+          <h3>~19 KB, zero !important</h3>
+          <p class="muted">Delivered on an <code>@layer</code> cascade, so your own unlayered CSS always
+            wins — no specificity fights, no override hacks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ COMPONENTS, LIVE ══════════════════ -->
+  <section class="sk-section sk-section--alt">
+    <div class="sk-container">
+      <div class="head">
+        <p class="ey">Components, live</p>
+        <h2>Real product cards, straight from the kit</h2>
+        <p>Each tile composes <code>.sk-badge</code>, <code>.sk-wishlist</code>, <code>.sk-rating</code>,
+          <code>.sk-price</code> and <code>.sk-btn</code>. Reskin one primitive and every card follows.</p>
+      </div>
+
+      <div class="sk-product-grid" style="--sk-product-min:15rem">
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">👕
+            <div class="sk-product-card__badges">
+              <span class="sk-badge sk-badge--sale">-25%</span>
+            </div>
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="false" aria-label="Add to wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Everyday Basics</p>
+            <h3 class="sk-product-card__title">Featherweight Merino Crew</h3>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:4.5" role="img" aria-label="Rated 4.5 out of 5"></span><span class="sk-rating__count">(124)</span></span>
+              <p class="sk-price sk-price--sale">
+                <span class="sk-price__now">$63</span>
+                <span class="sk-price__was">$84</span>
+                <span class="sk-price__off">-25%</span>
+              </p>
+            </div>
+            <div class="sk-product-card__actions">
+              <button type="button" class="sk-btn sk-btn--block">Add to cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">🎒
+            <div class="sk-product-card__badges">
+              <span class="sk-badge sk-badge--new">New</span>
+              <span class="sk-badge sk-badge--bestseller">Bestseller</span>
+            </div>
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="true" aria-label="Remove from wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Trailhead</p>
+            <h3 class="sk-product-card__title">Canvas Daypack — 24L</h3>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:5" role="img" aria-label="Rated 5 out of 5"></span><span class="sk-rating__count">(38)</span></span>
+              <p class="sk-price"><span class="sk-price__now">$148</span></p>
+            </div>
+            <div class="sk-product-card__actions">
+              <button type="button" class="sk-btn sk-btn--block">Add to cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">☕
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="false" aria-label="Add to wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Morning Ritual</p>
+            <h3 class="sk-product-card__title">Ceramic Pour-Over Set</h3>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:4" role="img" aria-label="Rated 4 out of 5"></span><span class="sk-rating__count">(206)</span></span>
+              <p class="sk-price"><span class="sk-price__now">$52</span></p>
+            </div>
+            <div class="sk-product-card__actions">
+              <button type="button" class="sk-btn sk-btn--block">Add to cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">👔
+            <div class="sk-product-card__badges">
+              <span class="sk-badge sk-badge--sale">Sale</span>
+            </div>
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="false" aria-label="Add to wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Warm Weather</p>
+            <h3 class="sk-product-card__title">Linen Weekend Shirt</h3>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:3.5" role="img" aria-label="Rated 3.5 out of 5"></span><span class="sk-rating__count">(17)</span></span>
+              <p class="sk-price sk-price--sale">
+                <span class="sk-price__now">$39</span>
+                <span class="sk-price__was">$59</span>
+                <span class="sk-price__off">-34%</span>
+              </p>
+            </div>
+            <div class="sk-product-card__actions">
+              <button type="button" class="sk-btn sk-btn--block">Add to cart</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="sk-cluster sk-mt-6">
+        <a class="sk-btn sk-btn--outline" href="index.html">See every component →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ MULTI-BRAND ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <p class="ey">Multi-brand</p>
+      <h2>Three brands, one page</h2>
+      <p>Each panel is scoped with a single <code>data-brand</code> attribute. Same markup, same CSS —
+        independent tenants, live, with no recompile.</p>
+    </div>
+
+    <div class="sk-grid">
+      <div class="sk-col-12 sk-col-md-4">
+        <div class="brandpanel" data-brand="aurora">
+          <div class="brandpanel__head">
+            <span class="brandpanel__dot"></span>
+            <span class="brandpanel__name">Aurora</span>
+            <span class="brandpanel__tag">indigo</span>
+          </div>
+          <div class="sk-cluster sk-gap-2 sk-mb-4">
+            <span class="sk-badge sk-badge--primary">New</span>
+            <span class="sk-badge sk-badge--sale">-25%</span>
+          </div>
+          <div class="sk-cluster sk-gap-3">
+            <button type="button" class="sk-btn">Primary</button>
+            <button type="button" class="sk-btn sk-btn--ghost">Ghost</button>
+          </div>
+          <p class="sk-price sk-price--sale sk-mt-4">
+            <span class="sk-price__now">$63</span>
+            <span class="sk-price__was">$84</span>
+          </p>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-4">
+        <div class="brandpanel" data-brand="verde">
+          <div class="brandpanel__head">
+            <span class="brandpanel__dot"></span>
+            <span class="brandpanel__name">Verde</span>
+            <span class="brandpanel__tag">emerald</span>
+          </div>
+          <div class="sk-cluster sk-gap-2 sk-mb-4">
+            <span class="sk-badge sk-badge--primary">New</span>
+            <span class="sk-badge sk-badge--sale">-25%</span>
+          </div>
+          <div class="sk-cluster sk-gap-3">
+            <button type="button" class="sk-btn">Primary</button>
+            <button type="button" class="sk-btn sk-btn--ghost">Ghost</button>
+          </div>
+          <p class="sk-price sk-price--sale sk-mt-4">
+            <span class="sk-price__now">$63</span>
+            <span class="sk-price__was">$84</span>
+          </p>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-4">
+        <div class="brandpanel" data-brand="ember">
+          <div class="brandpanel__head">
+            <span class="brandpanel__dot"></span>
+            <span class="brandpanel__name">Ember</span>
+            <span class="brandpanel__tag">rose</span>
+          </div>
+          <div class="sk-cluster sk-gap-2 sk-mb-4">
+            <span class="sk-badge sk-badge--primary">New</span>
+            <span class="sk-badge sk-badge--sale">-25%</span>
+          </div>
+          <div class="sk-cluster sk-gap-3">
+            <button type="button" class="sk-btn">Primary</button>
+            <button type="button" class="sk-btn sk-btn--ghost">Ghost</button>
+          </div>
+          <p class="sk-price sk-price--sale sk-mt-4">
+            <span class="sk-price__now">$63</span>
+            <span class="sk-price__was">$84</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ GET STARTED ══════════════════ -->
+  <section class="sk-container sk-section" id="get-started">
+    <div class="head">
+      <p class="ey">Get started</p>
+      <h2>Two ways to install</h2>
+      <p>Drop in the compiled stylesheet, or pull the Sass sources and compose your own build. Either
+        way you get the same tokens, the same components, and the same public theming API.</p>
+    </div>
+
+    <div class="sk-grid">
+      <div class="sk-col-12 sk-col-md-6">
+        <p class="codelabel">CDN · one link tag</p>
+<pre class="code"><span class="tok-com">&lt;!-- drop into your &lt;head&gt; --&gt;</span>
+<span class="tok-tag">&lt;link</span> rel=<span class="tok-str">"stylesheet"</span>
+      href=<span class="tok-str">"https://cdn.jsdelivr.net/npm/shopkit/dist/shopkit.css"</span><span class="tok-tag">&gt;</span></pre>
+      </div>
+      <div class="sk-col-12 sk-col-md-6">
+        <p class="codelabel">npm · Sass sources</p>
+<pre class="code"><span class="tok-com"># install</span>
+npm install shopkit
+
+<span class="tok-com">// then, in your Sass entry</span>
+@use <span class="tok-str">"shopkit/scss/shopkit"</span>;</pre>
+      </div>
+    </div>
+
+    <div class="sk-cluster sk-mt-6">
+      <a class="sk-btn sk-btn--lg" href="index.html">Browse the kit</a>
+      <a class="sk-btn sk-btn--ghost sk-btn--lg" href="https://github.com" rel="noopener">Read the docs</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="sk-footer">
+  <div class="sk-footer__inner">
+    <div class="sk-footer__grid">
+      <div class="sk-footer__brand">
+        <span class="sk-footer__logo">ShopKit</span>
+        <p class="sk-footer__tagline">The e-commerce design system you can copy-paste.</p>
+      </div>
+      <nav class="sk-footer__col">
+        <h3 class="sk-footer__heading">Product</h3>
+        <a class="sk-footer__link" href="index.html">Components</a>
+        <a class="sk-footer__link" href="index.html#main">Tokens</a>
+        <a class="sk-footer__link" href="index.html#main">Motion</a>
+      </nav>
+      <nav class="sk-footer__col">
+        <h3 class="sk-footer__heading">Resources</h3>
+        <a class="sk-footer__link" href="index.html">Docs</a>
+        <a class="sk-footer__link" href="https://github.com" rel="noopener">GitHub</a>
+        <a class="sk-footer__link" href="https://opensource.org/license/mit" rel="noopener">License</a>
+      </nav>
+    </div>
+    <div class="sk-footer__bottom">
+      <span>© 2026 ShopKit · MIT</span>
+      <div class="sk-footer__legal">
+        <a class="sk-footer__link" href="index.html">Components</a>
+        <a class="sk-footer__link" href="https://github.com" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="customizer.js" defer></script>
+</body>
+</html>
