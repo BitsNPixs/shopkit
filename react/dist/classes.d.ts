@@ -1,0 +1,154 @@
+export declare const PREFIX = "sk";
+export declare const cls: {
+    readonly btn: string;
+    readonly btnVariant: {
+        readonly accent: string;
+        readonly secondary: string;
+        readonly outline: string;
+        readonly ghost: string;
+        readonly soft: string;
+        readonly danger: string;
+        readonly success: string;
+        readonly link: string;
+    };
+    readonly btnSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
+    readonly btnBlock: string;
+    readonly btnPill: string;
+    readonly btnIcon: string;
+    readonly btnLoading: string;
+    readonly btnGroup: string;
+    readonly btnGroupVertical: string;
+    readonly badge: string;
+    readonly badgeVariant: {
+        readonly primary: string;
+        readonly success: string;
+        readonly danger: string;
+        readonly warning: string;
+        readonly info: string;
+        readonly sale: string;
+        readonly new: string;
+        readonly bestseller: string;
+        readonly outline: string;
+    };
+    readonly badgePill: string;
+    readonly badgeDot: string;
+    readonly chip: string;
+    readonly chipRemove: string;
+    readonly alert: string;
+    readonly alertVariant: {
+        readonly success: string;
+        readonly warning: string;
+        readonly danger: string;
+        readonly info: string;
+    };
+    readonly alertIcon: string;
+    readonly alertBody: string;
+    readonly alertTitle: string;
+    readonly alertClose: string;
+    readonly input: string;
+    readonly inputSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
+    readonly textarea: string;
+    readonly select: string;
+    readonly selectSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
+    readonly checkbox: string;
+    readonly radio: string;
+    readonly switch: string;
+    readonly check: string;
+    readonly label: string;
+    readonly labelReq: string;
+    readonly help: string;
+    readonly error: string;
+    readonly field: string;
+    readonly fieldset: string;
+    readonly legend: string;
+    readonly price: string;
+    readonly priceSale: string;
+    readonly priceSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
+    readonly priceNow: string;
+    readonly priceWas: string;
+    readonly priceOff: string;
+    readonly priceSep: string;
+    readonly rating: string;
+    readonly ratingSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
+    readonly ratingCount: string;
+    readonly swatches: string;
+    readonly swatch: string;
+    readonly swatchSize: string;
+    readonly stepper: string;
+    readonly stepperSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
+    readonly stepperBtn: string;
+    readonly stepperInput: string;
+    readonly wishlist: string;
+    readonly card: string;
+    readonly cardVariant: {
+        readonly horizontal: string;
+        readonly compact: string;
+        readonly flat: string;
+    };
+    readonly cardMedia: string;
+    readonly cardImg: string;
+    readonly cardBadges: string;
+    readonly cardWishlist: string;
+    readonly cardBody: string;
+    readonly cardEyebrow: string;
+    readonly cardTitle: string;
+    readonly cardLink: string;
+    readonly cardMeta: string;
+    readonly cardActions: string;
+    readonly breadcrumbList: string;
+    readonly breadcrumbItem: string;
+    readonly breadcrumbLink: string;
+    readonly pagination: string;
+    readonly paginationLink: string;
+    readonly paginationEllipsis: string;
+    readonly skeleton: string;
+    readonly skeletonVariant: {
+        readonly text: string;
+        readonly title: string;
+        readonly circle: string;
+        readonly block: string;
+    };
+    readonly modal: string;
+    readonly modalSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
+    readonly modalPanel: string;
+    readonly modalHeader: string;
+    readonly modalTitle: string;
+    readonly modalClose: string;
+    readonly modalBody: string;
+    readonly modalFooter: string;
+    readonly tabs: string;
+    readonly tabsPill: string;
+    readonly tabsList: string;
+    readonly tab: string;
+    readonly tabsPanel: string;
+    readonly accordion: string;
+    readonly accordionItem: string;
+    readonly accordionTrigger: string;
+    readonly accordionMarker: string;
+    readonly accordionPanel: string;
+};
+export declare const attr: {
+    readonly tooltip: "data-sk-tooltip";
+    readonly tooltipPos: "data-sk-tooltip-pos";
+};

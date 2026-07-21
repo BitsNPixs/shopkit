@@ -13,9 +13,9 @@ file is the *plan & checklist*. Update the checkboxes here whenever a piece ship
 | | |
 |---|---|
 | **Date** | 2026-07-21 |
-| **Current phase** | Phase 6 — Motion system (✅ complete) · Phase 7 next |
+| **Current phase** | Phase 7 — React parity layer (✅ complete) · Phase 8 next |
 | **Compiled core** | **18.9 KB gzip** (min) · budget 30 KB · **63% used** |
-| **Guards passing** | `npm run lint` (logical-props) ✅ · `npm run size` (budget) ✅ |
+| **Guards passing** | `lint` (logical-props) ✅ · `size` (budget) ✅ · `parity` (React↔CSS) ✅ |
 
 ---
 
@@ -133,8 +133,17 @@ Cascade layer order (later wins; all library CSS is layered so unlayered consume
       `data-motion="off"` / `"full"`); no per-component `@media`. Written up in [`MOTION.md`](MOTION.md)
 - [x] Docs: "Motion system" section — replayable enter animations + live loops
 
-### Phase 7 — React parity layer ⬜
-- [ ] React components emitting the same `sk-` classes + reading the same tokens (no drift)
+### Phase 7 — React parity layer ✅
+- [x] `@shopkit/react` ([`react/`](react/)) — thin, typed, forwardRef components emitting the exact
+      same `sk-` classes and reading the same tokens; TypeScript, ESM + `.d.ts` via `tsc`
+- [x] **One class contract** ([`react/src/classes.ts`](react/src/classes.ts)) — no component inlines
+      a `sk-` literal; variant/size unions are `keyof typeof cls.*`
+- [x] **Parity guard** ([`scripts/parity.mjs`](scripts/parity.mjs), `npm run parity`) — asserts every
+      class + attribute the React layer emits exists in `dist/shopkit.css` (123 classes, 0 drift)
+- [x] Core UI + e-commerce widgets (Button, Badge, Alert, Modal, Tabs, Accordion, Skeleton, forms;
+      Price, Rating, Swatch, Stepper, Wishlist, ProductCard, Breadcrumb, Pagination); controlled +
+      uncontrolled state where relevant. Verified by a server-render smoke test.
+- [x] `npm run verify` runs build · lint · size · react:build · parity end-to-end
 
 ### Phase 8 — Docs site + floating customizer ⬜
 - [ ] Docs site, landing page, live floating theme customizer grown from the demo deck (§17)

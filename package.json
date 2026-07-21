@@ -8,6 +8,10 @@
     "lint": "stylelint \"scss/**/*.scss\"",
     "lint:fix": "stylelint \"scss/**/*.scss\" --fix",
     "size": "node scripts/size.cjs",
+    "react:build": "npm --prefix react run build",
+    "react:typecheck": "npm --prefix react run typecheck",
+    "parity": "node scripts/parity.mjs",
+    "verify": "npm run build && npm run lint && npm run size && npm run react:build && npm run parity",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

@@ -1,0 +1,33 @@
+{
+  "name": "@shopkit/react",
+  "version": "0.1.0",
+  "description": "React parity layer for ShopKit — components that emit the exact same sk- classes and read the same design tokens, no drift.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist/"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/react": "^18.3.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "keywords": ["react", "shopkit", "design-system", "ecommerce", "components", "design-tokens"],
+  "license": "MIT"
+}

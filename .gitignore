@@ -1,0 +1,6 @@
+# Dependencies (the React package installs its own toolchain locally).
+node_modules/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
