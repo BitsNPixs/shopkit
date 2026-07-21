@@ -1,0 +1,3 @@
+# Dependencies (the React package installs its own toolchain locally).
+node_modules/
+
