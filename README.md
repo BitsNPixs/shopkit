@@ -188,6 +188,10 @@ Full contract in **[`MOTION.md`](MOTION.md)**.
   border-radius, survives `overflow:hidden`, maps to a system colour in forced-colors).
 - Colour steps chosen per mode so key pairings (text, primary label, sale, badges)
   meet WCAG 2.2 AA in **both** light and dark — see the live contrast panel in the demo.
+- Tap targets: default interactive controls (buttons, inputs, stepper, nav icons) are
+  ≥44px via `--sk-control-height: 2.75rem`. Compact variants (small buttons, pagination,
+  tabs, swatches) meet the **WCAG 2.2 AA** minimum target size (SC 2.5.8, 24×24px); the
+  44px figure is the **AAA** target (SC 2.5.5), not a blanket guarantee.
 - Logical properties throughout → `dir="rtl"` flips layout with no extra CSS.
 - `.sk-sr-only`, `.sk-sr-only-focusable`, `.sk-skip-link` provided.
 
@@ -236,6 +240,25 @@ Tracked in detail (with checkboxes) in **[`PHASES.md`](PHASES.md)**.
 7. **React parity layer** ✅ [`@shopkit/react`](react/) — same classes + tokens, a `parity` guard proves no drift
 8. **Docs site + floating customizer** ✅ [landing page](docs/landing.html) + drop-in [`customizer.js`](docs/customizer.js) (persisted, copy-CSS)
 9. GitHub Pages + npm/jsDelivr + size CI + full storefront demo
+
+## Browser support
+
+ShopKit targets **evergreen browsers** and uses modern CSS with no polyfills:
+`color-mix()`, `:has()`, `@starting-style` / `transition-behavior: allow-discrete`,
+logical properties, and cascade `@layer`. Practical baseline:
+
+- **Chrome / Edge 111+**
+- **Safari 16.4+**
+- **Firefox 128+**
+
+These cover the core primitives (`color-mix`: Chrome 111 · Safari 16.2 · Firefox 113;
+`:has`: Chrome 105 · Safari 15.4 · Firefox 121; `@layer` and logical properties are
+older still). `@starting-style` enter-transitions land a little later (Chrome 117 ·
+Safari 17.5 · Firefox 129) — hence Firefox 128+ as the combined floor.
+
+On older engines the library **degrades gracefully**: `color-mix()`-based soft tints and
+`@starting-style` enter-transitions no-op, but components stay fully functional — layout,
+states, and focus behaviour are unaffected; only decorative motion is skipped.
 
 ## License
 MIT
