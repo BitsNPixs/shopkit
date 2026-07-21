@@ -1,0 +1,144 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// MENU · DROPDOWN PANEL  ·  .sk-menu  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A floating panel of actions — reused for account/profile menus, sort menus,
+// row overflow menus, etc. CSS paints the panel + items; the AUTHOR owns
+// positioning (anchor / popover / JS) and toggles VISIBILITY via the `hidden`
+// attribute (that toggle is the only JS-driven state here).
+//
+//   <button aria-haspopup="true" aria-expanded="false" aria-controls="acct">…</button>
+//   <ul class="sk-menu" id="acct" role="menu" hidden>
+//     <li class="sk-menu__label">Signed in as Ada</li>
+//     <li><a class="sk-menu__item" role="menuitem" href="/orders">Orders</a></li>
+//     <li><button class="sk-menu__item" role="menuitem">Settings</button></li>
+//     <li class="sk-menu__separator" role="separator"></li>
+//     <li><button class="sk-menu__item sk-menu__item--danger">Sign out</button></li>
+//   </ul>
+//
+// MOTION — a subtle fade + rise on open, transitioned from `@starting-style`
+// and gated behind `--sk-dur-fast`; reduced-motion users (tokens zeroed) get an
+// instant swap. `display` is transitioned with `allow-discrete` so the panel
+// animates in the first frame after `[hidden]` is removed.
+//
+// ACCESSIBILITY — items are real <a>/<button> elements (keyboard + AT native);
+// `:focus-visible` paints the token focus ring; `[aria-disabled="true"]` mutes
+// an item without removing it from the a11y tree.
+//
+// RTL — logical properties throughout; `text-align: start` and the vertical-only
+// `translateY` are direction-agnostic, so the panel mirrors cleanly.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-menu {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-menu-bg:      var(--#{$prefix}-color-surface);
+    --#{$prefix}-menu-border:  var(--#{$prefix}-color-border);
+    --#{$prefix}-menu-radius:  var(--#{$prefix}-radius-md);
+    --#{$prefix}-menu-shadow:  var(--#{$prefix}-shadow-lg);
+    --#{$prefix}-menu-min:     12rem;
+
+    display: flex;
+    flex-direction: column;
+    min-inline-size: var(--#{$prefix}-menu-min);
+    padding-block: var(--#{$prefix}-space-1);
+    padding-inline: 0;
+    margin: 0;
+    list-style: none;
+    border: 1px solid var(--#{$prefix}-menu-border);
+    border-radius: var(--#{$prefix}-menu-radius);
+    background: var(--#{$prefix}-menu-bg);
+    box-shadow: var(--#{$prefix}-menu-shadow);
+    z-index: var(--#{$prefix}-z-dropdown);
+
+    // Enter transition (fade + rise). Exit runs in reverse automatically.
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-out),
+                transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-out),
+                display var(--#{$prefix}-dur-fast) allow-discrete;
+  }
+
+  // Author hides the panel with the `hidden` attribute.
+  .#{$prefix}-menu[hidden] { display: none; }
+
+  // Open state = simply "not hidden".
+  .#{$prefix}-menu:not([hidden]) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @starting-style {
+    .#{$prefix}-menu:not([hidden]) {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  // ── Item — the interactive row (works on <button> and <a>) ──
+  .#{$prefix}-menu__item {
+    display: flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    inline-size: 100%;
+    padding-block: var(--#{$prefix}-space-2);
+    padding-inline: var(--#{$prefix}-space-3);
+    border: 0;
+    background: transparent;
+    color: var(--#{$prefix}-color-text);
+    font: inherit;
+    font-size: var(--#{$prefix}-text-sm);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-menu__item:not([aria-disabled="true"]):hover,
+  .#{$prefix}-menu__item:not([aria-disabled="true"]):focus {
+    background: var(--#{$prefix}-color-surface-sunken);
+  }
+  .#{$prefix}-menu__item:focus-visible {
+    @include focus-ring;
+    outline-offset: calc(var(--#{$prefix}-focus-ring-offset) * -1);   // inset ring
+  }
+
+  // Icons track the label size; never shrink in the flex row.
+  .#{$prefix}-menu__item svg,
+  .#{$prefix}-menu__item .#{$prefix}-menu__icon {
+    inline-size: 1.15em;
+    block-size: 1.15em;
+    flex: none;
+  }
+
+  // Disabled item (ARIA — kept in the a11y tree, just muted + inert-looking).
+  .#{$prefix}-menu__item[aria-disabled="true"] {
+    color: var(--#{$prefix}-color-text-subtle);
+    cursor: not-allowed;
+  }
+
+  // Destructive action.
+  .#{$prefix}-menu__item--danger {
+    color: var(--#{$prefix}-color-danger);
+  }
+
+  // ── Section header — small uppercase kicker ──
+  .#{$prefix}-menu__label {
+    padding-block: var(--#{$prefix}-space-1);
+    padding-inline: var(--#{$prefix}-space-3);
+    color: var(--#{$prefix}-color-text-subtle);
+    font-size: var(--#{$prefix}-text-2xs);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // ── Separator — a hairline rule between groups ──
+  .#{$prefix}-menu__separator {
+    block-size: 1px;
+    margin-block: var(--#{$prefix}-space-1);
+    margin-inline: 0;
+    border: 0;
+    background: var(--#{$prefix}-color-border-subtle);
+  }
+}

@@ -1,0 +1,285 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// CART · DRAWER  ·  .sk-cart  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A slide-in cart drawer built on the native <dialog>. Opened with
+// `dialog.showModal()`, the platform hands us the top layer, the `::backdrop`,
+// focus trapping, Esc-to-close and an inert background — we only paint and
+// animate. Same motion recipe as .sk-modal, re-pointed to slide from the
+// inline-END edge (the cart convention).
+//
+//   <dialog class="sk-cart">
+//     <header class="sk-cart__header">
+//       <h2 class="sk-cart__title">Your cart</h2>
+//       <button class="sk-cart__close" value="cancel" aria-label="Close cart">✕</button>
+//     </header>
+//
+//     <div class="sk-cart__body">
+//       <article class="sk-cart-item">
+//         <span class="sk-cart-item__media"><img src="…" alt=""></span>
+//         <div class="sk-cart-item__info">
+//           <h3 class="sk-cart-item__title">Merino crew sweater</h3>
+//           <p class="sk-cart-item__variant">Oat · M</p>
+//           <div class="sk-cart-item__controls">
+//             <div class="sk-stepper sk-stepper--sm">…</div>
+//             <button class="sk-cart-item__remove" type="button">Remove</button>
+//           </div>
+//         </div>
+//         <span class="sk-cart-item__price">$98</span>
+//       </article>
+//     </div>
+//
+//     <footer class="sk-cart__footer">
+//       <div class="sk-order-summary">
+//         <div class="sk-order-summary__row"><span>Subtotal</span><span>$98</span></div>
+//         <div class="sk-order-summary__row"><span>Shipping</span><span>Free</span></div>
+//         <div class="sk-order-summary__row sk-order-summary__row--total">
+//           <span>Total</span><span>$98</span>
+//         </div>
+//         <p class="sk-order-summary__note">Taxes calculated at checkout.</p>
+//       </div>
+//       <button class="sk-btn sk-btn--block">Checkout</button>
+//     </footer>
+//   </dialog>
+//
+// MOTION — enter/exit fade + slide, transitioned from `@starting-style` and
+// gated behind `--sk-dur-base`; the `overlay`/`display` legs use allow-discrete
+// so the exit still runs on the top layer. Reduced-motion users (tokens zeroed)
+// get an instant swap.
+//
+// RTL — logical properties throughout, so the drawer pins to the inline-END
+// edge in both directions. NOTE: `translateX` is a *physical* transform, so the
+// slide distance is driven by the `--sk-cart-from` token (default 100% = off to
+// the inline-end in LTR). For a start-edge drawer, set `--sk-cart-from: -100%`.
+//
+// ACCESSIBILITY — the close control needs an aria-label (the ✕ glyph is not
+// descriptive); JS drives open/close via `dialog.showModal()` / `.close()`.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-cart {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-cart-width: min(28rem, 92vw);
+    --#{$prefix}-cart-from:  100%;   // slide distance; -100% for a start-edge drawer
+
+    // ── Structure ──
+    display: flex;
+    flex-direction: column;
+    inline-size: var(--#{$prefix}-cart-width);
+    block-size: 100%;
+    max-block-size: none;
+    // Pin to the inline-end edge and fill the block axis (cart convention).
+    margin-block: 0;
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+    inset-block: 0;
+    padding: 0;
+    border: 0;
+    background: var(--#{$prefix}-color-surface);
+    color: var(--#{$prefix}-color-text);
+    box-shadow: var(--#{$prefix}-shadow-xl);
+
+    // Enter transition (open): fade + slide from the end edge.
+    opacity: 0;
+    transform: translateX(var(--#{$prefix}-cart-from));
+    transition: opacity var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
+                transform var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
+                overlay var(--#{$prefix}-dur-base) allow-discrete,
+                display var(--#{$prefix}-dur-base) allow-discrete;
+  }
+  .#{$prefix}-cart[open] {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  @starting-style {
+    .#{$prefix}-cart[open] {
+      opacity: 0;
+      transform: translateX(var(--#{$prefix}-cart-from));
+    }
+  }
+
+  // Backdrop — token-driven scrim, fades with the drawer.
+  .#{$prefix}-cart::backdrop {
+    background: var(--#{$prefix}-color-backdrop);
+    opacity: 0;
+    transition: opacity var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-standard),
+                overlay var(--#{$prefix}-dur-base) allow-discrete,
+                display var(--#{$prefix}-dur-base) allow-discrete;
+  }
+  .#{$prefix}-cart[open]::backdrop { opacity: 1; }
+  @starting-style {
+    .#{$prefix}-cart[open]::backdrop { opacity: 0; }
+  }
+
+  // ── Header ──
+  .#{$prefix}-cart__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--#{$prefix}-space-3);
+    padding-block: var(--#{$prefix}-space-4);
+    padding-inline: var(--#{$prefix}-space-5);
+    border-block-end: 1px solid var(--#{$prefix}-color-border);
+  }
+  .#{$prefix}-cart__title {
+    margin: 0;
+    font-size: var(--#{$prefix}-text-lg);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    line-height: var(--#{$prefix}-leading-snug);
+  }
+  .#{$prefix}-cart__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: 2rem;
+    block-size: 2rem;
+    margin-inline-end: calc(var(--#{$prefix}-space-2) * -1);
+    padding: 0;
+    border: 0;
+    border-radius: var(--#{$prefix}-radius-sm);
+    background: transparent;
+    color: var(--#{$prefix}-color-text-muted);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-cart__close:hover {
+    background: var(--#{$prefix}-color-surface-sunken);
+    color: var(--#{$prefix}-color-text);
+  }
+  .#{$prefix}-cart__close:focus-visible { @include focus-ring; }
+
+  // ── Body — the scrolling list of line items ──
+  .#{$prefix}-cart__body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-4);
+    padding-block: var(--#{$prefix}-space-4);
+    padding-inline: var(--#{$prefix}-space-5);
+    overflow-y: auto;
+  }
+
+  // ── Footer — order summary + full-width checkout button ──
+  .#{$prefix}-cart__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-3);
+    padding-block: var(--#{$prefix}-space-4);
+    padding-inline: var(--#{$prefix}-space-5);
+    border-block-start: 1px solid var(--#{$prefix}-color-border);
+  }
+
+  // ═════════════════════════════ LINE ITEM ════════════════════════════
+  // media | info | price
+  .#{$prefix}-cart-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--#{$prefix}-space-3);
+    align-items: start;
+  }
+
+  .#{$prefix}-cart-item__media {
+    inline-size: 4rem;
+    block-size: 4rem;
+    border-radius: var(--#{$prefix}-radius-md);
+    background: var(--#{$prefix}-color-surface-sunken);
+    overflow: clip;
+  }
+  .#{$prefix}-cart-item__media img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .#{$prefix}-cart-item__info {
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-1);
+  }
+  .#{$prefix}-cart-item__title {
+    margin: 0;
+    color: var(--#{$prefix}-color-text);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-medium);
+    @include line-clamp(2);
+  }
+  .#{$prefix}-cart-item__variant {
+    margin: 0;
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-xs);
+  }
+
+  .#{$prefix}-cart-item__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    margin-block-start: var(--#{$prefix}-space-1);
+  }
+
+  // Bare text button — recolours to danger on hover.
+  .#{$prefix}-cart-item__remove {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--#{$prefix}-color-text-subtle);
+    font-family: inherit;
+    font-size: var(--#{$prefix}-text-xs);
+    line-height: 1;
+    cursor: pointer;
+    transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-cart-item__remove:hover { color: var(--#{$prefix}-color-danger); }
+  .#{$prefix}-cart-item__remove:focus-visible { @include focus-ring; }
+
+  // Price sits in the trailing grid cell.
+  .#{$prefix}-cart-item__price {
+    color: var(--#{$prefix}-color-text);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    white-space: nowrap;
+    text-align: end;
+  }
+
+  // ═════════════════════════════ ORDER SUMMARY ════════════════════════
+  .#{$prefix}-order-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-2);
+    font-size: var(--#{$prefix}-text-sm);
+  }
+  .#{$prefix}-order-summary__row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--#{$prefix}-space-3);
+    color: var(--#{$prefix}-color-text);
+  }
+  // The label (first child) is muted; the value keeps the text colour.
+  .#{$prefix}-order-summary__row > :first-child {
+    color: var(--#{$prefix}-color-text-muted);
+  }
+
+  // Grand total — divided off, heavier, full text colour on both cells.
+  .#{$prefix}-order-summary__row--total {
+    margin-block-start: var(--#{$prefix}-space-2);
+    padding-block-start: var(--#{$prefix}-space-3);
+    border-block-start: 1px solid var(--#{$prefix}-color-border);
+    color: var(--#{$prefix}-color-text);
+    font-size: var(--#{$prefix}-text-md);
+    font-weight: var(--#{$prefix}-weight-bold);
+  }
+  .#{$prefix}-order-summary__row--total > :first-child {
+    color: var(--#{$prefix}-color-text);
+    font-weight: var(--#{$prefix}-weight-bold);
+  }
+
+  .#{$prefix}-order-summary__note {
+    margin: 0;
+    color: var(--#{$prefix}-color-text-subtle);
+    font-size: var(--#{$prefix}-text-xs);
+  }
+}

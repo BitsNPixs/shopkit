@@ -1019,6 +1019,130 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     </div>
   </section>
 
+  <!-- ══════════════════ STOREFRONT SECTIONS (PHASE 4) ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <div><h2>Storefront sections <span class="tag">new · phase 4</span></h2>
+        <p class="lede">The page-level chrome a shop is assembled from — navbar, hero, checkout
+          progress, cart drawer and footer — each with layout variants. Previewed in frames below;
+          all re-skin with the deck.</p></div>
+      <span class="ey">@layer sk.components</span>
+    </div>
+
+    <p class="ey sk-mb-3">announcement + navbar</p>
+    <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+      <div class="sk-announcement sk-announcement--primary">Free shipping on orders over $50 ·
+        <a class="sk-announcement__link" href="#main">Shop now</a>
+        <button class="sk-announcement__close" type="button" aria-label="Dismiss">✕</button></div>
+      <header class="sk-navbar">
+        <button class="sk-navbar__toggle" type="button" aria-label="Open menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        <a class="sk-navbar__brand" href="#main">ShopKit</a>
+        <ul class="sk-navbar__nav">
+          <li><a class="sk-navbar__link" href="#main" aria-current="page">New</a></li>
+          <li><a class="sk-navbar__link" href="#main">Men</a></li>
+          <li><a class="sk-navbar__link" href="#main">Women</a></li>
+          <li><a class="sk-navbar__link" href="#main">Sale</a></li>
+        </ul>
+        <div class="sk-navbar__search"><input class="sk-input sk-input--sm" type="search" placeholder="Search products…" aria-label="Search"></div>
+        <div class="sk-navbar__actions">
+          <button type="button" class="sk-navbar__cart" aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+          <button type="button" class="sk-navbar__cart" aria-label="Cart, 3 items" onclick="document.getElementById('demo-cart').showModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="sk-navbar__cart-count">3</span></button>
+        </div>
+      </header>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">hero — split</p>
+    <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+      <section class="sk-hero sk-hero--split" style="--sk-space-section:var(--sk-space-12)">
+        <div class="sk-hero__inner">
+          <div class="sk-hero__content">
+            <p class="sk-hero__eyebrow">Autumn 2026</p>
+            <h2 class="sk-hero__title">Wardrobe staples, thoughtfully made</h2>
+            <p class="sk-hero__lede">Organic fabrics, fair factories, and a fit that lasts.</p>
+            <div class="sk-hero__actions"><a class="sk-btn sk-btn--lg" href="#main">Shop the edit</a><a class="sk-btn sk-btn--ghost sk-btn--lg" href="#main">Our story</a></div>
+          </div>
+          <div class="sk-hero__media" style="aspect-ratio:4/3;background:linear-gradient(135deg,var(--sk-color-primary),var(--sk-color-accent))"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sk-grid sk-mt-7" style="gap:var(--sk-space-8)">
+      <div class="sk-col-12 sk-col-md-7">
+        <p class="ey sk-mb-3">checkout progress · open cart drawer</p>
+        <ol class="sk-steps" style="max-inline-size:34rem">
+          <li class="sk-steps__item sk-steps__item--done"><span class="sk-step__marker" aria-hidden="true">✓</span><span class="sk-step__label">Cart</span></li>
+          <li class="sk-steps__item sk-steps__item--done"><span class="sk-step__marker" aria-hidden="true">✓</span><span class="sk-step__label">Shipping</span></li>
+          <li class="sk-steps__item sk-steps__item--current" aria-current="step"><span class="sk-step__marker" aria-hidden="true">3</span><span class="sk-step__label">Payment</span></li>
+          <li class="sk-steps__item"><span class="sk-step__marker" aria-hidden="true">4</span><span class="sk-step__label">Done</span></li>
+        </ol>
+        <div class="sk-cluster sk-gap-3" style="margin-block-start:var(--sk-space-5)">
+          <button type="button" class="sk-btn" onclick="document.getElementById('demo-cart').showModal()">Open cart drawer</button>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-5">
+        <p class="ey sk-mb-3">dropdown menu</p>
+        <div class="sk-menu" style="position:static;max-inline-size:15rem">
+          <span class="sk-menu__label">Account</span>
+          <a class="sk-menu__item" href="#main">Orders</a>
+          <a class="sk-menu__item" href="#main">Wishlist</a>
+          <a class="sk-menu__item" href="#main">Settings</a>
+          <hr class="sk-menu__separator">
+          <button class="sk-menu__item sk-menu__item--danger" type="button">Sign out</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">footer — multi-column + newsletter</p>
+    <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+      <footer class="sk-footer" style="--sk-space-section:var(--sk-space-10)">
+        <div class="sk-footer__inner">
+          <div class="sk-footer__grid">
+            <div class="sk-footer__brand">
+              <span class="sk-footer__logo">ShopKit</span>
+              <p class="sk-footer__tagline">The e-commerce design system you can copy-paste.</p>
+            </div>
+            <div class="sk-footer__col"><h3 class="sk-footer__heading">Shop</h3><a class="sk-footer__link" href="#main">New in</a><a class="sk-footer__link" href="#main">Men</a><a class="sk-footer__link" href="#main">Women</a></div>
+            <div class="sk-footer__col"><h3 class="sk-footer__heading">Help</h3><a class="sk-footer__link" href="#main">Shipping</a><a class="sk-footer__link" href="#main">Returns</a><a class="sk-footer__link" href="#main">Contact</a></div>
+            <div class="sk-footer__col sk-footer__newsletter"><h3 class="sk-footer__heading">Newsletter</h3>
+              <form class="sk-footer__newsletter-form" onsubmit="return false"><input class="sk-input sk-input--sm" type="email" placeholder="Email" aria-label="Email"><button class="sk-btn sk-btn--sm" type="submit">Join</button></form></div>
+          </div>
+          <div class="sk-footer__bottom"><span>© 2026 ShopKit</span><div class="sk-footer__legal"><a class="sk-footer__link" href="#main">Privacy</a><a class="sk-footer__link" href="#main">Terms</a></div></div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Cart drawer (opened by the navbar cart button + the button above) -->
+    <dialog class="sk-cart" id="demo-cart" aria-label="Shopping cart">
+      <header class="sk-cart__header"><h2 class="sk-cart__title">Your cart</h2>
+        <button class="sk-cart__close" type="button" aria-label="Close cart" onclick="document.getElementById('demo-cart').close()">✕</button></header>
+      <div class="sk-cart__body">
+        <article class="sk-cart-item">
+          <span class="sk-cart-item__media" style="display:grid;place-items:center;font-size:2rem">👕</span>
+          <div class="sk-cart-item__info"><h3 class="sk-cart-item__title">Featherweight Merino Crew</h3><p class="sk-cart-item__variant">Oat · M</p>
+            <div class="sk-cart-item__controls"><div class="sk-stepper sk-stepper--sm"><button type="button" class="sk-stepper__btn" aria-label="Decrease">−</button><input class="sk-stepper__input" type="number" value="1" aria-label="Quantity"><button type="button" class="sk-stepper__btn" aria-label="Increase">+</button></div>
+              <button class="sk-cart-item__remove" type="button">Remove</button></div></div>
+          <span class="sk-cart-item__price">$63</span>
+        </article>
+        <article class="sk-cart-item">
+          <span class="sk-cart-item__media" style="display:grid;place-items:center;font-size:2rem">🎒</span>
+          <div class="sk-cart-item__info"><h3 class="sk-cart-item__title">Trailhead Canvas Backpack 24L</h3><p class="sk-cart-item__variant">Slate</p>
+            <div class="sk-cart-item__controls"><div class="sk-stepper sk-stepper--sm"><button type="button" class="sk-stepper__btn" aria-label="Decrease">−</button><input class="sk-stepper__input" type="number" value="1" aria-label="Quantity"><button type="button" class="sk-stepper__btn" aria-label="Increase">+</button></div>
+              <button class="sk-cart-item__remove" type="button">Remove</button></div></div>
+          <span class="sk-cart-item__price">$148</span>
+        </article>
+      </div>
+      <footer class="sk-cart__footer">
+        <div class="sk-order-summary">
+          <div class="sk-order-summary__row"><span>Subtotal</span><span>$211</span></div>
+          <div class="sk-order-summary__row"><span>Shipping</span><span>Free</span></div>
+          <div class="sk-order-summary__row sk-order-summary__row--total"><span>Total</span><span>$211</span></div>
+          <p class="sk-order-summary__note">Taxes calculated at checkout.</p>
+        </div>
+        <button type="button" class="sk-btn sk-btn--block sk-btn--lg">Checkout</button>
+      </footer>
+    </dialog>
+  </section>
+
   <!-- ══════════════════ COPY THEME ══════════════════ -->
   <section class="sk-section sk-section--sunken">
     <div class="sk-container">

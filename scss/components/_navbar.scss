@@ -1,0 +1,224 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// NAVBAR  ·  .sk-navbar  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The storefront header: brand ▸ primary nav ▸ search ▸ actions (cart, account)
+// with a hamburger toggle that takes over on mobile. Mobile-first — the nav and
+// search are hidden below `md`, the toggle shows below `md`.
+//
+//   <header class="sk-navbar sk-navbar--sticky">
+//     <button class="sk-navbar__toggle" aria-label="Open menu" aria-expanded="false">…</button>
+//     <a class="sk-navbar__brand" href="/">ShopKit</a>
+//     <ul class="sk-navbar__nav">
+//       <li><a class="sk-navbar__link" href="/new" aria-current="page">New</a></li>
+//       <li><a class="sk-navbar__link" href="/sale">Sale</a></li>
+//     </ul>
+//     <div class="sk-navbar__search"><input class="sk-input" type="search"></div>
+//     <div class="sk-navbar__actions">
+//       <button class="sk-navbar__cart" aria-label="Cart, 3 items">
+//         <svg>…</svg><span class="sk-navbar__cart-count">3</span>
+//       </button>
+//     </div>
+//   </header>
+//
+// TIER-3 TOKEN SURFACE — `--sk-navbar-bg` / `--sk-navbar-height` fall back to
+// the surface token + the large control height, so the header reskins with the
+// theme and can be resized in one place.
+//
+// ACCESSIBILITY
+//   • `.sk-navbar__toggle` carries aria-label + aria-expanded; the open/close
+//     of the mobile menu is JS-driven — CSS only styles the button and its
+//     visibility. The toggle flips aria-expanded true/false in script.
+//   • Active page link is marked with [aria-current="page"] (author-set).
+//   • :focus-visible → shared token focus ring on every interactive element.
+//
+// RTL — logical properties throughout; `margin-inline-end: auto` on the brand
+// pushes nav/actions to the trailing edge in both directions. The cart count
+// bubble is positioned with logical insets so it mirrors correctly.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-navbar {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-navbar-bg:     var(--#{$prefix}-color-surface);
+    --#{$prefix}-navbar-height: var(--#{$prefix}-control-height-lg);
+
+    display: flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-5);
+    min-block-size: max(var(--#{$prefix}-navbar-height), 4rem);
+    padding-inline: var(--#{$prefix}-space-gutter);
+    padding-block: var(--#{$prefix}-space-2);
+    background: var(--#{$prefix}-navbar-bg);
+    border-block-end: 1px solid var(--#{$prefix}-color-border);
+    color: var(--#{$prefix}-color-text);
+  }
+
+  // ── Brand / wordmark — pushes everything after it to the trailing edge ──
+  .#{$prefix}-navbar__brand {
+    margin-inline-end: auto;
+    font-family: var(--#{$prefix}-font-heading);
+    font-weight: var(--#{$prefix}-weight-bold);
+    font-size: var(--#{$prefix}-text-lg);
+    color: var(--#{$prefix}-color-text);
+    text-decoration: none;
+  }
+  .#{$prefix}-navbar__brand:focus-visible { @include focus-ring; }
+
+  // ── Primary nav list — hidden on mobile, flex row from md up ──
+  .#{$prefix}-navbar__nav {
+    display: none;
+    align-items: center;
+    gap: var(--#{$prefix}-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: bp("md")) {
+    .#{$prefix}-navbar__nav { display: flex; }
+  }
+
+  // ── Nav link ──
+  .#{$prefix}-navbar__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    padding-inline: var(--#{$prefix}-space-3);
+    padding-block: var(--#{$prefix}-space-2);
+    border-radius: var(--#{$prefix}-radius-md);
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-medium);
+    text-decoration: none;
+    transition: color      var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                background  var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-navbar__link:hover {
+    color: var(--#{$prefix}-color-text);
+    background: var(--#{$prefix}-color-surface-sunken);
+  }
+  .#{$prefix}-navbar__link[aria-current="page"] {
+    color: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-navbar__link:focus-visible { @include focus-ring; }
+
+  // ── Search wrapper — flexes to fill, capped; hidden on mobile ──
+  .#{$prefix}-navbar__search {
+    display: none;
+    flex: 1 1 auto;
+    align-items: center;
+    max-inline-size: 24rem;
+  }
+  @media (min-width: bp("md")) {
+    .#{$prefix}-navbar__search { display: flex; }
+  }
+
+  // ── Trailing action cluster (cart, account, icon buttons) ──
+  .#{$prefix}-navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+  }
+
+  // ── Hamburger toggle — mobile only ──
+  .#{$prefix}-navbar__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--#{$prefix}-control-height);
+    block-size: var(--#{$prefix}-control-height);
+    padding: 0;
+    border: 0;
+    border-radius: var(--#{$prefix}-radius-md);
+    background: transparent;
+    color: var(--#{$prefix}-color-text);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-navbar__toggle svg,
+  .#{$prefix}-navbar__toggle .#{$prefix}-navbar__toggle-icon {
+    inline-size: 1.4em;
+    block-size: 1.4em;
+    flex: none;
+  }
+  .#{$prefix}-navbar__toggle:hover { background: var(--#{$prefix}-color-surface-sunken); }
+  .#{$prefix}-navbar__toggle:focus-visible { @include focus-ring; }
+  @media (min-width: bp("md")) {
+    .#{$prefix}-navbar__toggle { display: none; }
+  }
+
+  // ── Cart button + count bubble ──
+  .#{$prefix}-navbar__cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--#{$prefix}-control-height);
+    block-size: var(--#{$prefix}-control-height);
+    padding: 0;
+    border: 0;
+    border-radius: var(--#{$prefix}-radius-md);
+    background: transparent;
+    color: var(--#{$prefix}-color-text);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-navbar__cart svg,
+  .#{$prefix}-navbar__cart .#{$prefix}-navbar__cart-icon {
+    inline-size: 1.35em;
+    block-size: 1.35em;
+    flex: none;
+  }
+  .#{$prefix}-navbar__cart:hover { background: var(--#{$prefix}-color-surface-sunken); }
+  .#{$prefix}-navbar__cart:focus-visible { @include focus-ring; }
+
+  // Count pill — anchored to the top trailing corner of the cart button.
+  .#{$prefix}-navbar__cart-count {
+    position: absolute;
+    inset-block-start: var(--#{$prefix}-space-1);
+    inset-inline-end: var(--#{$prefix}-space-1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 1.15rem;
+    block-size: 1.15rem;
+    padding-inline: var(--#{$prefix}-space-1);
+    border-radius: var(--#{$prefix}-radius-pill);
+    background: var(--#{$prefix}-color-primary);
+    color: var(--#{$prefix}-color-primary-contrast);
+    font-size: var(--#{$prefix}-text-2xs);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    line-height: 1;
+  }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+
+  // Centred brand — three-cell grid: nav (start) · brand (centre) · actions (end)
+  .#{$prefix}-navbar--centered {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  .#{$prefix}-navbar--centered .#{$prefix}-navbar__brand {
+    margin-inline-end: 0;
+    justify-self: center;
+    text-align: center;
+  }
+
+  // Sticky — frosted, translucent, pinned to the top of the viewport.
+  .#{$prefix}-navbar--sticky {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--#{$prefix}-z-sticky);
+    background: color-mix(in srgb, var(--#{$prefix}-navbar-bg) 82%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}

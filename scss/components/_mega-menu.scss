@@ -1,0 +1,124 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// MEGA MENU · FULL-WIDTH PANEL  ·  .sk-mega  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A wide dropdown that drops from a navbar item, laying its links out in
+// columns. The panel positions itself absolutely under a `position: relative`
+// nav item (or nav bar). CSS paints + lays out; the AUTHOR toggles VISIBILITY
+// via the `hidden` attribute (hover-intent / focus-within / JS) — that toggle
+// is the only JS-driven state here.
+//
+//   <li class="sk-nav__item" style="position: relative">
+//     <button aria-haspopup="true" aria-expanded="false" aria-controls="shop">Shop</button>
+//     <div class="sk-mega" id="shop" hidden>
+//       <div class="sk-mega__grid">
+//         <div class="sk-mega__col">
+//           <h3 class="sk-mega__heading">Women</h3>
+//           <a class="sk-mega__link" href="/new">New in</a>
+//           <a class="sk-mega__link" href="/dresses">Dresses</a>
+//         </div>
+//         <div class="sk-mega__col sk-mega__featured"> … promo … </div>
+//       </div>
+//     </div>
+//   </li>
+//
+// MOTION — a fade + rise on open, transitioned from `@starting-style` and gated
+// behind `--sk-dur-base`; reduced-motion users (tokens zeroed) get an instant
+// swap. `display` is transitioned with `allow-discrete` so the panel animates
+// the first frame after `[hidden]` is removed.
+//
+// ACCESSIBILITY — links are real <a> elements; `:focus-visible` paints the
+// token focus ring. Pair the trigger with `aria-expanded` / `aria-controls`.
+//
+// RTL — logical properties throughout (`inset-inline`, `inset-block-start`); the
+// vertical-only `translateY` is direction-agnostic, so the panel mirrors cleanly.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-mega {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-mega-bg:      var(--#{$prefix}-color-surface);
+    --#{$prefix}-mega-border:  var(--#{$prefix}-color-border);
+    --#{$prefix}-mega-radius:  var(--#{$prefix}-radius-lg);
+    --#{$prefix}-mega-shadow:  var(--#{$prefix}-shadow-xl);
+    --#{$prefix}-mega-pad:     var(--#{$prefix}-space-6);
+
+    position: absolute;
+    inset-inline: 0;                       // full width of the positioned ancestor
+    inset-block-start: 100%;               // directly beneath the trigger
+    z-index: var(--#{$prefix}-z-dropdown);
+    padding: var(--#{$prefix}-mega-pad);
+    border: 1px solid var(--#{$prefix}-mega-border);
+    border-radius: var(--#{$prefix}-mega-radius);
+    background: var(--#{$prefix}-mega-bg);
+    box-shadow: var(--#{$prefix}-mega-shadow);
+
+    // Enter transition (fade + rise). Exit runs in reverse automatically.
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
+                transform var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
+                display var(--#{$prefix}-dur-base) allow-discrete;
+  }
+
+  // Author hides the panel with the `hidden` attribute.
+  .#{$prefix}-mega[hidden] { display: none; }
+
+  // Open state = simply "not hidden".
+  .#{$prefix}-mega:not([hidden]) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @starting-style {
+    .#{$prefix}-mega:not([hidden]) {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  // ── Layout — auto-fitting columns ──
+  .#{$prefix}-mega__grid {
+    display: grid;
+    gap: var(--#{$prefix}-space-6);
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  }
+
+  .#{$prefix}-mega__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-2);
+  }
+
+  // ── Column heading — small uppercase kicker ──
+  .#{$prefix}-mega__heading {
+    margin: 0;
+    color: var(--#{$prefix}-color-text-subtle);
+    font-size: var(--#{$prefix}-text-xs);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // ── Link ──
+  .#{$prefix}-mega__link {
+    display: block;
+    padding-block: var(--#{$prefix}-space-1);
+    padding-inline: 0;
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    text-decoration: none;
+    transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-mega__link:hover {
+    color: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-mega__link:focus-visible { @include focus-ring; }
+
+  // ── Featured promo cell ──
+  .#{$prefix}-mega__featured {
+    padding: var(--#{$prefix}-space-4);
+    border-radius: var(--#{$prefix}-radius-md);
+    background: var(--#{$prefix}-color-surface-sunken);
+  }
+}

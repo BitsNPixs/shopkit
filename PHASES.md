@@ -13,8 +13,8 @@ file is the *plan & checklist*. Update the checkboxes here whenever a piece ship
 | | |
 |---|---|
 | **Date** | 2026-07-21 |
-| **Current phase** | Phase 3 — E-commerce components (✅ complete) · Phase 4 next |
-| **Compiled core** | **15.8 KB gzip** (min) · budget 30 KB · **53% used** |
+| **Current phase** | Phase 4 — Commerce flows & layout sections (✅ complete) · Phase 5 next |
+| **Compiled core** | **18.6 KB gzip** (min) · budget 30 KB · **62% used** |
 | **Guards passing** | `npm run lint` (logical-props) ✅ · `npm run size` (budget) ✅ |
 
 ---
@@ -51,6 +51,7 @@ scss/
 ├── layout/           container · grid · section · stack · cluster
 ├── components/       ✅ Core UI: button · button-group · form · badge · alert · modal · tabs · accordion · skeleton · tooltip
 │                      ✅ Commerce: price · rating · swatch · stepper · wishlist · product-card · breadcrumb · pagination · facets · empty
+│                      ✅ Sections: announcement · navbar · menu · mega-menu · drawer · hero · cart · checkout-steps · footer
 ├── utilities/        ✅ spacing · ✅ display · ✅ flex · (more as needed)
 └── shopkit.scss      entry — @use of each layer in cascade order
 ```
@@ -101,14 +102,15 @@ Cascade layer order (later wins; all library CSS is layered so unlayered consume
       sidebar (`.sk-facets` / `.sk-facet`)
 - [x] Breadcrumbs (`.sk-breadcrumb`) · Pagination (`.sk-pagination`) · Wishlist button (`.sk-wishlist`)
 
-### Phase 4 — Commerce flows & layout sections ⬜  *(multiple layouts per section)*
-- [ ] **Navbar** — variants: simple · centered-logo · with-search · with-mega-menu · sticky/condensing
-- [ ] **Mega-menu** & **mobile drawer** nav
-- [ ] **Hero** — variants: split · centered · with-image · minimal
-- [ ] **Cart** — drawer + full-page line items · **Order summary**
-- [ ] **Checkout stepper** (multi-step progress)
-- [ ] **Footer** — variants: minimal · multi-column · with-newsletter
-- [ ] Announcement bar · Account/profile menu
+### Phase 4 — Commerce flows & layout sections ✅  *(multiple layouts per section)*
+- [x] **Navbar** (`.sk-navbar`) — brand/nav/search/actions, cart-count bubble, mobile toggle;
+      variants `--centered` (centered logo) · `--sticky` (frosted, pinned)
+- [x] **Mega-menu** (`.sk-mega`) & **mobile drawer** (`.sk-drawer`, native `<dialog>`, start/`--end` edge)
+- [x] **Hero** (`.sk-hero`) — variants `--split` · `--centered` · `--minimal` · `--image` (scrim + inverse ink)
+- [x] **Cart** (`.sk-cart` drawer on `<dialog>`) + line items (`.sk-cart-item`) · **Order summary** (`.sk-order-summary`)
+- [x] **Checkout stepper** (`.sk-steps`) — done/current states, connector fill, class **or** aria-driven
+- [x] **Footer** (`.sk-footer`) — variants `--minimal` · multi-column (default) · `--newsletter` · `--inverse`
+- [x] **Announcement bar** (`.sk-announcement` + `--primary`) · **Account/profile menu** (`.sk-menu`)
 
 ### Phase 5 — Variant system ⬜
 - [ ] Formalise the variant/size/state token API across all components (§16)

@@ -1,0 +1,248 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// FOOTER  ·  .sk-footer  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The site footer: a brand column + link columns, an optional newsletter
+// signup, a social row, and a legal/bottom bar. Three variants cover the
+// common shapes without restating structure.
+//
+//   <footer class="sk-footer">
+//     <div class="sk-footer__inner">
+//       <div class="sk-footer__grid">
+//         <div class="sk-footer__brand">
+//           <span class="sk-footer__logo">ShopKit</span>
+//           <p class="sk-footer__tagline">Everything your store needs.</p>
+//           <div class="sk-footer__social">
+//             <a href="#" aria-label="Instagram"><svg …></svg></a>
+//           </div>
+//         </div>
+//         <nav class="sk-footer__col">
+//           <h3 class="sk-footer__heading">Shop</h3>
+//           <a class="sk-footer__link" href="#">New in</a>
+//         </nav>
+//         …two more .sk-footer__col…
+//       </div>
+//       <div class="sk-footer__bottom">
+//         <span>© 2026 ShopKit</span>
+//         <div class="sk-footer__legal">
+//           <a class="sk-footer__link" href="#">Privacy</a>
+//         </div>
+//       </div>
+//     </div>
+//   </footer>
+//
+// VARIANTS (all set on the root <footer>)
+//   • --minimal    → a single centred column; the grid collapses, the bottom
+//                    bar loses its rule + top margin and centres.
+//   • --inverse    → dark panel. Remaps the Tier-3 footer tokens to the inverse
+//                    surface; headings/logo inherit the inverse fg, links read a
+//                    translucent inverse, borders a translucent light line.
+//   • --newsletter → semantic flag for a footer carrying a signup block; the
+//                    brand column already sizes to give it room, so no heavy
+//                    styling is layered on.
+//
+// TIER-3 TOKEN SURFACE — `--sk-footer-bg` / `--sk-footer-fg` fall back to
+// semantic tokens, so the whole footer reskins from one place; --inverse just
+// remaps them.
+//
+// The newsletter form reuses the shared control set (.sk-input + .sk-btn), so
+// it inherits control metrics, focus rings, and theming for free.
+//
+// ACCESSIBILITY
+//   • Every link + social control gets the shared token focus ring.
+//   • Icon-only social links REQUIRE an aria-label (documented, not enforceable).
+//
+// RTL — logical properties throughout; no physical offsets or transforms, so
+// the footer mirrors cleanly. Dark-safe: --inverse uses color-mix over the
+// inverse fg so lines + muted links read on the dark panel.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-footer {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-footer-bg: var(--#{$prefix}-color-surface-alt);
+    --#{$prefix}-footer-fg: var(--#{$prefix}-color-text);
+
+    padding-block: var(--#{$prefix}-space-section);
+    padding-inline: var(--#{$prefix}-space-gutter);
+    border-block-start: 1px solid var(--#{$prefix}-color-border);
+    background: var(--#{$prefix}-footer-bg);
+    color: var(--#{$prefix}-footer-fg);
+  }
+
+  // ── Centred content column ──
+  .#{$prefix}-footer__inner {
+    max-inline-size: var(--#{$prefix}-container-max);
+    margin-inline: auto;
+    inline-size: 100%;
+  }
+
+  // ── Column layout: wide brand column, then three link columns ──
+  .#{$prefix}-footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--#{$prefix}-space-8);
+    align-items: start;
+
+    @media (min-width: bp("md")) {
+      grid-template-columns: 2fr repeat(3, 1fr);
+    }
+  }
+
+  // ── Brand column ──
+  .#{$prefix}-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-3);
+    max-inline-size: 28ch;
+  }
+  .#{$prefix}-footer__logo {
+    font-family: var(--#{$prefix}-font-heading);
+    font-weight: var(--#{$prefix}-weight-bold);
+    font-size: var(--#{$prefix}-text-lg);
+    color: var(--#{$prefix}-color-text);
+  }
+  .#{$prefix}-footer__tagline {
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-body);
+  }
+
+  // ── Link column ──
+  .#{$prefix}-footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-2);
+  }
+  .#{$prefix}-footer__heading {
+    margin-block: 0 var(--#{$prefix}-space-1);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    color: var(--#{$prefix}-color-text);
+  }
+  .#{$prefix}-footer__link {
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    text-decoration: none;
+    transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-footer__link:hover {
+    color: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-footer__link:focus-visible { @include focus-ring; }
+
+  // ── Social row (icon-only links — each NEEDS an aria-label) ──
+  .#{$prefix}-footer__social {
+    display: flex;
+    gap: var(--#{$prefix}-space-2);
+  }
+  .#{$prefix}-footer__social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border-radius: var(--#{$prefix}-radius-md);
+    color: var(--#{$prefix}-color-text-muted);
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-footer__social a:hover {
+    background: var(--#{$prefix}-color-surface-sunken);
+    color: var(--#{$prefix}-color-text);
+  }
+  .#{$prefix}-footer__social a:focus-visible { @include focus-ring; }
+  .#{$prefix}-footer__social a svg {
+    inline-size: 1.15em;
+    block-size: 1.15em;
+  }
+
+  // ── Newsletter block (reuses .sk-input + .sk-btn) ──
+  .#{$prefix}-footer__newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-3);
+    max-inline-size: 22rem;
+  }
+  .#{$prefix}-footer__newsletter-form {
+    display: flex;
+    flex-wrap: wrap;              // wrap the input + button on very small screens
+    gap: var(--#{$prefix}-space-2);
+  }
+
+  // ── Bottom bar: copyright ▸ legal links ──
+  .#{$prefix}-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--#{$prefix}-space-3);
+    margin-block-start: var(--#{$prefix}-space-8);
+    padding-block-start: var(--#{$prefix}-space-6);
+    border-block-start: 1px solid var(--#{$prefix}-color-border-subtle);
+    color: var(--#{$prefix}-color-text-subtle);
+    font-size: var(--#{$prefix}-text-xs);
+  }
+  .#{$prefix}-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--#{$prefix}-space-4);
+  }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+
+  // ── Minimal — a single centred column; the grid collapses out of use ──
+  .#{$prefix}-footer--minimal .#{$prefix}-footer__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--#{$prefix}-space-4);
+    text-align: center;
+  }
+  .#{$prefix}-footer--minimal .#{$prefix}-footer__bottom {
+    margin-block-start: 0;
+    padding-block-start: 0;
+    border-block-start: 0;
+    justify-content: center;
+  }
+
+  // ── Inverse — dark panel. Remap the Tier-3 tokens; adjust contrast within ──
+  .#{$prefix}-footer--inverse {
+    --#{$prefix}-footer-bg: var(--#{$prefix}-color-surface-inverse);
+    --#{$prefix}-footer-fg: var(--#{$prefix}-color-text-inverse);
+
+    border-block-start-color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 15%, transparent);
+  }
+  // Headings + logo take the inverse foreground.
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__logo,
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__heading {
+    color: var(--#{$prefix}-color-text-inverse);
+  }
+  // Tagline + muted text read a softened inverse.
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__tagline,
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__bottom {
+    color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 72%, transparent);
+  }
+  // Links: muted inverse → full inverse on hover.
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__link,
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__social a {
+    color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 72%, transparent);
+  }
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__link:hover,
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__social a:hover {
+    color: var(--#{$prefix}-color-text-inverse);
+  }
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__social a:hover {
+    background: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 12%, transparent);
+  }
+  // Translucent light rules so borders read on the dark panel.
+  .#{$prefix}-footer--inverse .#{$prefix}-footer__bottom {
+    border-block-start-color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 15%, transparent);
+  }
+
+  // ── Newsletter — semantic flag; the brand column already sizes for the block ──
+  .#{$prefix}-footer--newsletter .#{$prefix}-footer__brand {
+    max-inline-size: 32ch;
+  }
+}

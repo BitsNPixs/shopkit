@@ -1,0 +1,198 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// HERO  ·  .sk-hero  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A marketing hero band: an eyebrow, a large display title, a lede, and a row
+// of `.sk-btn` actions. Four layout variants share one structural base.
+//
+//   Base (stacked)
+//     <section class="sk-hero">
+//       <div class="sk-hero__inner">
+//         <p  class="sk-hero__eyebrow">New in</p>
+//         <h1 class="sk-hero__title">Everything your store needs</h1>
+//         <p  class="sk-hero__lede">One kit, every surface.</p>
+//         <div class="sk-hero__actions">
+//           <a class="sk-btn" href="#">Shop now</a>
+//           <a class="sk-btn sk-btn--ghost" href="#">Learn more</a>
+//         </div>
+//       </div>
+//     </section>
+//
+//   Split (content + media side by side ≥ lg)
+//     <section class="sk-hero sk-hero--split">
+//       <div class="sk-hero__inner">
+//         <div class="sk-hero__content"> …eyebrow/title/lede/actions… </div>
+//         <div class="sk-hero__media"><img src="…" alt=""></div>
+//       </div>
+//     </section>
+//
+//   Centered
+//     <section class="sk-hero sk-hero--centered">
+//       <div class="sk-hero__inner"> …content… </div>
+//     </section>
+//
+//   Minimal (compact rhythm, smaller title)
+//     <section class="sk-hero sk-hero--minimal"> … </section>
+//
+//   Image (background photo + legibility scrim, inverse text)
+//     <section class="sk-hero sk-hero--image"
+//              style="--sk-hero-image:url('/hero.jpg')">
+//       <div class="sk-hero__inner"> …content… </div>
+//     </section>
+//
+// TIER-3 TOKEN SURFACE — the knobs a consumer overrides per-hero fall back to
+// semantic tokens: `--sk-hero-min` (min block-size of the image variant),
+// `--sk-hero-measure` (lede line length), `--sk-hero-image` (the photo URL).
+//
+// ACCESSIBILITY — `.sk-hero__title` is styling only; author it as the correct
+// heading level for the document (typically <h1> once per page). The eyebrow is
+// a <p>, not a heading, so it never breaks heading order. Actions are real
+// `.sk-btn` elements that carry their own token-driven focus ring.
+//
+// RTL — logical properties throughout; text-align uses center / start, never
+// left / right, and the scrim uses inset:0, so the hero mirrors cleanly.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.components {
+  .#{$prefix}-hero {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-hero-min:     60vh;
+    --#{$prefix}-hero-measure: 46ch;
+
+    // ── Structure ──
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-5);
+    padding-block: var(--#{$prefix}-space-section);
+    padding-inline: var(--#{$prefix}-space-gutter);
+    background: var(--#{$prefix}-color-surface);
+  }
+
+  // Centering wrapper — caps line length + centers within the band.
+  .#{$prefix}-hero__inner {
+    inline-size: 100%;
+    max-inline-size: var(--#{$prefix}-container-max);
+    margin-inline: auto;
+  }
+
+  // Content column (used by --split; harmless elsewhere).
+  .#{$prefix}-hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-5);
+  }
+
+  .#{$prefix}-hero__eyebrow {
+    margin: 0;
+    color: var(--#{$prefix}-color-primary);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .#{$prefix}-hero__title {
+    margin: 0;
+    max-inline-size: 18ch;
+    color: var(--#{$prefix}-color-text);
+    font-family: var(--#{$prefix}-font-heading);
+    font-size: var(--#{$prefix}-text-4xl);
+    font-weight: var(--#{$prefix}-weight-bold);
+    line-height: var(--#{$prefix}-leading-tight);
+  }
+
+  .#{$prefix}-hero__lede {
+    margin: 0;
+    max-inline-size: var(--#{$prefix}-hero-measure);
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-lg);
+    line-height: var(--#{$prefix}-leading-body);
+  }
+
+  .#{$prefix}-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--#{$prefix}-space-3);
+    margin-block-start: var(--#{$prefix}-space-2);
+  }
+
+  // Media frame — clips the image to the rounded corner.
+  .#{$prefix}-hero__media {
+    overflow: clip;
+    border-radius: var(--#{$prefix}-radius-2xl);
+    background: var(--#{$prefix}-color-surface-alt);
+  }
+  .#{$prefix}-hero__media img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+
+  // ── Split — content + media side by side from lg up; stacks below. ──
+  @media (min-width: bp("lg")) {
+    .#{$prefix}-hero--split .#{$prefix}-hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--#{$prefix}-space-10);
+      align-items: center;
+    }
+  }
+
+  // ── Centered — everything on the centreline, narrower measure. ──
+  .#{$prefix}-hero--centered .#{$prefix}-hero__inner {
+    max-inline-size: var(--#{$prefix}-container-narrow);
+    text-align: center;
+  }
+  .#{$prefix}-hero--centered .#{$prefix}-hero__title,
+  .#{$prefix}-hero--centered .#{$prefix}-hero__lede {
+    margin-inline: auto;
+  }
+  .#{$prefix}-hero--centered .#{$prefix}-hero__actions {
+    justify-content: center;
+  }
+
+  // ── Minimal — compact rhythm, smaller display title. ──
+  .#{$prefix}-hero--minimal {
+    padding-block: var(--#{$prefix}-space-12);
+  }
+  .#{$prefix}-hero--minimal .#{$prefix}-hero__title {
+    font-size: var(--#{$prefix}-text-3xl);
+  }
+
+  // ── Image — background photo, legibility scrim, inverse text. ──
+  .#{$prefix}-hero--image {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-block-size: var(--#{$prefix}-hero-min);
+    color: var(--#{$prefix}-color-text-inverse);
+    background-image: var(--#{$prefix}-hero-image);
+    background-position: center;
+    background-size: cover;
+  }
+  // Scrim — darkens the photo so text stays legible in any theme.
+  .#{$prefix}-hero--image::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--#{$prefix}-color-overlay);
+  }
+  // Content sits above the scrim.
+  .#{$prefix}-hero--image .#{$prefix}-hero__inner {
+    position: relative;
+    z-index: 1;
+  }
+  // Inherit the inverse ink; keep the eyebrow visible on the dark scrim.
+  .#{$prefix}-hero--image .#{$prefix}-hero__eyebrow {
+    color: var(--#{$prefix}-color-text-inverse);
+  }
+  .#{$prefix}-hero--image .#{$prefix}-hero__title {
+    color: currentColor;
+  }
+  .#{$prefix}-hero--image .#{$prefix}-hero__lede {
+    color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 82%, transparent);
+  }
+}

@@ -1,0 +1,95 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ANNOUNCEMENT BAR  ·  .sk-announcement  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A slim, full-bleed promo strip that sits ABOVE the navbar — free-shipping
+// notices, sale countdowns, store-wide messaging. Centred by default, with an
+// optional inline link and a trailing dismiss button.
+//
+//   <div class="sk-announcement">
+//     Free shipping on orders over $50 ·
+//     <a class="sk-announcement__link" href="/sale">Shop the sale</a>
+//     <button class="sk-announcement__close" aria-label="Dismiss announcement">
+//       <svg>…</svg>
+//     </button>
+//   </div>
+//
+// TIER-3 TOKEN SURFACE — `--sk-announcement-bg` / `-fg` fall back to the
+// inverse surface pair, so the bar reads as a dark ribbon in light mode (and
+// a light ribbon in dark mode) without any per-mode overrides. The `--primary`
+// variant just remaps those two tokens to the brand pair.
+//
+// ACCESSIBILITY
+//   • The close button REQUIRES an aria-label (icon-only) — documented, not
+//     enforceable in CSS. Actual dismissal (hiding the bar) is JS-driven; CSS
+//     only styles the control.
+//   • :focus-visible → shared token focus ring on link + close.
+//
+// RTL — logical properties throughout; `margin-inline-start: auto` on the close
+// button parks it on the trailing edge in both directions.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-announcement {
+    // ── Tier-3 tokens (default to the inverse surface pair) ──
+    --#{$prefix}-announcement-bg: var(--#{$prefix}-color-surface-inverse);
+    --#{$prefix}-announcement-fg: var(--#{$prefix}-color-text-inverse);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--#{$prefix}-space-2);
+    padding-block: var(--#{$prefix}-space-2);
+    padding-inline: var(--#{$prefix}-space-gutter);
+    background: var(--#{$prefix}-announcement-bg);
+    color: var(--#{$prefix}-announcement-fg);
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-snug);
+    text-align: center;
+  }
+
+  // Inline call-to-action — inherits the bar's colour, always underlined.
+  .#{$prefix}-announcement__link {
+    color: inherit;
+    font-weight: var(--#{$prefix}-weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  .#{$prefix}-announcement__link:focus-visible { @include focus-ring; }
+
+  // Trailing dismiss button — bare, parked on the inline-end edge.
+  .#{$prefix}-announcement__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    margin-inline-start: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.75;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: opacity var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-announcement__close svg,
+  .#{$prefix}-announcement__close .#{$prefix}-announcement__icon {
+    inline-size: 1.1em;
+    block-size: 1.1em;
+    flex: none;
+  }
+  .#{$prefix}-announcement__close:hover { opacity: 1; }
+  .#{$prefix}-announcement__close:focus-visible { @include focus-ring; }
+
+  // ═════════════════════════════ VARIANT ══════════════════════════════
+  // Primary — brand-coloured ribbon (remaps the two tier-3 tokens only).
+  .#{$prefix}-announcement--primary {
+    --#{$prefix}-announcement-bg: var(--#{$prefix}-color-primary);
+    --#{$prefix}-announcement-fg: var(--#{$prefix}-color-primary-contrast);
+  }
+}

@@ -1,0 +1,140 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// CHECKOUT STEPS · PROGRESS  ·  .sk-steps  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A horizontal progress stepper for a checkout flow (Cart → Shipping →
+// Payment → Done). Each step is a marker (number or ✓) over a label, joined by
+// a connector line. State is semantics-driven: mark a step done or current and
+// the markers, labels and the connectors between them recolour to primary.
+//
+//   <ol class="sk-steps">
+//     <li class="sk-steps__item sk-steps__item--done">
+//       <span class="sk-step__marker" aria-hidden="true">✓</span>
+//       <span class="sk-step__label">Cart</span>
+//     </li>
+//     <li class="sk-steps__item sk-steps__item--current" aria-current="step">
+//       <span class="sk-step__marker" aria-hidden="true">2</span>
+//       <span class="sk-step__label">Shipping</span>
+//     </li>
+//     <li class="sk-steps__item">
+//       <span class="sk-step__marker" aria-hidden="true">3</span>
+//       <span class="sk-step__label">Payment</span>
+//     </li>
+//     <li class="sk-steps__item">
+//       <span class="sk-step__marker" aria-hidden="true">4</span>
+//       <span class="sk-step__label">Done</span>
+//     </li>
+//   </ol>
+//
+// STATE — put the state on `.sk-steps__item`, as either a class OR an attribute
+// (both are supported): done = `--done` / `[data-status="done"]`, current =
+// `--current` / `[aria-current="step"]`. Prefer `aria-current="step"` on the
+// live step for assistive tech.
+//
+// CONNECTOR CHOICE — the line is a `::before` on every item after the first,
+// pinned with `inset-inline-start: -50%; inline-size: 100%` so it stretches back
+// to the *previous* marker. Because the track is a flex row and the offset is
+// the LOGICAL inset-inline-start, the whole thing mirrors for free in RTL — no
+// per-direction override needed. A `--done` item paints its own LEADING
+// connector primary, so the filled trail grows left-to-right (start-to-end)
+// through the completed steps. The marker sits above the line (z-index 1).
+//
+// ACCESSIBILITY — markers are decorative (`aria-hidden`); the label carries the
+// name. Use an <ol> so the sequence is conveyed, and `aria-current="step"` for
+// the active step.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.components {
+  .#{$prefix}-steps {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-steps-marker-size: 2rem;
+    --#{$prefix}-steps-line:        var(--#{$prefix}-color-border);
+    --#{$prefix}-steps-line-done:   var(--#{$prefix}-color-primary);
+
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
+    inline-size: 100%;
+    list-style: none;
+  }
+
+  // One step — a centred marker-over-label column that flexes to equal width.
+  .#{$prefix}-steps__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    flex: 1 1 0;
+    text-align: center;
+  }
+
+  // Connector — reaches back to the previous marker. On every item but the
+  // first. Vertically centred on the marker (half its size). Sits behind it.
+  .#{$prefix}-steps__item:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    inset-block-start: calc(var(--#{$prefix}-steps-marker-size) / 2);
+    inset-inline-start: -50%;
+    inline-size: 100%;
+    block-size: 2px;
+    background: var(--#{$prefix}-steps-line);
+    z-index: 0;
+  }
+
+  // ── Marker ──
+  .#{$prefix}-step__marker {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    inline-size: var(--#{$prefix}-steps-marker-size);
+    block-size: var(--#{$prefix}-steps-marker-size);
+    border: 2px solid var(--#{$prefix}-color-border);
+    border-radius: 50%;
+    background: var(--#{$prefix}-color-surface);
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-semibold);
+  }
+
+  // ── Label ──
+  .#{$prefix}-step__label {
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+  }
+
+  // ═════════════════════════════ STATES ═══════════════════════════════
+  // Completed — filled primary marker; its leading connector goes primary too,
+  // so the completed trail reads as one continuous filled line.
+  .#{$prefix}-steps__item--done .#{$prefix}-step__marker,
+  .#{$prefix}-steps__item[data-status="done"] .#{$prefix}-step__marker {
+    border-color: var(--#{$prefix}-color-primary);
+    background: var(--#{$prefix}-color-primary);
+    color: var(--#{$prefix}-color-primary-contrast);
+  }
+  .#{$prefix}-steps__item--done .#{$prefix}-step__label,
+  .#{$prefix}-steps__item[data-status="done"] .#{$prefix}-step__label {
+    color: var(--#{$prefix}-color-text);
+  }
+  // Fill the connector that LEADS OUT of a completed step (into the next
+  // marker), so the done trail reads as continuous up to the current step.
+  .#{$prefix}-steps__item--done + .#{$prefix}-steps__item::before,
+  .#{$prefix}-steps__item[data-status="done"] + .#{$prefix}-steps__item::before {
+    background: var(--#{$prefix}-steps-line-done);
+  }
+
+  // Current — outlined primary marker on a soft tint; emphasised label.
+  .#{$prefix}-steps__item--current .#{$prefix}-step__marker,
+  .#{$prefix}-steps__item[aria-current="step"] .#{$prefix}-step__marker {
+    border-color: var(--#{$prefix}-color-primary);
+    background: var(--#{$prefix}-color-primary-soft);
+    color: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-steps__item--current .#{$prefix}-step__label,
+  .#{$prefix}-steps__item[aria-current="step"] .#{$prefix}-step__label {
+    color: var(--#{$prefix}-color-text);
+    font-weight: var(--#{$prefix}-weight-semibold);
+  }
+}
