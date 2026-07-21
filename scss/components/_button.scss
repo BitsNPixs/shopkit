@@ -27,6 +27,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 @use "../base/variants" as *;
+@use "../base/motion" as *;
 
 @layer sk.components {
   .#{$prefix}-btn {
@@ -67,11 +68,7 @@
     user-select: none;
     appearance: none;
     -webkit-appearance: none;
-    transition:
-      background   var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
-      border-color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
-      color        var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
-      transform    var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+    @include transition((background, border-color, color, transform));
   }
 
   // Icons scale with the label; never shrink in a flex row.

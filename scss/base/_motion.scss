@@ -1,0 +1,45 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// MOTION SYSTEM  ·  the transition/animation contract (Sass-only)
+// ───────────────────────────────────────────────────────────────────────────
+// Emits NO CSS on its own. Codifies how ShopKit expresses motion so every
+// transition reads the same tokens and reduced-motion "just works".
+//
+// REDUCED-MOTION IS FREE — every duration is a `--sk-dur-*` token, and the token
+// layer zeroes those tokens for users who prefer reduced motion (unless a
+// subtree opts back in with `data-motion="full"`). So a transition/animation
+// built with these helpers becomes INSTANT under reduced motion with no extra
+// media query, and still honours the `data-motion` kill switches. This is why
+// components must never hard-code a `ms` value — always a duration token.
+//
+//   TOKENS
+//     duration  --sk-dur-instant (80ms) · -fast (150) · -base (300) · -slow (600)
+//     easing    --sk-ease-standard (in-out) · -out (decelerate) · -spring (overshoot)
+//
+//   USAGE
+//     @use "../base/motion" as *;
+//     .thing { @include transition(background, color); }          // fast · standard
+//     .panel { @include transition(transform, $dur: "base", $ease: "out"); }
+//     .row   { @include transition((opacity, transform), $dur: "base"); }
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:list";
+@use "../config" as *;
+
+// Reference vocabularies (documented; usable by tooling / the React layer).
+$durations: ("instant", "fast", "base", "slow") !default;
+$easings:   ("standard", "out", "spring") !default;
+
+// ── Compose a token-driven transition for one or more properties ────────────
+// $props may be a single property or a (comma) list of them; every property
+// gets the same duration + easing token (the common case). For per-property
+// timing, write the `transition` shorthand by hand.
+@mixin transition($props, $dur: "fast", $ease: "standard") {
+  $parts: ();
+  @each $p in $props {
+    $parts: list.append(
+      $parts,
+      #{$p} var(--#{$prefix}-dur-#{$dur}) var(--#{$prefix}-ease-#{$ease}),
+      $separator: comma
+    );
+  }
+  transition: $parts;
+}

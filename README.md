@@ -5,13 +5,13 @@ with token-driven **runtime theming**, first-class **dark mode**, and **multi-br
 support on a single page — no recompile. An optional React layer (later phase) reuses
 the exact same tokens and class names.
 
-> **Status: Phases 1–5 complete.** Foundation, utilities, the full Core-UI + e-commerce
-> component set, the storefront layout sections (navbar/hero/cart/checkout/footer), and the
-> formal variant/size/state API ([`VARIANT-API.md`](VARIANT-API.md)) all ship. Motion system
-> (Phase 6) and the React parity layer (Phase 7) are next.
+> **Status: Phases 1–6 complete.** Foundation, utilities, the full Core-UI + e-commerce
+> component set, the storefront layout sections (navbar/hero/cart/checkout/footer), the formal
+> variant/size/state API ([`VARIANT-API.md`](VARIANT-API.md)), and the token-driven motion
+> system ([`MOTION.md`](MOTION.md)) all ship. The React parity layer (Phase 7) is next.
 > **Full plan & progress → [`PHASES.md`](PHASES.md).**
 
-Compiled core today: **18.6 KB gzip** (min) — 62% of the 30 KB budget, ~28 components.
+Compiled core today: **18.9 KB gzip** (min) — 63% of the 30 KB budget, ~28 components.
 
 ---
 
@@ -164,14 +164,19 @@ The fastest reskin overrides only the semantic anchors at runtime — no build s
 
 ---
 
-## Motion (kill switches ready now, full system in Phase 6)
+## Motion (token-driven, reduced-motion first)
 
-All motion reads `--sk-dur-*` / `--sk-ease-*`. Users who prefer reduced motion have
-those durations zeroed automatically (no `!important`), and you can force a mode:
+All motion reads `--sk-dur-*` / `--sk-ease-*`. Users who prefer reduced motion have those
+durations zeroed automatically (no `!important`), so every transition and animation goes
+still — and you can force a mode:
 
 ```html
 <html data-motion="off">    <!-- or data-motion="full" to opt back in -->
 ```
+
+Author transitions with the `transition()` mixin and drop in enter animations with the
+`.sk-animate-*` utilities (`fade` · `fade-up` · `fade-down` · `scale-in` · `spin` · `pulse`).
+Full contract in **[`MOTION.md`](MOTION.md)**.
 
 ---
 
@@ -225,7 +230,7 @@ Tracked in detail (with checkboxes) in **[`PHASES.md`](PHASES.md)**.
 3. **E-commerce components** ✅ product card, price, rating, swatches, stepper, wishlist, breadcrumb, pagination, facets, empty
 4. **Commerce flows & layout sections** ✅ navbar/mega-menu/drawer, hero, cart + order summary, checkout stepper, footer, announcement, menu (multiple variants each)
 5. **Variant system** ✅ formal variant/size/state API — [`VARIANT-API.md`](VARIANT-API.md) + `base/_variants.scss`
-6. Motion system (§18)
+6. **Motion system** ✅ token-driven transitions + `.sk-animate-*` utilities, reduced-motion first — [`MOTION.md`](MOTION.md)
 7. React parity layer
 8. Docs site + landing + floating theme customizer (§17)
 9. GitHub Pages + npm/jsDelivr + size CI + full storefront demo

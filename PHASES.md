@@ -13,8 +13,8 @@ file is the *plan & checklist*. Update the checkboxes here whenever a piece ship
 | | |
 |---|---|
 | **Date** | 2026-07-21 |
-| **Current phase** | Phase 5 — Variant system (✅ complete) · Phase 6 next |
-| **Compiled core** | **18.6 KB gzip** (min) · budget 30 KB · **62% used** |
+| **Current phase** | Phase 6 — Motion system (✅ complete) · Phase 7 next |
+| **Compiled core** | **18.9 KB gzip** (min) · budget 30 KB · **63% used** |
 | **Guards passing** | `npm run lint` (logical-props) ✅ · `npm run size` (budget) ✅ |
 
 ---
@@ -47,12 +47,12 @@ scss/
 ├── _tools.scss       Sass helpers (fluid clamp, v(), cls()) — no CSS output
 ├── _layers.scss      @layer order (emitted first): reset→tokens→base→layout→components→utilities
 ├── tokens/           Tier 1 primitives · Tier 2 semantic · Tier 3 component metrics
-├── base/             reset · typography · a11y · _mixins (focus-ring…) · _variants (variant/size/state contract)
+├── base/             reset · typography · a11y · _mixins (focus-ring…) · _variants (variant/size/state) · _motion (transition())
 ├── layout/           container · grid · section · stack · cluster
 ├── components/       ✅ Core UI: button · button-group · form · badge · alert · modal · tabs · accordion · skeleton · tooltip
 │                      ✅ Commerce: price · rating · swatch · stepper · wishlist · product-card · breadcrumb · pagination · facets · empty
 │                      ✅ Sections: announcement · navbar · menu · mega-menu · drawer · hero · cart · checkout-steps · footer
-├── utilities/        ✅ spacing · ✅ display · ✅ flex · (more as needed)
+├── utilities/        ✅ spacing · ✅ display · ✅ flex · ✅ animation (motion)
 └── shopkit.scss      entry — @use of each layer in cascade order
 ```
 
@@ -123,8 +123,15 @@ Cascade layer order (later wins; all library CSS is layered so unlayered consume
 - [x] Docs: "Variant · size · state system" section — one status intent across components, one
       aligned size scale
 
-### Phase 6 — Motion system ⬜
-- [ ] Full transition/animation system on `--sk-dur-*` / `--sk-ease-*`, reduced-motion first (§18)
+### Phase 6 — Motion system ✅
+- [x] `transition()` mixin ([`scss/base/_motion.scss`](scss/base/_motion.scss)) — token-driven,
+      reduced-motion-first; adopted in the button with **byte-identical** output
+- [x] Animation utilities ([`scss/utilities/_animation.scss`](scss/utilities/_animation.scss),
+      gated on `$utilities-enabled.motion`) — `.sk-animate-fade / -fade-up / -fade-down /
+      -scale-in / -spin / -pulse` + `-fast` / `-slow`; RTL-safe keyframes
+- [x] Reduced-motion is automatic via the existing duration-token zeroing (respects
+      `data-motion="off"` / `"full"`); no per-component `@media`. Written up in [`MOTION.md`](MOTION.md)
+- [x] Docs: "Motion system" section — replayable enter animations + live loops
 
 ### Phase 7 — React parity layer ⬜
 - [ ] React components emitting the same `sk-` classes + reading the same tokens (no drift)

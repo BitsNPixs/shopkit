@@ -236,6 +236,14 @@ input[type=range] { accent-color: var(--sk-color-primary); inline-size: 8.5rem; 
 
 .footnote { color: var(--sk-color-text-subtle); font-size:.82rem; }
 mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25em; border-radius:4px; }
+
+/* ---- motion demo tiles ---- */
+.motile { display:grid; place-items:center; min-inline-size:7rem; min-block-size:4.5rem;
+  padding: var(--sk-space-4); border:1px solid var(--sk-color-border);
+  border-radius: var(--sk-radius-md); background: var(--sk-color-surface);
+  font-family: var(--sk-font-mono); font-size:.72rem; color: var(--sk-color-text-muted); }
+.motile-ring { inline-size:1.4rem; block-size:1.4rem; border-radius:50%;
+  border:2px solid var(--sk-color-border-strong); border-block-start-color: var(--sk-color-primary); }
 </style>
 </head>
 <body>
@@ -1188,6 +1196,32 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     </div>
   </section>
 
+  <!-- ══════════════════ MOTION SYSTEM (PHASE 6) ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <div><h2>Motion system <span class="tag">new · phase 6</span></h2>
+        <p class="lede">Every transition and animation reads a <code>--sk-dur-*</code> token, so
+          reduced motion is automatic — flip <strong>motion</strong> in the deck above (or your OS
+          setting) and all of this goes still, no <code>!important</code>. Full spec in <code>MOTION.md</code>.</p></div>
+      <span class="ey">utilities/_animation.scss</span>
+    </div>
+
+    <p class="ey sk-mb-3">enter animations · <code>.sk-animate-*</code></p>
+    <div id="motion-demo" class="sk-cluster sk-gap-3" style="align-items:stretch">
+      <div class="motile sk-animate-fade">fade</div>
+      <div class="motile sk-animate-fade-up">fade-up</div>
+      <div class="motile sk-animate-fade-down">fade-down</div>
+      <div class="motile sk-animate-scale-in">scale-in</div>
+    </div>
+    <div class="sk-cluster sk-gap-3" style="margin-block-start:var(--sk-space-4);align-items:center">
+      <button type="button" class="sk-btn sk-btn--outline sk-btn--sm" onclick="replayMotion()">↻ Replay</button>
+      <span class="ey">continuous:</span>
+      <span class="motile-ring sk-animate-spin" aria-hidden="true"></span>
+      <span class="ey">spin</span>
+      <span class="sk-badge sk-badge--primary sk-animate-pulse">pulse</span>
+    </div>
+  </section>
+
   <!-- ══════════════════ COPY THEME ══════════════════ -->
   <section class="sk-section sk-section--sunken">
     <div class="sk-container">
@@ -1469,6 +1503,16 @@ document.querySelectorAll(".sk-tabs").forEach(function (tabs) {
     if (next) { e.preventDefault(); select(next); next.focus(); }
   });
 });
+
+/* ---- motion demo: re-trigger the enter animations ---- */
+function replayMotion() {
+  document.querySelectorAll("#motion-demo .motile").forEach(function (el) {
+    var cls = el.className;
+    el.className = "motile";      // strip the animate class …
+    void el.offsetWidth;          // … force reflow so it can replay …
+    el.className = cls;           // … then restore it
+  });
+}
 </script>
 </body>
 </html>

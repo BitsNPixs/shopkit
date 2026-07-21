@@ -6615,3 +6615,77 @@
     }
   }
 }
+@layer sk.utilities {
+  .sk-animate-fade {
+    animation: sk-fade var(--sk-dur-base) var(--sk-ease-standard) both;
+  }
+  .sk-animate-fade-up {
+    animation: sk-fade-up var(--sk-dur-base) var(--sk-ease-out) both;
+  }
+  .sk-animate-fade-down {
+    animation: sk-fade-down var(--sk-dur-base) var(--sk-ease-out) both;
+  }
+  .sk-animate-scale-in {
+    animation: sk-scale-in var(--sk-dur-base) var(--sk-ease-spring) both;
+  }
+  .sk-animate-spin {
+    animation: sk-spin var(--sk-dur-slow) linear infinite;
+  }
+  .sk-animate-pulse {
+    animation: sk-pulse var(--sk-dur-slow) var(--sk-ease-standard) infinite;
+  }
+  .sk-animate-fast {
+    animation-duration: var(--sk-dur-fast);
+  }
+  .sk-animate-slow {
+    animation-duration: var(--sk-dur-slow);
+  }
+}
+@keyframes sk-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes sk-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes sk-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

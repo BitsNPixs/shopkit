@@ -1,0 +1,79 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ANIMATION UTILITIES  ·  @layer sk.utilities  ·  gated on $utilities-enabled.motion
+// ───────────────────────────────────────────────────────────────────────────
+// Drop-in enter animations + a couple of continuous loops, all driven by the
+// `--sk-dur-*` / `--sk-ease-*` tokens. Because the duration is a token, these
+// are REDUCED-MOTION-FIRST for free: when the token layer zeroes the durations
+// (OS reduced-motion, or `data-motion="off"`), an enter animation snaps to its
+// end state (no flash — `both` fill) and a loop simply stops. `data-motion="full"`
+// opts a subtree back in. No `@media` override is needed here, and none is used —
+// that is what keeps the `data-motion` kill switches authoritative.
+//
+//   ENTER (play once, hold end state)
+//     .sk-animate-fade · -fade-up · -fade-down · -scale-in
+//   CONTINUOUS
+//     .sk-animate-spin (loaders) · -pulse (attention)
+//   SPEED MODIFIERS
+//     .sk-animate-fast · -slow      (override the duration token used)
+//
+// RTL-SAFE — the keyframes move only opacity, scale, and the BLOCK axis
+// (translateY) or rotate; nothing keys off a physical inline direction, so they
+// are identical under `dir="rtl"`. For edge slides (drawer/cart) use the
+// component's `--*-from` token pattern instead.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "../config" as *;
+
+@if map.get($utilities-enabled, "motion") {
+  @layer #{$prefix}.utilities {
+    // ── Enter animations (play once, hold the end frame) ──
+    .#{$prefix}-animate-fade {
+      animation: #{$prefix}-fade var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-standard) both;
+    }
+    .#{$prefix}-animate-fade-up {
+      animation: #{$prefix}-fade-up var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out) both;
+    }
+    .#{$prefix}-animate-fade-down {
+      animation: #{$prefix}-fade-down var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out) both;
+    }
+    .#{$prefix}-animate-scale-in {
+      animation: #{$prefix}-scale-in var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-spring) both;
+    }
+
+    // ── Continuous loops ──
+    .#{$prefix}-animate-spin {
+      animation: #{$prefix}-spin var(--#{$prefix}-dur-slow) linear infinite;
+    }
+    .#{$prefix}-animate-pulse {
+      animation: #{$prefix}-pulse var(--#{$prefix}-dur-slow) var(--#{$prefix}-ease-standard) infinite;
+    }
+
+    // ── Speed modifiers (swap the duration token) ──
+    .#{$prefix}-animate-fast { animation-duration: var(--#{$prefix}-dur-fast); }
+    .#{$prefix}-animate-slow { animation-duration: var(--#{$prefix}-dur-slow); }
+  }
+
+  // ── Keyframes (global; RTL-agnostic — opacity / scale / block-axis / rotate) ──
+  @keyframes #{$prefix}-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes #{$prefix}-fade-up {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes #{$prefix}-fade-down {
+    from { opacity: 0; transform: translateY(-0.5rem); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes #{$prefix}-scale-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes #{$prefix}-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes #{$prefix}-pulse {
+    50% { opacity: 0.5; }
+  }
+}

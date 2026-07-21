@@ -68,8 +68,9 @@ $space-scale: (
 // matching key here.
 $utilities-enabled: (
   "spacing": true,
-  "display": true,   // Phase 2 · next
-  "flex":    true,   // Phase 2 · next
+  "display": true,
+  "flex":    true,
+  "motion":  true,   // Phase 6 · animation utilities (.sk-animate-*)
 ) !default;
 
 // Curated subset of spacing keys that ALSO get responsive variants
