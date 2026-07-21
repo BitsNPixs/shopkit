@@ -1,5 +1,7 @@
 // Components — @layer sk.components. Import directly (no barrel re-export of
 // internals); add one @forward per component partial as the layer grows.
+
+// Phase 2 — Core UI
 @forward "button";
 @forward "button-group";
 @forward "form";
@@ -10,3 +12,15 @@
 @forward "accordion";
 @forward "skeleton";
 @forward "tooltip";
+
+// Phase 3 — E-commerce
+@forward "price";
+@forward "rating";
+@forward "swatch";
+@forward "stepper";
+@forward "wishlist";
+@forward "product-card";
+@forward "breadcrumb";
+@forward "pagination";
+@forward "facets";
+@forward "empty";

@@ -366,54 +366,134 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   <section class="sk-section sk-section--alt">
     <div class="sk-container">
       <div class="head">
-        <div><h2>Components, previewed <span class="tag">preview · phase 3</span></h2>
-          <p class="lede">These aren't shipped components yet — they're drawn from the same semantic
-            tokens to prove the plumbing. Real product cards, buttons and price displays arrive in
-            Phase 3 and will inherit exactly this behaviour.</p></div>
-        <span class="ey">token-driven</span>
+        <div><h2>Product cards <span class="tag">new · phase 3</span></h2>
+          <p class="lede">Real, shipped components now — <code>.sk-product-card</code> composes
+            <code>.sk-badge</code>, <code>.sk-wishlist</code>, <code>.sk-rating</code>,
+            <code>.sk-price</code> and <code>.sk-btn</code>. Re-theme any one primitive and every
+            card follows. All of it re-skins with the deck above.</p></div>
+        <span class="ey">@layer sk.components</span>
       </div>
 
       <div class="sk-product-grid" style="--sk-product-min:15rem">
-        <article class="pcard">
-          <div class="media"><span class="badge">-25%</span>
-            <button class="wish" aria-label="Add to wishlist">♥</button></div>
-          <div class="body">
-            <div class="stars">★★★★<span class="off">★</span><small>124</small></div>
-            <div class="title">Featherweight Merino Crew</div>
-            <div class="price"><span class="now sale">$63</span><span class="was">$84</span></div>
-            <button class="btn block" style="margin-block-start:.6rem">Add to cart</button>
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">👕
+            <div class="sk-product-card__badges">
+              <span class="sk-badge sk-badge--sale">-25%</span>
+            </div>
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="true" aria-label="Remove from wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Everyday Basics</p>
+            <h3 class="sk-product-card__title">Featherweight Merino Crew</h3>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:4.5" role="img" aria-label="Rated 4.5 out of 5"></span><span class="sk-rating__count">(124)</span></span>
+              <p class="sk-price sk-price--sale">
+                <span class="sk-price__now">$63</span>
+                <span class="sk-price__was">$84</span>
+              </p>
+            </div>
+            <div class="sk-product-card__actions">
+              <button type="button" class="sk-btn sk-btn--block">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Add to cart
+              </button>
+            </div>
           </div>
         </article>
 
-        <article class="pcard b">
-          <div class="media"><span class="badge new">New</span>
-            <button class="wish" aria-label="Add to wishlist">♥</button></div>
-          <div class="body">
-            <div class="stars">★★★★★<small>38</small></div>
-            <div class="title">Trailhead Canvas Backpack</div>
-            <div class="price"><span class="now">$148</span></div>
-            <button class="btn ghost block" style="margin-block-start:.6rem">Add to cart</button>
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">🎒
+            <div class="sk-product-card__badges">
+              <span class="sk-badge sk-badge--new">New</span>
+              <span class="sk-badge sk-badge--bestseller">Bestseller</span>
+            </div>
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="false" aria-label="Add to wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Trailhead</p>
+            <h3 class="sk-product-card__title">Trailhead Canvas Backpack — 24L Daypack</h3>
+            <div class="sk-swatches" role="group" aria-label="Colour" style="margin-block-start:var(--sk-space-1)">
+              <button type="button" class="sk-swatch" style="--sk-swatch-color:#37455B" aria-pressed="true" aria-label="Slate"></button>
+              <button type="button" class="sk-swatch" style="--sk-swatch-color:#0D8580" aria-label="Teal"></button>
+              <button type="button" class="sk-swatch" style="--sk-swatch-color:#C7740A" aria-label="Ochre"></button>
+            </div>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:5" role="img" aria-label="Rated 5 out of 5"></span><span class="sk-rating__count">(38)</span></span>
+              <p class="sk-price"><span class="sk-price__now">$148</span></p>
+            </div>
+            <div class="sk-product-card__actions">
+              <button type="button" class="sk-btn sk-btn--outline sk-btn--block">Add to cart</button>
+            </div>
           </div>
         </article>
 
-        <article class="pcard c">
-          <div class="media"><button class="wish" aria-label="Add to wishlist">♥</button></div>
-          <div class="body">
-            <div class="stars">★★★★<span class="off">★</span><small>206</small></div>
-            <div class="title">Ceramic Pour-Over Set</div>
-            <div class="price"><span class="now">$52</span></div>
-            <button class="btn block" style="margin-block-start:.6rem">Add to cart</button>
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">☕
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="false" aria-label="Add to wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Morning Ritual</p>
+            <h3 class="sk-product-card__title">Ceramic Pour-Over Set</h3>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:4" role="img" aria-label="Rated 4 out of 5"></span><span class="sk-rating__count">(206)</span></span>
+              <p class="sk-price"><span class="sk-price__now">$52</span></p>
+            </div>
+            <div class="sk-product-card__actions">
+              <div class="sk-stepper" aria-label="Quantity">
+                <button type="button" class="sk-stepper__btn" aria-label="Decrease quantity">−</button>
+                <input class="sk-stepper__input" type="number" value="1" min="1" aria-label="Quantity">
+                <button type="button" class="sk-stepper__btn" aria-label="Increase quantity">+</button>
+              </div>
+              <button type="button" class="sk-btn sk-btn--icon" aria-label="Add to cart">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              </button>
+            </div>
           </div>
         </article>
 
-        <article class="pcard">
-          <div class="media"><span class="badge">Sale</span>
-            <button class="wish" aria-label="Add to wishlist">♥</button></div>
-          <div class="body">
-            <div class="stars">★★★<span class="off">★★</span><small>17</small></div>
-            <div class="title">Linen Weekend Shirt</div>
-            <div class="price"><span class="now sale">$39</span><span class="was">$59</span></div>
-            <button class="btn block" style="margin-block-start:.6rem">Add to cart</button>
+        <article class="sk-product-card">
+          <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:3.4rem">👔
+            <div class="sk-product-card__badges">
+              <span class="sk-badge sk-badge--sale">Sale</span>
+            </div>
+            <div class="sk-product-card__wishlist">
+              <button type="button" class="sk-wishlist" aria-pressed="false" aria-label="Add to wishlist">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sk-product-card__body">
+            <p class="sk-product-card__eyebrow">Warm Weather</p>
+            <h3 class="sk-product-card__title">Linen Weekend Shirt</h3>
+            <div class="sk-swatches" role="group" aria-label="Size" style="margin-block-start:var(--sk-space-1)">
+              <button type="button" class="sk-swatch sk-swatch--size" aria-pressed="false">S</button>
+              <button type="button" class="sk-swatch sk-swatch--size" aria-pressed="true">M</button>
+              <button type="button" class="sk-swatch sk-swatch--size" aria-pressed="false">L</button>
+              <button type="button" class="sk-swatch sk-swatch--size" aria-disabled="true" disabled>XL</button>
+            </div>
+            <div class="sk-product-card__meta">
+              <span><span class="sk-rating sk-rating--sm" style="--sk-rating-value:3.5" role="img" aria-label="Rated 3.5 out of 5"></span><span class="sk-rating__count">(17)</span></span>
+              <p class="sk-price sk-price--sale">
+                <span class="sk-price__now">$39</span>
+                <span class="sk-price__was">$59</span>
+                <span class="sk-price__off">-34%</span>
+              </p>
+            </div>
+            <div class="sk-product-card__actions">
+              <button type="button" class="sk-btn sk-btn--block">Add to cart</button>
+            </div>
           </div>
         </article>
       </div>
@@ -825,6 +905,118 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </footer>
       </form>
     </dialog>
+  </section>
+
+  <!-- ══════════════════ COMMERCE ATOMS (PHASE 3) ══════════════════ -->
+  <section class="sk-container sk-section">
+    <div class="head">
+      <div><h2>Commerce atoms &amp; navigation <span class="tag">new · phase 3</span></h2>
+        <p class="lede">The parts a storefront is built from — price, rating, swatches, quantity, plus
+          breadcrumbs and pagination. Each reads the commerce semantic tokens
+          (<code>--sk-color-price</code> / <code>-sale</code> / <code>-star</code>), so they recolour with mode and brand.</p></div>
+      <span class="ey">@layer sk.components</span>
+    </div>
+
+    <nav aria-label="Breadcrumb">
+      <ol class="sk-breadcrumb__list">
+        <li class="sk-breadcrumb__item"><a class="sk-breadcrumb__link" href="#main">Home</a></li>
+        <li class="sk-breadcrumb__item"><a class="sk-breadcrumb__link" href="#main">Men</a></li>
+        <li class="sk-breadcrumb__item"><a class="sk-breadcrumb__link" href="#main">Shirts</a></li>
+        <li class="sk-breadcrumb__item" aria-current="page">Linen Weekend Shirt</li>
+      </ol>
+    </nav>
+
+    <div class="sk-grid sk-mt-6" style="gap:var(--sk-space-6)">
+      <div class="sk-col-12 sk-col-md-6">
+        <p class="ey sk-mb-3">price — regular · sale · range</p>
+        <div class="sk-stack sk-gap-3">
+          <p class="sk-price"><span class="sk-price__now">$148</span></p>
+          <p class="sk-price sk-price--sale"><span class="sk-price__now">$39</span><span class="sk-price__was">$59</span><span class="sk-price__off">-34%</span></p>
+          <p class="sk-price"><span class="sk-price__now">$18</span><span class="sk-price__sep">–</span><span class="sk-price__now">$42</span></p>
+          <p class="sk-price sk-price--lg sk-price--sale"><span class="sk-price__now">$63</span><span class="sk-price__was">$84</span></p>
+        </div>
+
+        <p class="ey sk-mt-6 sk-mb-3">rating — sizes &amp; fractions</p>
+        <div class="sk-stack sk-gap-2">
+          <span><span class="sk-rating" style="--sk-rating-value:5" role="img" aria-label="Rated 5 out of 5"></span><span class="sk-rating__count">(1,204)</span></span>
+          <span><span class="sk-rating" style="--sk-rating-value:4.5" role="img" aria-label="Rated 4.5 out of 5"></span><span class="sk-rating__count">(318)</span></span>
+          <span><span class="sk-rating sk-rating--lg" style="--sk-rating-value:3.2" role="img" aria-label="Rated 3.2 out of 5"></span></span>
+        </div>
+      </div>
+
+      <div class="sk-col-12 sk-col-md-6">
+        <p class="ey sk-mb-3">swatches — colour &amp; size</p>
+        <div class="sk-swatches" role="group" aria-label="Colour">
+          <button type="button" class="sk-swatch" style="--sk-swatch-color:#4F46E5" aria-pressed="true" aria-label="Indigo"></button>
+          <button type="button" class="sk-swatch" style="--sk-swatch-color:#0D8580" aria-label="Teal"></button>
+          <button type="button" class="sk-swatch" style="--sk-swatch-color:#C20E3A" aria-label="Rose"></button>
+          <button type="button" class="sk-swatch" style="--sk-swatch-color:#C7740A" aria-label="Ochre"></button>
+          <button type="button" class="sk-swatch" style="--sk-swatch-color:#37455B" aria-disabled="true" disabled aria-label="Slate (out of stock)"></button>
+        </div>
+        <div class="sk-swatches sk-mt-4" role="group" aria-label="Size">
+          <button type="button" class="sk-swatch sk-swatch--size" aria-pressed="false">XS</button>
+          <button type="button" class="sk-swatch sk-swatch--size" aria-pressed="true">S</button>
+          <button type="button" class="sk-swatch sk-swatch--size" aria-pressed="false">M</button>
+          <button type="button" class="sk-swatch sk-swatch--size" aria-disabled="true" disabled>L</button>
+        </div>
+
+        <p class="ey sk-mt-6 sk-mb-3">quantity stepper — sizes</p>
+        <div class="sk-cluster sk-gap-4" style="align-items:center">
+          <div class="sk-stepper sk-stepper--sm" aria-label="Quantity">
+            <button type="button" class="sk-stepper__btn" aria-label="Decrease">−</button>
+            <input class="sk-stepper__input" type="number" value="1" min="1" aria-label="Quantity">
+            <button type="button" class="sk-stepper__btn" aria-label="Increase">+</button>
+          </div>
+          <div class="sk-stepper" aria-label="Quantity">
+            <button type="button" class="sk-stepper__btn" aria-label="Decrease">−</button>
+            <input class="sk-stepper__input" type="number" value="3" min="1" aria-label="Quantity">
+            <button type="button" class="sk-stepper__btn" aria-label="Increase">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">horizontal card — cart line / list view</p>
+    <article class="sk-product-card sk-product-card--horizontal" style="max-inline-size:34rem">
+      <div class="sk-product-card__media" style="display:grid;place-items:center;font-size:2.6rem">🎒</div>
+      <div class="sk-product-card__body">
+        <h3 class="sk-product-card__title">Trailhead Canvas Backpack</h3>
+        <p class="sk-price"><span class="sk-price__now">$148</span></p>
+        <div class="sk-product-card__meta">
+          <div class="sk-product-card__actions">
+            <div class="sk-stepper sk-stepper--sm" aria-label="Quantity">
+              <button type="button" class="sk-stepper__btn" aria-label="Decrease">−</button>
+              <input class="sk-stepper__input" type="number" value="1" min="1" aria-label="Quantity">
+              <button type="button" class="sk-stepper__btn" aria-label="Increase">+</button>
+            </div>
+            <button type="button" class="sk-btn sk-btn--ghost sk-btn--sm">Remove</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <p class="ey sk-mt-7 sk-mb-3">pagination</p>
+    <nav aria-label="Pagination">
+      <ul class="sk-pagination">
+        <li><a class="sk-pagination__link" href="#main" aria-disabled="true">‹ Prev</a></li>
+        <li><a class="sk-pagination__link" href="#main" aria-current="page">1</a></li>
+        <li><a class="sk-pagination__link" href="#main">2</a></li>
+        <li><a class="sk-pagination__link" href="#main">3</a></li>
+        <li><span class="sk-pagination__ellipsis" aria-hidden="true">…</span></li>
+        <li><a class="sk-pagination__link" href="#main">12</a></li>
+        <li><a class="sk-pagination__link" href="#main">Next ›</a></li>
+      </ul>
+    </nav>
+
+    <p class="ey sk-mt-7 sk-mb-3">empty state — zero results</p>
+    <div class="sk-empty" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg)">
+      <span class="sk-empty__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M8 11h6"/></svg></span>
+      <p class="sk-empty__title">No products match your filters</p>
+      <p class="sk-empty__desc">Try widening your price range or clearing a colour to see more of the catalogue.</p>
+      <div class="sk-empty__actions">
+        <button type="button" class="sk-btn sk-btn--soft">Clear all filters</button>
+      </div>
+    </div>
   </section>
 
   <!-- ══════════════════ COPY THEME ══════════════════ -->

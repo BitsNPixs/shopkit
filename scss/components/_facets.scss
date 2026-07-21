@@ -1,0 +1,99 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// FACETS  ·  .sk-facets  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The product-filter sidebar: a stack of collapsible filter *groups* (facets),
+// each holding a list of options. This component is purely presentational —
+// it owns grouping, dividers and rhythm only. The actual choice rows are the
+// form component's `.sk-check` (native checkbox + label), reused verbatim.
+//
+// MARKUP
+//   <div class="sk-facets">
+//     <div class="sk-facet">
+//       <h3 class="sk-facet__title">
+//         Brand
+//         <button class="sk-facets__clear" type="button">Clear</button>
+//       </h3>
+//       <ul class="sk-facet__list">
+//         <li>
+//           <label class="sk-check">
+//             <input class="sk-checkbox" type="checkbox"> Aurora
+//             <span class="sk-facet__count">128</span>
+//           </label>
+//         </li>
+//         <!-- … more li > .sk-check … -->
+//       </ul>
+//     </div>
+//     <!-- … more .sk-facet groups … -->
+//   </div>
+//
+// NOTES
+//   • The last group drops its divider + trailing padding via `:last-child`.
+//   • `.sk-facet__count` pushes to the trailing edge with a logical auto margin.
+//
+// A11Y / RTL — logical properties throughout, so the divider, group padding and
+// the count's trailing margin all flip correctly under `[dir="rtl"]`. The clear
+// button is a real <button> with a token-driven `:focus-visible` ring.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-facets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-6);
+  }
+
+  // ── A single filter group ──
+  .#{$prefix}-facet {
+    border-block-end: 1px solid var(--#{$prefix}-color-border-subtle);
+    padding-block-end: var(--#{$prefix}-space-6);
+  }
+  .#{$prefix}-facet:last-child {
+    border-block-end: 0;
+    padding-block-end: 0;
+  }
+
+  // ── Group heading (label + optional clear affordance) ──
+  .#{$prefix}-facet__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block: 0 var(--#{$prefix}-space-3);
+    color: var(--#{$prefix}-color-text);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-semibold);
+  }
+
+  // ── Option list — resets native list chrome, stacks the rows ──
+  .#{$prefix}-facet__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  // ── Trailing result count on an option row ──
+  .#{$prefix}-facet__count {
+    margin-inline-start: auto;
+    color: var(--#{$prefix}-color-text-subtle);
+    font-size: var(--#{$prefix}-text-xs);
+  }
+
+  // ── Bare text button: "Clear" the group's active filters ──
+  .#{$prefix}-facets__clear {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--#{$prefix}-color-primary);
+    font: inherit;
+    font-size: var(--#{$prefix}-text-sm);
+    cursor: pointer;
+  }
+  .#{$prefix}-facets__clear:hover {
+    text-decoration: underline;
+  }
+  .#{$prefix}-facets__clear:focus-visible { @include focus-ring; }
+}

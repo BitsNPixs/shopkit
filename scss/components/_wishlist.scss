@@ -1,0 +1,93 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// WISHLIST  ·  .sk-wishlist  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A round "save to wishlist" heart toggle, typically floated over product
+// imagery. Muted outline heart by default; on save the heart fills with the
+// commerce sale colour. Saved state is expressed with `aria-pressed="true"`.
+//
+//   <button class="sk-wishlist" type="button"
+//           aria-label="Add to wishlist" aria-pressed="false">
+//     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="…"/></svg>
+//   </button>
+//
+// TIER-3 — the size + colours resolve through `--sk-wishlist-*` tokens that fall
+// back to the semantic layer, so a reskin is a one-line remap:
+//   • move a semantic token    → every wishlist button reskins
+//   • set a `--sk-wishlist-*`   → only wishlist buttons change
+//   • set it on one element     → only that button changes
+//
+// ACCESSIBILITY — this is an ICON-ONLY control: it REQUIRES an `aria-label`
+// (it carries no text) AND `aria-pressed` to convey the saved/unsaved state.
+// The inline <svg> should be `aria-hidden="true"`. Focus is a token-driven ring.
+// Disabled via :disabled OR [aria-disabled="true"].
+//
+// RTL — the button is symmetric; the only transforms are vertical/uniform
+// (translateY / scale), so it is direction-agnostic.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-wishlist {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-wishlist-size:      2.5rem;
+    --#{$prefix}-wishlist-bg:        var(--#{$prefix}-color-surface);
+    --#{$prefix}-wishlist-border:    var(--#{$prefix}-color-border);
+    --#{$prefix}-wishlist-fg:        var(--#{$prefix}-color-text-muted);
+    --#{$prefix}-wishlist-fg-hover:  var(--#{$prefix}-color-text);
+    --#{$prefix}-wishlist-fg-active: var(--#{$prefix}-color-sale);
+
+    // ── Structure ──
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--#{$prefix}-wishlist-size);
+    block-size: var(--#{$prefix}-wishlist-size);
+    padding: 0;
+    border: 1px solid var(--#{$prefix}-wishlist-border);
+    border-radius: 50%;
+    background: var(--#{$prefix}-wishlist-bg);
+    color: var(--#{$prefix}-wishlist-fg);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+      color      var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+      background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+      transform  var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+
+  // The author-supplied inline heart. Outline by default; fills when pressed.
+  .#{$prefix}-wishlist svg {
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  // ── Interaction (guarded so disabled buttons don't react) ──
+  .#{$prefix}-wishlist:not(:disabled):not([aria-disabled="true"]):hover {
+    color: var(--#{$prefix}-wishlist-fg-hover);
+  }
+  .#{$prefix}-wishlist:not(:disabled):not([aria-disabled="true"]):active {
+    transform: scale(0.92);
+  }
+  .#{$prefix}-wishlist:focus-visible { @include focus-ring; }
+
+  // ── Saved state — coloured, filled heart ──
+  .#{$prefix}-wishlist[aria-pressed="true"] {
+    color: var(--#{$prefix}-wishlist-fg-active);
+  }
+  .#{$prefix}-wishlist[aria-pressed="true"] svg {
+    fill: currentColor;
+  }
+
+  // ── Disabled (native + ARIA) ──
+  .#{$prefix}-wishlist:disabled,
+  .#{$prefix}-wishlist[disabled],
+  .#{$prefix}-wishlist[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}

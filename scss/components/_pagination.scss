@@ -1,0 +1,102 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// PAGINATION  ·  .sk-pagination  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Numbered page navigation for product listings and search results. Wrap the
+// component in a landmark: `<nav aria-label="Pagination">`, containing a list of
+// page links (or buttons). Each control is a square tap target sized to the
+// small control height for comfortable pointer + touch use.
+//
+// TIER-3 — the control's square size is exposed as `--sk-pagination-size`, so a
+// denser or roomier pager is a one-token override.
+//
+// MARKUP
+//   <nav aria-label="Pagination">
+//     <ul class="sk-pagination">
+//       <li><a class="sk-pagination__link" href="?page=1"
+//              aria-disabled="true">‹</a></li>
+//       <li><a class="sk-pagination__link" href="?page=1"
+//              aria-current="page">1</a></li>
+//       <li><a class="sk-pagination__link" href="?page=2">2</a></li>
+//       <li><span class="sk-pagination__ellipsis">…</span></li>
+//       <li><a class="sk-pagination__link" href="?page=9">9</a></li>
+//       <li><a class="sk-pagination__link" href="?page=2">›</a></li>
+//     </ul>
+//   </nav>
+//
+// ACCESSIBILITY
+//   • the wrapping <nav aria-label="Pagination"> names the landmark
+//   • the active page carries `aria-current="page"`
+//   • unavailable controls use `aria-disabled="true"` (works on <a>)
+//   • every control meets the small control-height tap target
+//   • links / buttons expose a token-driven focus ring on :focus-visible
+//
+// RTL — logical sizing + spacing throughout; the flex row reverses direction
+// automatically in right-to-left contexts.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-pagination {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-pagination-size: var(--#{$prefix}-control-height-sm);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--#{$prefix}-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .#{$prefix}-pagination__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--#{$prefix}-pagination-size);
+    min-block-size: var(--#{$prefix}-pagination-size);
+    padding-inline: var(--#{$prefix}-space-2);
+    border: 0;
+    border-radius: var(--#{$prefix}-radius-md);
+    background: transparent;
+    color: var(--#{$prefix}-color-text);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+      color      var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+
+  // Hover — only for available, non-current controls.
+  .#{$prefix}-pagination__link:not([aria-current="page"]):not([aria-disabled="true"]):hover {
+    background: var(--#{$prefix}-color-surface-sunken);
+  }
+  .#{$prefix}-pagination__link:focus-visible { @include focus-ring; }
+
+  // Current page — solid primary fill, no hover change.
+  .#{$prefix}-pagination__link[aria-current="page"] {
+    background: var(--#{$prefix}-color-primary);
+    color: var(--#{$prefix}-color-primary-contrast);
+    cursor: default;
+  }
+
+  // Disabled — muted, non-interactive.
+  .#{$prefix}-pagination__link[aria-disabled="true"] {
+    color: var(--#{$prefix}-color-text-subtle);
+    cursor: not-allowed;
+  }
+
+  // Ellipsis — a non-interactive gap marker matching the control footprint.
+  .#{$prefix}-pagination__ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--#{$prefix}-pagination-size);
+    min-block-size: var(--#{$prefix}-pagination-size);
+    color: var(--#{$prefix}-color-text-subtle);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}

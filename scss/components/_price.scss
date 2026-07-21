@@ -1,0 +1,71 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// PRICE  ·  .sk-price  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The money display: a current price, an optional struck-through "was" price,
+// a discount flag, and a range separator. Reads the commerce semantic tokens
+// (`--sk-color-price`, `--sk-color-sale`) so it recolours with theme + mode.
+//
+//   <p class="sk-price sk-price--sale">
+//     <span class="sk-price__now">$34</span>
+//     <span class="sk-price__was">$49</span>
+//     <span class="sk-price__off">-30%</span>
+//   </p>
+//
+// The `--sale` modifier tints the current price with the sale colour; without
+// it, the price is neutral. Range = two `__now` values around `__sep`.
+//
+// RTL — flex + logical gap; the strike-through and separator are direction
+// agnostic, so the row mirrors cleanly.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.components {
+  .#{$prefix}-price {
+    --#{$prefix}-price-now:  var(--#{$prefix}-color-price);
+    --#{$prefix}-price-size: var(--#{$prefix}-text-lg);
+
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--#{$prefix}-space-2);
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .#{$prefix}-price__now {
+    color: var(--#{$prefix}-price-now);
+    font-size: var(--#{$prefix}-price-size);
+    font-weight: var(--#{$prefix}-weight-bold);
+    letter-spacing: -0.01em;
+  }
+
+  .#{$prefix}-price__was {
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-regular);
+    text-decoration: line-through;
+  }
+
+  // Discount flag — a compact tinted pill (sale colour).
+  .#{$prefix}-price__off {
+    align-self: center;
+    padding-block: 0.1em;
+    padding-inline: var(--#{$prefix}-space-2);
+    border-radius: var(--#{$prefix}-radius-sm);
+    background: color-mix(in srgb, var(--#{$prefix}-color-sale) 14%, transparent);
+    color: var(--#{$prefix}-color-sale);
+    font-size: var(--#{$prefix}-text-xs);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    line-height: 1.4;
+  }
+
+  // Range separator ("–") between two prices.
+  .#{$prefix}-price__sep { color: var(--#{$prefix}-color-text-subtle); }
+
+  // ── On sale — recolour the current price ──
+  .#{$prefix}-price--sale { --#{$prefix}-price-now: var(--#{$prefix}-color-sale); }
+
+  // ── Sizes ──
+  .#{$prefix}-price--sm { --#{$prefix}-price-size: var(--#{$prefix}-text-md); }
+  .#{$prefix}-price--lg { --#{$prefix}-price-size: var(--#{$prefix}-text-2xl); }
+}

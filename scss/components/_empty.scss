@@ -1,0 +1,81 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// EMPTY STATE  ·  .sk-empty  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The zero-results / empty-collection block — "No products match your filters",
+// an empty cart, a cleared search. A centred stack of optional icon, title,
+// description and action buttons, sized to sit inside a content column.
+//
+// MARKUP
+//   <div class="sk-empty">
+//     <span class="sk-empty__icon"><svg …></svg></span>
+//     <h2 class="sk-empty__title">No products found</h2>
+//     <p class="sk-empty__desc">
+//       Try removing a filter or two — nothing matches every option you picked.
+//     </p>
+//     <div class="sk-empty__actions">
+//       <button class="sk-btn sk-btn--secondary" type="button">Clear filters</button>
+//       <a class="sk-btn" href="/shop">Browse all</a>
+//     </div>
+//   </div>
+//
+// NOTES
+//   • Tier-3 padding tokens (`--sk-empty-pad-block` / `--sk-empty-pad-inline`)
+//     let a single block be tightened or loosened without restating the box.
+//   • `text-align: center` is direction-agnostic (centre is not left/right).
+//
+// A11Y / RTL — logical padding + `max-inline-size`, so the block reflows and
+// mirrors cleanly under `[dir="rtl"]`. Actions hold real `.sk-btn` controls,
+// which carry their own focus rings.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.components {
+  .#{$prefix}-empty {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-empty-pad-block:  var(--#{$prefix}-space-12);
+    --#{$prefix}-empty-pad-inline: var(--#{$prefix}-space-6);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--#{$prefix}-space-3);
+    padding-block: var(--#{$prefix}-empty-pad-block);
+    padding-inline: var(--#{$prefix}-empty-pad-inline);
+    color: var(--#{$prefix}-color-text-muted);
+    text-align: center;
+  }
+
+  // ── Decorative icon slot (holds an inline SVG that fills the box) ──
+  .#{$prefix}-empty__icon {
+    inline-size: 3rem;
+    block-size: 3rem;
+    color: var(--#{$prefix}-color-text-subtle);
+  }
+  .#{$prefix}-empty__icon svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  // ── Headline ──
+  .#{$prefix}-empty__title {
+    margin: 0;
+    color: var(--#{$prefix}-color-text);
+    font-size: var(--#{$prefix}-text-lg);
+    font-weight: var(--#{$prefix}-weight-semibold);
+  }
+
+  // ── Supporting copy — capped for a comfortable measure ──
+  .#{$prefix}-empty__desc {
+    max-inline-size: 34ch;
+    margin: 0;
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-body);
+  }
+
+  // ── Action row (holds .sk-btn controls) ──
+  .#{$prefix}-empty__actions {
+    display: flex;
+    gap: var(--#{$prefix}-space-3);
+    margin-block-start: var(--#{$prefix}-space-2);
+  }
+}

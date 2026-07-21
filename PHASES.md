@@ -13,8 +13,8 @@ file is the *plan & checklist*. Update the checkboxes here whenever a piece ship
 | | |
 |---|---|
 | **Date** | 2026-07-21 |
-| **Current phase** | Phase 2 — Utilities + Core UI (✅ core UI complete) |
-| **Compiled core** | **13.9 KB gzip** (min) · budget 30 KB · **46% used** |
+| **Current phase** | Phase 3 — E-commerce components (✅ complete) · Phase 4 next |
+| **Compiled core** | **15.8 KB gzip** (min) · budget 30 KB · **53% used** |
 | **Guards passing** | `npm run lint` (logical-props) ✅ · `npm run size` (budget) ✅ |
 
 ---
@@ -49,7 +49,8 @@ scss/
 ├── tokens/           Tier 1 primitives · Tier 2 semantic · Tier 3 component metrics
 ├── base/             reset · typography · a11y · _mixins (focus-ring, visually-hidden…)
 ├── layout/           container · grid · section · stack · cluster
-├── components/       ✅ button · button-group · form · badge · alert · modal · tabs · accordion · skeleton · tooltip
+├── components/       ✅ Core UI: button · button-group · form · badge · alert · modal · tabs · accordion · skeleton · tooltip
+│                      ✅ Commerce: price · rating · swatch · stepper · wishlist · product-card · breadcrumb · pagination · facets · empty
 ├── utilities/        ✅ spacing · ✅ display · ✅ flex · (more as needed)
 └── shopkit.scss      entry — @use of each layer in cascade order
 ```
@@ -91,11 +92,14 @@ Cascade layer order (later wins; all library CSS is layered so unlayered consume
 - [x] **Skeleton** — `.sk-skeleton` (text/title/circle/block), reduced-motion static fallback
 - [x] **Tooltip** — `[data-sk-tooltip]` zero-JS, hover + `:focus-visible`, 4 placements
 
-### Phase 3 — E-commerce components ⬜
-- [ ] Product card (+ horizontal / compact variants) · Price (regular/sale/range) · Rating stars
-- [ ] Colour / size swatches · Product badges · Quantity stepper
-- [ ] Product grid states (loading skeletons, empty) · Facets / filters sidebar
-- [ ] Breadcrumbs · Pagination · Wishlist button
+### Phase 3 — E-commerce components ✅
+- [x] Product card (`.sk-product-card` + `--horizontal` / `--compact` / `--flat`, stretched-link) ·
+      Price (`.sk-price` regular/sale/range/off) · Rating stars (`.sk-rating`, fractional, mask-driven)
+- [x] Colour / size swatches (`.sk-swatch(es)` + `--size`, selected/out-of-stock) · Product badges
+      (via `.sk-badge--sale/--new/--bestseller`) · Quantity stepper (`.sk-stepper`)
+- [x] Product grid states — loading (compose `.sk-skeleton`) · empty (`.sk-empty`) · Facets / filters
+      sidebar (`.sk-facets` / `.sk-facet`)
+- [x] Breadcrumbs (`.sk-breadcrumb`) · Pagination (`.sk-pagination`) · Wishlist button (`.sk-wishlist`)
 
 ### Phase 4 — Commerce flows & layout sections ⬜  *(multiple layouts per section)*
 - [ ] **Navbar** — variants: simple · centered-logo · with-search · with-mega-menu · sticky/condensing

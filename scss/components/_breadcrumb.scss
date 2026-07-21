@@ -1,0 +1,85 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// BREADCRUMB  ·  .sk-breadcrumb  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Trail navigation showing the user's location in the site hierarchy. Wrap the
+// component in a landmark: `<nav aria-label="Breadcrumb">`, with an ordered or
+// unordered list of items inside.
+//
+// TIER-3 — the separator glyph is exposed as `--sk-breadcrumb-sep` so it can be
+// swapped ("›", "»", "•", an SVG url()) per instance without touching CSS.
+//
+// MARKUP
+//   <nav aria-label="Breadcrumb">
+//     <ol class="sk-breadcrumb__list">
+//       <li class="sk-breadcrumb__item">
+//         <a class="sk-breadcrumb__link" href="/">Home</a>
+//       </li>
+//       <li class="sk-breadcrumb__item">
+//         <a class="sk-breadcrumb__link" href="/shop">Shop</a>
+//       </li>
+//       <li class="sk-breadcrumb__item" aria-current="page">Jackets</li>
+//     </ol>
+//   </nav>
+//
+// ACCESSIBILITY
+//   • the wrapping <nav aria-label="Breadcrumb"> names the landmark
+//   • the current page carries `aria-current="page"` (styled, not a link)
+//   • separators are generated content → invisible to assistive tech
+//   • links expose a token-driven focus ring on :focus-visible
+//
+// RTL — logical properties throughout; the separator uses `margin-inline-end`,
+// so the trail flips direction automatically in right-to-left contexts.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-breadcrumb {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-breadcrumb-sep: "/";
+  }
+
+  .#{$prefix}-breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--#{$prefix}-text-sm);
+    color: var(--#{$prefix}-color-text-muted);
+  }
+
+  .#{$prefix}-breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+  }
+
+  // Separator sits before every item except the first.
+  .#{$prefix}-breadcrumb__item + .#{$prefix}-breadcrumb__item::before {
+    content: var(--#{$prefix}-breadcrumb-sep, "/");
+    margin-inline-end: var(--#{$prefix}-space-2);
+    color: var(--#{$prefix}-color-text-subtle);
+  }
+
+  .#{$prefix}-breadcrumb__link {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-breadcrumb__link:hover {
+    color: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-breadcrumb__link:focus-visible {
+    @include focus-ring;
+    border-radius: var(--#{$prefix}-radius-xs);
+  }
+
+  // Current page — emphasised, non-interactive.
+  .#{$prefix}-breadcrumb__item[aria-current="page"] {
+    color: var(--#{$prefix}-color-text);
+    font-weight: var(--#{$prefix}-weight-medium);
+  }
+}

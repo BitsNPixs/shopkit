@@ -1,0 +1,54 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// RATING STARS  ·  .sk-rating  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A read-only star rating driven entirely by two custom properties — no markup
+// per star, no images per star. A repeating star MASK punches the shapes out of
+// a two-stop gradient: filled portion in `--sk-color-star`, remainder in the
+// out-of-stock grey. Fractions (4.5) render as a partial star for free.
+//
+//   <span class="sk-rating" style="--sk-rating-value:4.5" role="img"
+//         aria-label="Rated 4.5 out of 5"></span>
+//   <span class="sk-rating__count">(1,204)</span>
+//
+// A11y — the stars are decorative; ALWAYS give the element a role="img" +
+// aria-label with the numeric value (the fill isn't announced). RTL — stars
+// read left-to-right in every locale, so the fill direction is intentionally
+// fixed; nothing here needs mirroring.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer sk.components {
+  .#{$prefix}-rating {
+    --#{$prefix}-rating-value: 0;      // 0 … max, fractions allowed
+    --#{$prefix}-rating-max:   5;
+    --#{$prefix}-rating-size:  1.05em;
+    --#{$prefix}-rating-star:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z'/%3E%3C/svg%3E");
+
+    display: inline-block;
+    inline-size: calc(var(--#{$prefix}-rating-max) * var(--#{$prefix}-rating-size));
+    block-size: var(--#{$prefix}-rating-size);
+    vertical-align: middle;
+
+    // Fill to the value %, grey beyond it …
+    background: linear-gradient(
+      to right,
+      var(--#{$prefix}-color-star) 0
+        calc(var(--#{$prefix}-rating-value) / var(--#{$prefix}-rating-max) * 100%),
+      var(--#{$prefix}-color-out-of-stock) 0
+    );
+    // … then punch out the row of stars.
+    -webkit-mask: var(--#{$prefix}-rating-star) 0 0 / var(--#{$prefix}-rating-size) var(--#{$prefix}-rating-size) repeat-x;
+    mask: var(--#{$prefix}-rating-star) 0 0 / var(--#{$prefix}-rating-size) var(--#{$prefix}-rating-size) repeat-x;
+  }
+
+  .#{$prefix}-rating__count {
+    margin-inline-start: var(--#{$prefix}-space-1);
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    vertical-align: middle;
+  }
+
+  // ── Sizes ──
+  .#{$prefix}-rating--sm { --#{$prefix}-rating-size: 0.85em; }
+  .#{$prefix}-rating--lg { --#{$prefix}-rating-size: 1.35em; }
+}

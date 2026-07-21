@@ -1,0 +1,136 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// STEPPER  ·  .sk-stepper  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A quantity stepper — a minus button, a <input type="number">, and a plus
+// button fused into one bordered control. The three children share the control
+// height and are separated by hairline dividers, reading as a single unit.
+//
+//   <div class="sk-stepper">
+//     <button class="sk-stepper__btn" type="button" aria-label="Decrease quantity">−</button>
+//     <input class="sk-stepper__input" type="number" value="1" min="0" aria-label="Quantity">
+//     <button class="sk-stepper__btn" type="button" aria-label="Increase quantity">+</button>
+//   </div>
+//
+// TIER-3 — visuals resolve through `--sk-stepper-*` tokens that fall back to the
+// semantic / shared-control layer, so a size or reskin is a one-line remap:
+//   • move a semantic token   → every stepper (and control) reskins
+//   • set a `--sk-stepper-*`   → only steppers change
+//   • set it on one element    → only that stepper changes
+//
+// STRUCTURE — `.sk-stepper` owns the box + border + height; `__btn` and
+// `__input` inherit that height and only differ in their own concerns. Sizes
+// (`--sm` / `--lg`) remap the height token; the children follow automatically.
+//
+// ACCESSIBILITY
+//   • buttons and input are real controls — label them (aria-label) since the
+//     +/− glyphs are not descriptive text
+//   • :focus-visible → token-driven focus ring (inset, so it survives the
+//     overflow: clip on the group)
+//   • disabled via :disabled OR [aria-disabled="true"]
+//
+// RTL — logical properties throughout; the inline dividers and the whole group
+// flip direction automatically, no transforms involved.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-stepper {
+    // ── Tier-3 tokens (defaults resolve to the semantic / control layer) ──
+    --#{$prefix}-stepper-height:  var(--#{$prefix}-control-height);
+    --#{$prefix}-stepper-radius:  var(--#{$prefix}-control-radius);
+    --#{$prefix}-stepper-bg:      var(--#{$prefix}-color-surface);
+    --#{$prefix}-stepper-border:  var(--#{$prefix}-color-border);
+    --#{$prefix}-stepper-fg:      var(--#{$prefix}-color-text);
+    --#{$prefix}-stepper-input-w: 3rem;
+
+    // ── Structure ──
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--#{$prefix}-stepper-height);
+    border: 1px solid var(--#{$prefix}-stepper-border);
+    border-radius: var(--#{$prefix}-stepper-radius);
+    overflow: clip;
+    background: var(--#{$prefix}-stepper-bg);
+    color: var(--#{$prefix}-stepper-fg);
+  }
+
+  // ── The +/− buttons — square, borderless, tint on hover ──
+  .#{$prefix}-stepper__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--#{$prefix}-stepper-height);
+    block-size: var(--#{$prefix}-stepper-height);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--#{$prefix}-text-lg);
+    line-height: 1;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-stepper__btn:not(:disabled):not([aria-disabled="true"]):hover {
+    background: var(--#{$prefix}-color-surface-sunken);
+  }
+  .#{$prefix}-stepper__btn:focus-visible {
+    @include focus-ring;
+    outline-offset: calc(var(--#{$prefix}-focus-ring-offset) * -1);
+  }
+  .#{$prefix}-stepper__btn:disabled,
+  .#{$prefix}-stepper__btn[disabled],
+  .#{$prefix}-stepper__btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  // ── The number field — centred, hairline dividers, no native spinners ──
+  .#{$prefix}-stepper__input {
+    flex: none;
+    inline-size: var(--#{$prefix}-stepper-input-w);
+    min-block-size: var(--#{$prefix}-stepper-height);
+    padding-block: 0;
+    padding-inline: var(--#{$prefix}-space-1);
+    border-block: 0;
+    border-inline: 1px solid var(--#{$prefix}-stepper-border);
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--#{$prefix}-text-sm);
+    text-align: center;
+    appearance: textfield;
+    -webkit-appearance: textfield;
+  }
+  .#{$prefix}-stepper__input::-webkit-outer-spin-button,
+  .#{$prefix}-stepper__input::-webkit-inner-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .#{$prefix}-stepper__input:focus-visible {
+    @include focus-ring;
+    outline-offset: calc(var(--#{$prefix}-focus-ring-offset) * -1);
+  }
+  .#{$prefix}-stepper__input:disabled,
+  .#{$prefix}-stepper__input[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  // ═════════════════════════════ SIZES ════════════════════════════════
+  .#{$prefix}-stepper--sm {
+    --#{$prefix}-stepper-height:  var(--#{$prefix}-control-height-sm);
+    --#{$prefix}-stepper-input-w: 2.5rem;
+  }
+  .#{$prefix}-stepper--lg {
+    --#{$prefix}-stepper-height:  var(--#{$prefix}-control-height-lg);
+    --#{$prefix}-stepper-input-w: 3.5rem;
+  }
+}

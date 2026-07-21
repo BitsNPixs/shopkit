@@ -1,0 +1,223 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// PRODUCT CARD  ·  .sk-product-card  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The commerce workhorse — a self-contained tile that COMPOSES the smaller
+// primitives (`.sk-badge` flags, `.sk-price`, `.sk-rating`, `.sk-btn`) into a
+// shoppable unit. It owns only *layout + chrome*; the money, stars and flags
+// keep their own styling, so re-theming any primitive reskins every card.
+//
+//   <article class="sk-product-card">
+//     <div class="sk-product-card__media">
+//       <img class="sk-product-card__img" src="tee.jpg" alt="Organic cotton tee">
+//       <div class="sk-product-card__badges">
+//         <span class="sk-badge sk-badge--sale">-30%</span>
+//         <span class="sk-badge sk-badge--new">New</span>
+//       </div>
+//       <div class="sk-product-card__wishlist">
+//         <button class="sk-wishlist" aria-label="Add to wishlist"></button>
+//       </div>
+//     </div>
+//     <div class="sk-product-card__body">
+//       <p class="sk-product-card__eyebrow">Everyday Basics</p>
+//       <h3 class="sk-product-card__title">
+//         <a class="sk-product-card__link" href="/p/tee">Organic Cotton Crew Tee</a>
+//       </h3>
+//       <div class="sk-product-card__meta">
+//         <span class="sk-rating" style="--sk-rating-value:4.5" role="img"
+//               aria-label="Rated 4.5 out of 5"></span>
+//         <p class="sk-price sk-price--sale">
+//           <span class="sk-price__now">$34</span>
+//           <span class="sk-price__was">$49</span>
+//         </p>
+//       </div>
+//       <div class="sk-product-card__actions">
+//         <button class="sk-btn sk-btn--block">Add to cart</button>
+//       </div>
+//     </div>
+//   </article>
+//
+// TIER-3 — the geometry knobs (`--sk-card-radius`, `--sk-card-pad`,
+// `--sk-card-gap`, `--sk-card-media-ratio`) each default to a semantic token, so
+// a compact/flat variant is just a knob remap and never restates structure.
+//
+// STRUCTURE — a flex column: a fixed-ratio media box on top, then a body that
+// flexes to fill height. `__meta` uses `margin-block-start:auto` to pin the
+// price/rating to the bottom edge regardless of title length, so a grid of
+// cards keeps its price row aligned.
+//
+// A11y — the `<img>` MUST carry a real `alt`. For a whole-card link, put the
+// anchor in the title and let `.sk-product-card__link::after` stretch over the
+// card (the "stretched link" pattern); the title link owns the focus ring, and
+// `:focus-within` mirrors the hover elevation so keyboard users see the lift.
+//
+// RTL — logical properties throughout; badge/wishlist overlays are pinned with
+// logical insets so they swap corners under `dir="rtl"`. The only transform is a
+// vertical `translateY` lift (direction-agnostic) — horizontal cards add no
+// transform, so they mirror cleanly.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer sk.components {
+  .#{$prefix}-product-card {
+    // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
+    --#{$prefix}-card-radius:      var(--#{$prefix}-radius-lg);
+    --#{$prefix}-card-pad:         var(--#{$prefix}-space-4);
+    --#{$prefix}-card-gap:         var(--#{$prefix}-space-2);
+    --#{$prefix}-card-media-ratio: 1;
+
+    // ── Structure ──
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--#{$prefix}-color-border-subtle);
+    border-radius: var(--#{$prefix}-card-radius);
+    background: var(--#{$prefix}-color-surface);
+    overflow: clip;
+    transition:
+      box-shadow var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-standard),
+      transform  var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-standard);
+  }
+
+  // Hover / keyboard-focus lift — subtle shadow + a 1px vertical rise (RTL-safe).
+  .#{$prefix}-product-card:hover,
+  .#{$prefix}-product-card:focus-within {
+    box-shadow: var(--#{$prefix}-shadow-md);
+    transform: translateY(-1px);
+  }
+
+  // ── Media ──
+  .#{$prefix}-product-card__media {
+    position: relative;
+    aspect-ratio: var(--#{$prefix}-card-media-ratio);
+    background: var(--#{$prefix}-color-surface-sunken);
+    overflow: clip;
+  }
+
+  .#{$prefix}-product-card__img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-standard);
+  }
+  // Tasteful zoom on card hover (duration token → reduced-motion zeroes it).
+  .#{$prefix}-product-card:hover .#{$prefix}-product-card__img {
+    transform: scale(1.04);
+  }
+
+  // ── Overlays (logical insets → swap corners in RTL) ──
+  .#{$prefix}-product-card__badges {
+    position: absolute;
+    inset-block-start: var(--#{$prefix}-space-2);
+    inset-inline-start: var(--#{$prefix}-space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-1);
+  }
+
+  .#{$prefix}-product-card__wishlist {
+    position: absolute;
+    inset-block-start: var(--#{$prefix}-space-2);
+    inset-inline-end: var(--#{$prefix}-space-2);
+    // Stay clickable above a stretched card link (whose ::after is z-index:1).
+    z-index: 2;
+  }
+
+  // ── Body ──
+  .#{$prefix}-product-card__body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--#{$prefix}-card-gap);
+    padding: var(--#{$prefix}-card-pad);
+  }
+
+  // Brand / category kicker.
+  .#{$prefix}-product-card__eyebrow {
+    margin: 0;
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-xs);
+    font-weight: var(--#{$prefix}-weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // Product name — clamps to two lines so cards keep an even height.
+  .#{$prefix}-product-card__title {
+    margin: 0;
+    color: var(--#{$prefix}-color-text);
+    font-size: var(--#{$prefix}-text-md);
+    font-weight: var(--#{$prefix}-weight-medium);
+    line-height: var(--#{$prefix}-leading-snug);
+    @include line-clamp(2);
+  }
+  .#{$prefix}-product-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .#{$prefix}-product-card__title a:focus-visible { @include focus-ring; }
+
+  // ── Stretched-link helper ──
+  // A title anchor carrying this class blankets the whole card in a clickable
+  // layer (so the entire tile navigates) while badges/wishlist/actions stay
+  // interactive above it via their own stacking. Give the anchor real text for
+  // AT; the ::after is purely a hit area.
+  .#{$prefix}-product-card__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  // Pin price/rating to the bottom edge regardless of title length.
+  .#{$prefix}-product-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-1);
+    margin-block-start: auto;
+  }
+
+  // Buttons / steppers row.
+  .#{$prefix}-product-card__actions {
+    display: flex;
+    gap: var(--#{$prefix}-space-2);
+    margin-block-start: var(--#{$prefix}-space-2);
+    // Sit above a stretched card link so the controls stay clickable.
+    position: relative;
+    z-index: 2;
+  }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+
+  // Horizontal — media beside the body (logical row → mirrors in RTL).
+  .#{$prefix}-product-card--horizontal {
+    flex-direction: row;
+  }
+  .#{$prefix}-product-card--horizontal .#{$prefix}-product-card__media {
+    flex: 0 0 40%;
+    aspect-ratio: auto;
+  }
+  .#{$prefix}-product-card--horizontal .#{$prefix}-product-card__body {
+    flex: 1 1 auto;
+  }
+
+  // Compact — tighter padding + a smaller title.
+  .#{$prefix}-product-card--compact {
+    --#{$prefix}-card-pad: var(--#{$prefix}-space-3);
+    --#{$prefix}-card-gap: var(--#{$prefix}-space-1);
+  }
+  .#{$prefix}-product-card--compact .#{$prefix}-product-card__title {
+    font-size: var(--#{$prefix}-text-sm);
+  }
+
+  // Flat — no border, no hover shadow (for cards on their own surface).
+  .#{$prefix}-product-card--flat {
+    border-color: transparent;
+  }
+  .#{$prefix}-product-card--flat:hover,
+  .#{$prefix}-product-card--flat:focus-within {
+    box-shadow: none;
+    transform: none;
+  }
+}
