@@ -45,9 +45,10 @@
   // Restore it with system-color borders/outlines that survive the override.
   @media (forced-colors: active) {
     // Selected swatches: their selected ring is box-shadow-only → give a real
-    // outline in the system "selected item" colour.
+    // outline in the system "selected item" colour. ARIA selectors only — the
+    // swatch defines no `--selected` class (state comes from the DOM signal,
+    // per the variant contract).
     .#{$prefix}-swatch[aria-pressed="true"],
-    .#{$prefix}-swatch--selected,
     .#{$prefix}-swatch[aria-checked="true"] {
       outline: 2px solid SelectedItem;
       outline-offset: 2px;
@@ -62,6 +63,13 @@
     // stays readable.
     .#{$prefix}-progress { border: 1px solid CanvasText; }
     .#{$prefix}-progress__bar { background: Highlight; }
+
+    // Spinner: track (color-mix) and arc (currentColor) both flatten to the
+    // same system colour → the rotation cue vanishes. Re-split them.
+    .#{$prefix}-spinner {
+      border-color: CanvasText;
+      border-block-start-color: Highlight;
+    }
 
     // Pressed / current controls: their active state is fill/shadow-driven →
     // mark them with a Highlight outline. Scoped to specific controls to avoid

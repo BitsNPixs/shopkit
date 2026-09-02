@@ -720,7 +720,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <span class="ey">@layer sk.components</span>
     </div>
 
-    <div class="sk-grid" style="gap:var(--sk-space-5)">
+    <div class="sk-grid sk-gap-5">
       <div class="sk-col-12 sk-col-md-6">
         <div class="sk-stack">
           <div class="sk-field">
@@ -808,7 +808,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </div>
       </div>
 
-      <div class="sk-grid sk-mt-6" style="gap:var(--sk-space-6)">
+      <div class="sk-grid sk-gap-6 sk-mt-6">
         <div class="sk-col-12 sk-col-md-6">
           <p class="ey sk-mb-3">skeleton — loading a product card</p>
           <div style="max-inline-size:20rem">
@@ -856,7 +856,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </div>
     </div>
 
-    <div class="sk-grid sk-mt-7" style="gap:var(--sk-space-8)">
+    <div class="sk-grid sk-gap-8 sk-mt-7">
       <div class="sk-col-12 sk-col-md-6">
         <p class="ey sk-mb-3">tabs</p>
         <div class="sk-tabs" id="demo-tabs">
@@ -928,7 +928,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         <span class="ey">@layer sk.components</span>
       </div>
 
-      <div class="sk-grid" style="gap:var(--sk-space-6)">
+      <div class="sk-grid sk-gap-6">
         <div class="sk-col-12 sk-col-md-6">
           <p class="ey sk-mb-3">toasts — static preview · <button class="sk-btn sk-btn--sm sk-btn--soft" type="button" id="demo-toast-btn">fire a live one</button></p>
           <div class="sk-stack" style="--sk-gap:var(--sk-space-2)">
@@ -1021,7 +1021,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </ol>
     </nav>
 
-    <div class="sk-grid sk-mt-6" style="gap:var(--sk-space-6)">
+    <div class="sk-grid sk-gap-6 sk-mt-6">
       <div class="sk-col-12 sk-col-md-6">
         <p class="ey sk-mb-3">price — regular · sale · range</p>
         <div class="sk-stack sk-gap-3">
@@ -1103,13 +1103,43 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </ul>
     </nav>
 
-    <p class="ey sk-mt-7 sk-mb-3">empty state — zero results</p>
-    <div class="sk-empty" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg)">
+    <div class="sk-grid sk-gap-6 sk-mt-7">
+      <div class="sk-col-12 sk-col-md-5 sk-col-lg-4">
+        <p class="ey sk-mb-3">facets — filter sidebar (composes .sk-check + .sk-range)</p>
+        <div class="sk-facets" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg);padding-inline:var(--sk-space-4)">
+          <div class="sk-facet">
+            <h3 class="sk-facet__title">Brand
+              <button class="sk-facets__clear" type="button">Clear</button></h3>
+            <ul class="sk-facet__list">
+              <li><label class="sk-check"><input class="sk-checkbox" type="checkbox" checked> Aurora <span class="sk-facet__count">128</span></label></li>
+              <li><label class="sk-check"><input class="sk-checkbox" type="checkbox"> Verde <span class="sk-facet__count">64</span></label></li>
+              <li><label class="sk-check"><input class="sk-checkbox" type="checkbox"> Ember <span class="sk-facet__count">31</span></label></li>
+            </ul>
+          </div>
+          <div class="sk-facet">
+            <h3 class="sk-facet__title">Max price</h3>
+            <input class="sk-range" type="range" min="0" max="500" value="250" aria-label="Maximum price">
+          </div>
+          <div class="sk-facet">
+            <h3 class="sk-facet__title">Size</h3>
+            <div class="sk-swatches" role="group" aria-label="Filter by size">
+              <button class="sk-swatch sk-swatch--size" type="button" aria-pressed="false">S</button>
+              <button class="sk-swatch sk-swatch--size" type="button" aria-pressed="true">M</button>
+              <button class="sk-swatch sk-swatch--size" type="button" aria-pressed="false">L</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-7 sk-col-lg-8">
+        <p class="ey sk-mb-3">empty state — zero results</p>
+        <div class="sk-empty" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg)">
       <span class="sk-empty__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M8 11h6"/></svg></span>
       <p class="sk-empty__title">No products match your filters</p>
       <p class="sk-empty__desc">Try widening your price range or clearing a colour to see more of the catalogue.</p>
       <div class="sk-empty__actions">
         <button type="button" class="sk-btn sk-btn--soft">Clear all filters</button>
+      </div>
+    </div>
       </div>
     </div>
   </section>
@@ -1161,7 +1191,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </section>
     </div>
 
-    <div class="sk-grid sk-mt-7" style="gap:var(--sk-space-8)">
+    <div class="sk-grid sk-gap-8 sk-mt-7">
       <div class="sk-col-12 sk-col-md-7">
         <p class="ey sk-mb-3">checkout progress · open cart drawer</p>
         <ol class="sk-steps" style="max-inline-size:34rem">

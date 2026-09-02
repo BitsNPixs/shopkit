@@ -813,7 +813,6 @@
   }
   @media (forced-colors: active) {
     .sk-swatch[aria-pressed=true],
-    .sk-swatch--selected,
     .sk-swatch[aria-checked=true] {
       outline: 2px solid SelectedItem;
       outline-offset: 2px;
@@ -826,6 +825,10 @@
     }
     .sk-progress__bar {
       background: Highlight;
+    }
+    .sk-spinner {
+      border-color: CanvasText;
+      border-block-start-color: Highlight;
     }
     .sk-tab[aria-selected=true],
     .sk-pagination__link[aria-current],
@@ -2838,10 +2841,8 @@
   }
 }
 @layer sk.components {
-  .sk-breadcrumb {
-    --sk-breadcrumb-sep: "/";
-  }
   .sk-breadcrumb__list {
+    --sk-breadcrumb-sep: "/";
     display: flex;
     flex-wrap: wrap;
     align-items: center;

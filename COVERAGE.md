@@ -153,3 +153,32 @@ Still open, deliberately deferred until real usage demands them:
 
 Each follows the existing recipe in `PHASES.md` (partial → `_index.scss` → `npm run verify`
 → showcase block → checkbox), and needs a `classes.ts` entry if it gets a React wrapper.
+
+## 8 · Beyond the gap-fill — system audit results (2026-09-02)
+
+The same pass that closed the gaps above also ran a full design-system audit (values,
+tokens, layers, RTL, a11y, specificity, markup↔CSS). What it **fixed**:
+
+| Area | What was wrong | What shipped |
+|---|---|---|
+| `$prefix` | `_layers.scss` declared the layer order interpolated, but 84 `@layer sk.*` blocks were hardcoded — a custom prefix broke cascade order | Every `@layer` statement now interpolates `#{$prefix}`; default build verified **byte-identical**, a `"shop"`-prefix build verified clean |
+| Nested themes | `body { color: var(…) }` substitutes once at `<body>`, so plain text inside a nested `[data-theme]` kept the outer theme's colour (dark-on-dark) | Theme scopes re-anchor `color` — probe-measured before/after |
+| Select chevron | Dark glyph applied via descendant selectors → wrong glyph in mixed nesting (light-in-dark) | Chevron token declared **on the theme scopes**; inheritance proximity resolves every combo |
+| Close buttons | Modal / drawer / cart each carried an identical 12-declaration block | One `close-button` mixin (base/_mixins) feeds all three + the public `.sk-close` |
+| Breadcrumb | Separator token lived on a root class no documented usage emits → `content: var(…)` was invalid and **separators never rendered** | Token moved onto `.sk-breadcrumb__list`; separator probe now computes `"/"`, verified LTR + RTL |
+| Swatch | `_a11y.scss` targeted a `--selected` class the component (correctly, per the state contract) never defines | Dead selector removed; ARIA-driven state only |
+| Docs | Token-inspector + WCAG strip mis-parsed `color(srgb …)` (white read `#010101`); mode control initialized desynced; init pinned the fluid section clamp; facets had no demo at all | Parser fixed, mode initializes to System, sliders sync without pinning, facets demo added |
+
+What it **verified clean** (no action needed):
+
+- **Zero** hardcoded colors, durations, or real `!important` anywhere outside the token tiers
+- **Zero Bootstrap** residue; exactly **one** grid system (`layout/_grid.scss`) — the other
+  `display:grid` uses are component anatomy, not competing layout APIs
+- Every media query flows through `bp()` / `$breakpoints`; no stray breakpoints
+- Markup↔CSS cross-reference across all three docs pages + customizer: **0 classes used but
+  undefined**, both before and after the fixes (1,300 defined / 251 used in docs / 136 in the
+  React contract)
+- Global z-index all token-driven; local 0/1/2 values are intentional micro-stacking
+
+Guards after everything: build · lint · size **20.1 KB gzip (67%)** · react tsc · parity —
+all green. Full change log: `PHASES.md` Phase 8.5.
