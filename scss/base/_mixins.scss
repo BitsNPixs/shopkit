@@ -44,3 +44,33 @@
 @mixin motion-safe {
   @media (prefers-reduced-motion: no-preference) { @content; }
 }
+
+// The shared dismiss affordance — a quiet 2rem icon button. One definition for
+// the modal / drawer / cart header closes and the public `.sk-close`, so the
+// treatment can't drift between surfaces. Owns box + paint + interaction only;
+// PLACEMENT (negative header margins etc.) stays on the per-component class.
+// The element it lands on is icon-only → REQUIRES an aria-label.
+@mixin close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: 2rem;
+  block-size: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--#{$prefix}-radius-sm);
+  background: transparent;
+  color: var(--#{$prefix}-color-text-muted);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+              color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+
+  &:hover {
+    background: var(--#{$prefix}-color-surface-sunken);
+    color: var(--#{$prefix}-color-text);
+  }
+  &:focus-visible { @include focus-ring; }
+}

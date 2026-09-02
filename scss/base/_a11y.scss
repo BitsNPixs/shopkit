@@ -7,7 +7,7 @@
 @use "../config" as *;
 @use "mixins" as *;
 
-@layer sk.base {
+@layer #{$prefix}.base {
   :where(a, button, input, select, textarea, summary,
          [tabindex]:not([tabindex="-1"])):focus-visible {
     @include focus-ring;
@@ -56,6 +56,12 @@
     // Badges: status is carried by the background fill (flattened here) →
     // outline the shape so it stays legible as a discrete label.
     .#{$prefix}-badge { border: 1px solid currentColor; }
+
+    // Progress: track and fill are both background-only → flattened to nothing.
+    // Border the track and paint the bar in the system accent so the meter
+    // stays readable.
+    .#{$prefix}-progress { border: 1px solid CanvasText; }
+    .#{$prefix}-progress__bar { background: Highlight; }
 
     // Pressed / current controls: their active state is fill/shadow-driven →
     // mark them with a Highlight outline. Scoped to specific controls to avoid

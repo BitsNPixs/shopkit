@@ -2,8 +2,9 @@
 
 **The e-commerce design system you can copy-paste.** HTML + CSS authored in SCSS,
 with token-driven **runtime theming**, first-class **dark mode**, and **multi-brand**
-support on a single page — no recompile. An optional React layer (later phase) reuses
-the exact same tokens and class names.
+support on a single page — no recompile. The optional React layer
+([`@shopkit/react`](react/)) reuses the exact same tokens and class names, with a
+parity guard so the two can never drift.
 
 > **Status: Phases 1–8 complete.** Foundation, utilities, the full Core-UI + e-commerce
 > component set, the storefront layout sections, the formal variant/size/state API
@@ -12,7 +13,7 @@ the exact same tokens and class names.
 > theme customizer** ([`docs/landing.html`](docs/landing.html)) all ship. Release infra (Phase 9) is
 > next. **Full plan & progress → [`PHASES.md`](PHASES.md).**
 
-Compiled core today: **18.9 KB gzip** (min) — 63% of the 30 KB budget, ~28 components +
+Compiled core today: **20.1 KB gzip** (min) — 67% of the 30 KB budget, ~35 components +
 a typed React layer.
 
 ---

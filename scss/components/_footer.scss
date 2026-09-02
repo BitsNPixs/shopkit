@@ -58,7 +58,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-footer {
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
     --#{$prefix}-footer-bg: var(--#{$prefix}-color-surface-alt);

@@ -15,7 +15,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-badge {
     // ── Tier-3 tokens ──
     --#{$prefix}-badge-bg:      var(--#{$prefix}-color-surface-sunken);

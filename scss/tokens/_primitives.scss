@@ -42,7 +42,7 @@ $ramps: (
               950:#072544),
 );
 
-@layer sk.tokens {
+@layer #{$prefix}.tokens {
   :root {
     // ── absolutes ──
     --#{$prefix}-white: #ffffff;

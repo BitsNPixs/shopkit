@@ -1,0 +1,75 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// INPUT GROUP  ·  .sk-input-group  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Fuses a text control with addons and/or buttons into one segmented row —
+// search-with-button, currency/unit affixes, promo-code apply:
+//
+//   <div class="sk-input-group">
+//     <span class="sk-input-group__text">$</span>
+//     <input class="sk-input" type="text" aria-label="Amount">
+//     <button class="sk-btn">Apply</button>
+//   </div>
+//
+// Same mechanics as .sk-btn-group — square the shared corners with LOGICAL
+// radius properties, merge adjacent hairlines with a -1px inline pull, and
+// raise the focused segment so its border + ring win the overlap. Children
+// stay full `.sk-input` / `.sk-select` / `.sk-btn`, so sizes, variants and
+// states keep working inside the group. It owns geometry only.
+//
+// A11y — an addon (`__text`) is decorative context: keep the real label on the
+// control (visible <label> or aria-label). RTL — logical corners + margins,
+// mirrors automatically.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer #{$prefix}.components {
+  .#{$prefix}-input-group {
+    display: flex;
+    align-items: stretch;
+    inline-size: 100%;
+  }
+
+  // The control is the elastic segment; addons and buttons keep natural width.
+  .#{$prefix}-input-group > .#{$prefix}-input,
+  .#{$prefix}-input-group > .#{$prefix}-select {
+    flex: 1 1 auto;
+    inline-size: auto;
+    min-inline-size: 0;
+  }
+
+  // Static affix — text/icon context sharing the control's chrome.
+  .#{$prefix}-input-group__text {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: var(--#{$prefix}-control-padding-x);
+    border: var(--#{$prefix}-control-border);
+    border-radius: var(--#{$prefix}-control-radius);
+    background: var(--#{$prefix}-color-surface-alt);
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-sm);
+    white-space: nowrap;
+  }
+
+  // Square every segment, then re-round the two outer ends only.
+  .#{$prefix}-input-group > * {
+    border-radius: 0;
+  }
+  .#{$prefix}-input-group > :not(:first-child) {
+    margin-inline-start: -1px;
+  }
+  .#{$prefix}-input-group > :first-child {
+    border-start-start-radius: var(--#{$prefix}-control-radius);
+    border-end-start-radius: var(--#{$prefix}-control-radius);
+  }
+  .#{$prefix}-input-group > :last-child {
+    border-start-end-radius: var(--#{$prefix}-control-radius);
+    border-end-end-radius: var(--#{$prefix}-control-radius);
+  }
+
+  // Lift the focused/hovered segment so its border + focus ring win the overlap.
+  .#{$prefix}-input-group > :focus-visible,
+  .#{$prefix}-input-group > .#{$prefix}-btn:hover {
+    position: relative;
+    z-index: var(--#{$prefix}-z-raised);
+  }
+}

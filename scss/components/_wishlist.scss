@@ -28,7 +28,7 @@
 @use "../base/mixins" as *;
 @use "../base/variants" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-wishlist {
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
     --#{$prefix}-wishlist-size:      2.5rem;

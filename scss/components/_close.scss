@@ -1,0 +1,22 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// CLOSE  ·  .sk-close  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// The standalone dismiss button — the same quiet 2rem icon control the modal /
+// drawer / cart headers already use (one shared definition: `close-button` in
+// base/_mixins, so the treatment can never drift between surfaces). Reach for
+// this on any dismissible thing the component set doesn't ship a close for
+// (toasts, custom panels, tags).
+//
+//   <button class="sk-close" aria-label="Close">✕</button>
+//
+// A11y — icon-only: the element REQUIRES an aria-label. Focus ring, hover fill
+// and colour all come token-driven from the mixin.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer #{$prefix}.components {
+  .#{$prefix}-close {
+    @include close-button;
+  }
+}

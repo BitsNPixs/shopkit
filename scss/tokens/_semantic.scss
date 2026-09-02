@@ -174,7 +174,7 @@ $brands: (
 // ═══════════════════════════════════════════════════════════════════════════
 // EMIT THE CASCADE
 // ═══════════════════════════════════════════════════════════════════════════
-@layer sk.tokens {
+@layer #{$prefix}.tokens {
 
   // ── Root defaults: knobs + default brand (aurora) pointers + LIGHT theme ──
   :root {
@@ -197,6 +197,15 @@ $brands: (
   }
 
   // ── Explicit theme (works at root or on any nested wrapper) ──
+  // `color` is re-anchored here, not only on <body>: body's `color:
+  // var(--sk-color-text)` substitutes ONCE, at <body>, under the root theme —
+  // so a nested theme scope that only remapped the token would keep inheriting
+  // the outer theme's computed text colour (dark-on-dark). Same substitution
+  // rule that forces brand() to be re-emitted per scope (see header).
+  [data-theme="light"],
+  [data-theme="dark"] {
+    color: var(--#{$prefix}-color-text);
+  }
   [data-theme="light"] { @include surface("light"); }
   [data-theme="dark"]  { @include surface("dark"); }
 

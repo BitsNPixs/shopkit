@@ -1,0 +1,100 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TOAST  ·  .sk-toasts / .sk-toast  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Transient notifications — "Added to cart", "Saved to wishlist", an error that
+// resolves itself. `.sk-toasts` is the fixed stacking region (block-end /
+// inline-end corner, logical → swaps sides in RTL); `.sk-toast` is one message.
+// CSS paints and animates; SHOWING, TIMING and DISMISSAL are JS-owned (or the
+// @shopkit/react <Toast>). The document-flow sibling is `.sk-alert`.
+//
+//   <div class="sk-toasts">
+//     <div class="sk-toast sk-toast--success" role="status">
+//       <span class="sk-toast__icon" aria-hidden="true">✓</span>
+//       <div class="sk-toast__body">
+//         <p class="sk-toast__title">Added to cart</p>
+//         Organic Cotton Crew Tee · $34
+//       </div>
+//       <button class="sk-close" aria-label="Dismiss">✕</button>
+//     </div>
+//   </div>
+//
+// TIER-3 — `--sk-toast-bg/-fg/-accent` (accent = the inline-start bar + icon),
+// `--sk-toast-width`. Status variants remap colour tokens only, from the shared
+// status palette, so `--danger` means what it means on every component.
+//
+// A11y — role="status" (polite) for confirmations, role="alert" for urgent
+// failures; put the role on EACH toast, not the region, so insertions announce.
+// The region ignores pointer events so it never blocks the page underneath;
+// each toast re-enables them. Auto-dismiss timers should pause on hover/focus
+// and never be the ONLY way to act on the message (JS concern — documented).
+//
+// MOTION — enter rise+fade on duration tokens (`both` fill), so reduced-motion
+// users get an instant, non-flashing appearance for free.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer #{$prefix}.components {
+  // ── The fixed stacking region ──
+  .#{$prefix}-toasts {
+    position: fixed;
+    inset-block-end: var(--#{$prefix}-space-4);
+    inset-inline-end: var(--#{$prefix}-space-4);
+    z-index: var(--#{$prefix}-z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-2);
+    inline-size: min(22rem, calc(100vw - var(--#{$prefix}-space-4) * 2));
+    pointer-events: none;   // the region never blocks the page…
+  }
+
+  // ── One toast ──
+  .#{$prefix}-toast {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-toast-bg:     var(--#{$prefix}-color-surface);
+    --#{$prefix}-toast-fg:     var(--#{$prefix}-color-text);
+    --#{$prefix}-toast-accent: var(--#{$prefix}-color-primary);
+
+    display: flex;
+    align-items: flex-start;
+    gap: var(--#{$prefix}-space-3);
+    padding: var(--#{$prefix}-space-3) var(--#{$prefix}-space-4);
+    border: 1px solid var(--#{$prefix}-color-border);
+    border-inline-start: 3px solid var(--#{$prefix}-toast-accent);
+    border-radius: var(--#{$prefix}-radius);
+    background: var(--#{$prefix}-toast-bg);
+    color: var(--#{$prefix}-toast-fg);
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-snug);
+    box-shadow: var(--#{$prefix}-shadow-lg);
+    pointer-events: auto;   // …but each toast is interactive
+    animation: #{$prefix}-toast-in var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out) both;
+  }
+  @keyframes #{$prefix}-toast-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .#{$prefix}-toast__icon {
+    flex: none;
+    color: var(--#{$prefix}-toast-accent);
+    line-height: inherit;
+  }
+  .#{$prefix}-toast__body { flex: 1 1 auto; min-inline-size: 0; }
+  .#{$prefix}-toast__title {
+    margin: 0;
+    font-weight: var(--#{$prefix}-weight-semibold);
+    color: var(--#{$prefix}-toast-fg);
+  }
+  // The dismiss control is the shared `.sk-close`; just tuck it into the pad.
+  .#{$prefix}-toast > .#{$prefix}-close {
+    margin-block-start: calc(var(--#{$prefix}-space-1) * -1);
+    margin-inline-end: calc(var(--#{$prefix}-space-2) * -1);
+  }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+  // Colour-token remaps only, from the shared status palette.
+  .#{$prefix}-toast--success { --#{$prefix}-toast-accent: var(--#{$prefix}-color-success); }
+  .#{$prefix}-toast--danger  { --#{$prefix}-toast-accent: var(--#{$prefix}-color-danger); }
+  .#{$prefix}-toast--warning { --#{$prefix}-toast-accent: var(--#{$prefix}-color-warning); }
+  .#{$prefix}-toast--info    { --#{$prefix}-toast-accent: var(--#{$prefix}-color-info); }
+}

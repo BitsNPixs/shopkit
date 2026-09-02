@@ -1,0 +1,61 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// PROGRESS  ·  .sk-progress  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A determinate linear meter — "$12 away from free shipping", upload progress,
+// a goal bar. Driven by ONE custom property (`--sk-progress-value`, 0–100),
+// the same value-as-variable idiom the rating stars use, so JS only ever
+// writes a number:
+//
+//   <div class="sk-progress" role="progressbar" aria-valuenow="70"
+//        aria-valuemin="0" aria-valuemax="100" aria-label="Free-shipping goal"
+//        style="--sk-progress-value: 70">
+//     <div class="sk-progress__bar"></div>
+//   </div>
+//
+// Why not native <progress>? Cross-browser styling still needs three vendor
+// pseudo-element trees; the ARIA div pattern is fully specified, and here the
+// role + aria-value* attributes are REQUIRED markup, not decoration.
+//
+// TIER-3 — height / track / fill / radius tokens; status variants remap the
+// fill only, from the shared status palette.
+//
+// MOTION — the bar's inline-size transitions on duration tokens, so live
+// updates glide (and snap under reduced motion). RTL — the bar grows from the
+// inline start automatically (flex + logical sizing, no transforms).
+// Forced-colors support lives with the other overrides in base/_a11y.scss.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/motion" as *;
+
+@layer #{$prefix}.components {
+  .#{$prefix}-progress {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-progress-value:  0;                                    // 0–100
+    --#{$prefix}-progress-height: 0.5rem;
+    --#{$prefix}-progress-track:  var(--#{$prefix}-color-surface-sunken);
+    --#{$prefix}-progress-fill:   var(--#{$prefix}-color-primary);
+    --#{$prefix}-progress-radius: var(--#{$prefix}-radius-pill);
+
+    display: flex;
+    block-size: var(--#{$prefix}-progress-height);
+    border-radius: var(--#{$prefix}-progress-radius);
+    background: var(--#{$prefix}-progress-track);
+    overflow: hidden;
+  }
+
+  .#{$prefix}-progress__bar {
+    inline-size: calc(var(--#{$prefix}-progress-value) * 1%);
+    border-radius: inherit;
+    background: var(--#{$prefix}-progress-fill);
+    @include transition(inline-size, $dur: "base", $ease: "out");
+  }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+  .#{$prefix}-progress--success { --#{$prefix}-progress-fill: var(--#{$prefix}-color-success); }
+  .#{$prefix}-progress--danger  { --#{$prefix}-progress-fill: var(--#{$prefix}-color-danger); }
+  .#{$prefix}-progress--warning { --#{$prefix}-progress-fill: var(--#{$prefix}-color-warning); }
+
+  // ── Sizes ──
+  .#{$prefix}-progress--sm { --#{$prefix}-progress-height: 0.25rem; }
+  .#{$prefix}-progress--lg { --#{$prefix}-progress-height: 0.875rem; }
+}

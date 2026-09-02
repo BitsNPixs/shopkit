@@ -53,7 +53,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-hero {
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
     --#{$prefix}-hero-min:     60vh;

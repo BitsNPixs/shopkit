@@ -24,7 +24,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-tabs {
     --#{$prefix}-tabs-accent: var(--#{$prefix}-color-primary);
     --#{$prefix}-tabs-border: var(--#{$prefix}-color-border);

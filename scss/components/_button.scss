@@ -29,7 +29,7 @@
 @use "../base/variants" as *;
 @use "../base/motion" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-btn {
     // ── Tier-3 tokens (defaults resolve to the semantic / control layer) ──
     --#{$prefix}-btn-bg:           var(--#{$prefix}-color-primary);
