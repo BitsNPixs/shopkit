@@ -48,6 +48,23 @@ export declare const cls: {
     readonly alertBody: string;
     readonly alertTitle: string;
     readonly alertClose: string;
+    readonly toasts: string;
+    readonly toast: string;
+    readonly toastVariant: {
+        readonly success: string;
+        readonly danger: string;
+        readonly warning: string;
+        readonly info: string;
+    };
+    readonly toastIcon: string;
+    readonly toastBody: string;
+    readonly toastTitle: string;
+    readonly close: string;
+    readonly spinner: string;
+    readonly spinnerSize: {
+        readonly sm: string;
+        readonly lg: string;
+    };
     readonly input: string;
     readonly inputSize: {
         readonly sm: string;

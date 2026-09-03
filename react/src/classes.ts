@@ -64,6 +64,24 @@ export const cls = {
   alertTitle: p("alert__title"),
   alertClose: p("alert__close"),
 
+  // ── Toast ──
+  toasts: p("toasts"),
+  toast: p("toast"),
+  toastVariant: {
+    success: p("toast--success"),
+    danger: p("toast--danger"),
+    warning: p("toast--warning"),
+    info: p("toast--info"),
+  },
+  toastIcon: p("toast__icon"),
+  toastBody: p("toast__body"),
+  toastTitle: p("toast__title"),
+
+  // ── Shared close + spinner ──
+  close: p("close"),
+  spinner: p("spinner"),
+  spinnerSize: { sm: p("spinner--sm"), lg: p("spinner--lg") },
+
   // ── Form controls ──
   input: p("input"),
   inputSize: { sm: p("input--sm"), lg: p("input--lg") },

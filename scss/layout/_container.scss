@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.layout {
+@layer #{$prefix}.layout {
   .#{$prefix}-container,
   .#{$prefix}-container-fluid,
   .#{$prefix}-container-narrow {

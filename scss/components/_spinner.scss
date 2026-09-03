@@ -1,0 +1,42 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// SPINNER  ·  .sk-spinner  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A standalone indeterminate loading ring — the same treatment as the button's
+// `--loading` overlay, available outside a button (page sections, cards,
+// inline "loading…" rows). Colour is `currentColor`, so it inherits the text
+// colour and can be tinted with any semantic token:
+//
+//   <span class="sk-spinner" role="status" aria-label="Loading"></span>
+//   <span class="sk-spinner sk-spinner--lg" style="color: var(--sk-color-primary)"
+//         role="status" aria-label="Loading products"></span>
+//
+// A11y — carries no text: give it `role="status"` + an aria-label (or pair it
+// with visible text and `aria-hidden="true"` on the ring). Reduced-motion users
+// zero the duration tokens, so the ring simply holds still — pair with text for
+// them where the state matters.
+//
+// RTL — rotation only; direction-agnostic.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer #{$prefix}.components {
+  .#{$prefix}-spinner {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-spinner-size:  1.5rem;
+    --#{$prefix}-spinner-track: color-mix(in srgb, currentColor 25%, transparent);
+
+    display: inline-block;
+    flex: none;
+    inline-size: var(--#{$prefix}-spinner-size);
+    block-size: var(--#{$prefix}-spinner-size);
+    border: 2px solid var(--#{$prefix}-spinner-track);
+    border-block-start-color: currentColor;   // the moving arc
+    border-radius: 50%;
+    animation: #{$prefix}-spinner-spin var(--#{$prefix}-dur-slow) linear infinite;
+  }
+  @keyframes #{$prefix}-spinner-spin { to { transform: rotate(360deg); } }
+
+  // ── Sizes ──
+  .#{$prefix}-spinner--sm { --#{$prefix}-spinner-size: 1rem; }
+  .#{$prefix}-spinner--lg { --#{$prefix}-spinner-size: 2.25rem; border-width: 3px; }
+}

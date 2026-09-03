@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.base {
+@layer #{$prefix}.base {
   html { font-size: $font-size-root; }
 
   body {

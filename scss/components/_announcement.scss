@@ -30,7 +30,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-announcement {
     // ── Tier-3 tokens (default to the inverse surface pair) ──
     --#{$prefix}-announcement-bg: var(--#{$prefix}-color-surface-inverse);

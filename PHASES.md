@@ -12,9 +12,9 @@ file is the *plan & checklist*. Update the checkboxes here whenever a piece ship
 
 | | |
 |---|---|
-| **Date** | 2026-07-21 |
-| **Current phase** | Phase 8 — Docs site + floating customizer (✅ complete) · Phase 9 next |
-| **Compiled core** | **18.9 KB gzip** (min) · budget 30 KB · **63% used** |
+| **Date** | 2026-09-02 |
+| **Current phase** | Phase 8.5 — Coverage fill + system audit (✅ complete) · Phase 9 next |
+| **Compiled core** | **20.1 KB gzip** (min) · budget 30 KB · **67% used** |
 | **Guards passing** | `lint` (logical-props) ✅ · `size` (budget) ✅ · `parity` (React↔CSS) ✅ |
 
 ---
@@ -52,6 +52,7 @@ scss/
 ├── components/       ✅ Core UI: button · button-group · form · badge · alert · modal · tabs · accordion · skeleton · tooltip
 │                      ✅ Commerce: price · rating · swatch · stepper · wishlist · product-card · breadcrumb · pagination · facets · empty
 │                      ✅ Sections: announcement · navbar · menu · mega-menu · drawer · hero · cart · checkout-steps · footer
+│                      ✅ Coverage fill: toast · table · progress · input-group · spinner · close
 ├── utilities/        ✅ spacing · ✅ display · ✅ flex · ✅ animation (motion)
 └── shopkit.scss      entry — @use of each layer in cascade order
 ```
@@ -154,6 +155,21 @@ Cascade layer order (later wins; all library CSS is layered so unlayered consume
       real `sk-` components (navbar, hero, product cards, multi-brand panels, footer) + embeds the
       customizer; offline-safe (emoji/gradient placeholders).
 - [x] Docs site wired: landing ⇄ [component showcase](docs/index.html) cross-linked.
+
+### Phase 8.5 — Coverage fill + system audit ✅
+Closed the highest-value gaps from the Bootstrap-class coverage review ([`COVERAGE.md`](COVERAGE.md)),
+each following the standard recipe (tokens → partial → showcase → guards):
+- [x] **Toast** — `.sk-toasts` region + `.sk-toast` (status variants, enter motion, token-driven)
+      · React `<Toast>`/`<ToastRegion>` with pause-on-hover auto-dismiss
+- [x] **Table** — `.sk-table` (+`--striped/--hover/--bordered/--compact`) + `.sk-table-wrap` scroll escape
+- [x] **Progress** — `.sk-progress`, one custom property drives the bar (rating-stars idiom); forced-colors safe
+- [x] **Input group** — `.sk-input-group` fused control row (btn-group mechanics)
+- [x] **Range + file** — `.sk-range` (native, `accent-color`-tinted) · styled `::file-selector-button`
+- [x] **Spinner** — `.sk-spinner` (+ React `<Spinner>`) · **Close** — shared `.sk-close`
+- [x] **Dedup** — one `close-button` mixin now feeds modal/drawer/cart closes + `.sk-close`
+- [x] **Fixes** — `$prefix` interpolated in every `@layer` (was hardcoded in 84 blocks);
+      nested `[data-theme]` scopes re-anchor inherited text colour; select chevron token
+      moved onto theme scopes (correct in every nesting combo)
 
 ### Phase 9 — Release infrastructure ⬜
 - [ ] GitHub Pages · npm/jsDelivr publish · size CI gate · full storefront demo

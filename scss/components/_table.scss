@@ -1,0 +1,101 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TABLE  ·  .sk-table  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// Data tables — order history, size guides, spec sheets, comparisons. Opt-in
+// (a bare <table> keeps only the reset), BEM-free on the inner elements: the
+// component styles the semantic table elements it contains, so plain
+// <thead>/<th>/<td> markup needs no extra classes.
+//
+//   <div class="sk-table-wrap">
+//     <table class="sk-table sk-table--striped sk-table--hover">
+//       <caption>Order history</caption>
+//       <thead><tr><th scope="col">Order</th> … </tr></thead>
+//       <tbody><tr><td>#1042</td> … </tr></tbody>
+//     </table>
+//   </div>
+//
+// TIER-3 — cell padding, border and stripe/hover fills are tokens, so density
+// and zebra tint retune without restating structure.
+//
+// RESPONSIVE — tables can't reflow; `.sk-table-wrap` gives the standard
+// horizontal-scroll escape hatch so a wide table never breaks the page.
+//
+// A11y — keep a `<caption>` (visually quiet here, announced by AT) and
+// `scope="col|row"` on headers; `text-align` uses logical start so columns
+// mirror under RTL.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+
+@layer #{$prefix}.components {
+  .#{$prefix}-table {
+    // ── Tier-3 tokens ──
+    --#{$prefix}-table-pad-y:     var(--#{$prefix}-space-3);
+    --#{$prefix}-table-pad-x:     var(--#{$prefix}-space-4);
+    --#{$prefix}-table-border:    var(--#{$prefix}-color-border-subtle);
+    --#{$prefix}-table-stripe-bg: var(--#{$prefix}-color-surface-alt);
+    --#{$prefix}-table-hover-bg:  var(--#{$prefix}-color-surface-sunken);
+
+    inline-size: 100%;
+    border-collapse: collapse;
+    color: var(--#{$prefix}-color-text);
+    font-size: var(--#{$prefix}-text-sm);
+    line-height: var(--#{$prefix}-leading-snug);
+  }
+
+  .#{$prefix}-table caption {
+    padding-block: var(--#{$prefix}-table-pad-y);
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-xs);
+    text-align: start;
+    caption-side: bottom;
+  }
+
+  .#{$prefix}-table th,
+  .#{$prefix}-table td {
+    padding-block: var(--#{$prefix}-table-pad-y);
+    padding-inline: var(--#{$prefix}-table-pad-x);
+    border-block-end: 1px solid var(--#{$prefix}-table-border);
+    text-align: start;
+    vertical-align: middle;
+  }
+  .#{$prefix}-table thead th {
+    color: var(--#{$prefix}-color-text-muted);
+    font-size: var(--#{$prefix}-text-xs);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-block-end: 1px solid var(--#{$prefix}-color-border-strong);
+  }
+  .#{$prefix}-table tbody th { font-weight: var(--#{$prefix}-weight-medium); }
+
+  // ═════════════════════════════ VARIANTS ═════════════════════════════
+
+  // Zebra rows (odd rows tinted; stripes replace the row dividers visually,
+  // the hairline stays for AT-independent structure).
+  .#{$prefix}-table--striped tbody tr:nth-child(odd) {
+    background-color: var(--#{$prefix}-table-stripe-bg);
+  }
+
+  // Row hover — reads as "this row is interactive"; use with row links/actions.
+  .#{$prefix}-table--hover tbody tr:hover {
+    background-color: var(--#{$prefix}-table-hover-bg);
+  }
+
+  // Full grid lines.
+  .#{$prefix}-table--bordered th,
+  .#{$prefix}-table--bordered td {
+    border: 1px solid var(--#{$prefix}-table-border);
+  }
+
+  // Tighter density.
+  .#{$prefix}-table--compact {
+    --#{$prefix}-table-pad-y: var(--#{$prefix}-space-2);
+    --#{$prefix}-table-pad-x: var(--#{$prefix}-space-3);
+  }
+
+  // ── Responsive escape hatch — the wide table scrolls, the page doesn't. ──
+  .#{$prefix}-table-wrap {
+    inline-size: 100%;
+    overflow-x: auto;
+  }
+}

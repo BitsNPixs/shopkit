@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ShopKit — the e-commerce design system you can copy-paste</title>
-<meta name="description" content="ShopKit is an e-commerce design system you can copy-paste: 3-tier tokens, first-class dark + multi-brand, RTL-safe logical properties, ~19 KB and zero !important. Real storefront components, ready to ship.">
+<meta name="description" content="ShopKit is an e-commerce design system you can copy-paste: 3-tier tokens, first-class dark + multi-brand, RTL-safe logical properties, ~20 KB and zero !important. Real storefront components, ready to ship.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -81,7 +81,7 @@
 
 <!-- ══════════════════ ANNOUNCEMENT ══════════════════ -->
 <div class="sk-announcement sk-announcement--primary" id="promo">
-  v0.1 · 28 components · 18.9&nbsp;KB gzip · copy-paste ready ·
+  v0.2 · 35 components · 20.1&nbsp;KB gzip · copy-paste ready ·
   <a class="sk-announcement__link" href="index.html">Browse the kit →</a>
   <button class="sk-announcement__close" type="button" aria-label="Dismiss announcement"
           onclick="document.getElementById('promo').hidden=true">✕</button>
@@ -160,7 +160,7 @@
       <div class="sk-col-12 sk-col-md-6 sk-col-lg-3">
         <div class="feat">
           <span class="feat__emoji" aria-hidden="true">⚡</span>
-          <h3>~19 KB, zero !important</h3>
+          <h3>~20 KB, zero !important</h3>
           <p class="muted">Delivered on an <code>@layer</code> cascade, so your own unlayered CSS always
             wins — no specificity fights, no override hacks.</p>
         </div>
@@ -430,5 +430,19 @@ npm install shopkit
 </footer>
 
 <script src="customizer.js" defer></script>
+<script>
+/* ---- wishlist demo: toggle the saved state. aria-pressed drives the CSS
+   (the heart fills on "true"), so the handler only flips the DOM signal —
+   exactly the state contract every ShopKit component follows. ---- */
+(function () {
+  document.querySelectorAll(".sk-wishlist").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var saved = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", String(!saved));
+      btn.setAttribute("aria-label", saved ? "Add to wishlist" : "Remove from wishlist");
+    });
+  });
+})();
+</script>
 </body>
 </html>

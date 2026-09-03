@@ -22,7 +22,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   // ── Vertical field wrapper: label ▸ control ▸ help/error ──
   .#{$prefix}-field {
     display: flex;
@@ -86,10 +86,28 @@
 
   // Select — custom chevron; keep room for it on the trailing edge.
   // A background-image data-URI can't inherit `currentColor`, so the chevron is
-  // exposed as a token and the stroke is swapped per mode (light = neutral-500,
-  // dark = neutral-400) so it tracks the theme like the accordion marker does.
+  // a token whose per-mode value is declared ON THE THEME SCOPES (not on the
+  // element): nested light-in-dark / dark-in-light then resolve the NEAREST
+  // scope's glyph by inheritance proximity — the same per-scope re-emission the
+  // semantic layer uses for surfaces. Stroke: light = neutral-500, dark =
+  // neutral-400 (matches the accordion marker treatment).
+  $-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23647186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  $-chevron-dark:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238A98AE' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+
+  :root,
+  [data-theme="light"] {
+    --#{$prefix}-select-chevron: #{$-chevron-light};
+  }
+  [data-theme="dark"] {
+    --#{$prefix}-select-chevron: #{$-chevron-dark};
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --#{$prefix}-select-chevron: #{$-chevron-dark};
+    }
+  }
+
   .#{$prefix}-select {
-    --#{$prefix}-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23647186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
     padding-inline-end: var(--#{$prefix}-space-8);
     background-image: var(--#{$prefix}-select-chevron);
     background-repeat: no-repeat;
@@ -99,15 +117,6 @@
   }
   [dir="rtl"] .#{$prefix}-select {
     background-position: left var(--#{$prefix}-space-3) center;
-  }
-  // Dark chevron (explicit theme + system dark when not forced light).
-  [data-theme="dark"] .#{$prefix}-select {
-    --#{$prefix}-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238A98AE' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .#{$prefix}-select {
-      --#{$prefix}-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238A98AE' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
-    }
   }
 
   // ── Invalid + disabled (apply to every text control) ──
@@ -200,6 +209,49 @@
   }
   .#{$prefix}-switch:focus-visible { @include focus-ring; }
   .#{$prefix}-switch:disabled { cursor: not-allowed; opacity: 0.55; }
+
+  // ── Range — native slider, brand-tinted like checkbox/radio ──
+  // Same platform deal as the choice controls: `accent-color` themes the
+  // native slider (adaptive to theme + brand, RTL-safe, zero custom-painted
+  // vendor pseudo trees). Used by the price facet and quantity filters.
+  .#{$prefix}-range {
+    inline-size: 100%;
+    block-size: var(--#{$prefix}-tap-target);   // comfortable hit area
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    accent-color: var(--#{$prefix}-color-primary);
+    cursor: pointer;
+  }
+  .#{$prefix}-range:focus-visible { @include focus-ring; }
+  .#{$prefix}-range:disabled { cursor: not-allowed; opacity: 0.55; }
+
+  // ── File — `.sk-input` on <input type="file">, with a styled chooser ──
+  // The field chrome comes from `.sk-input`; only the UA's chooser button is
+  // restyled here (a quiet secondary-button treatment, token-driven).
+  .#{$prefix}-input[type="file"] {
+    padding-block: 0;
+    padding-inline-start: 0;
+    line-height: var(--#{$prefix}-field-height);
+    cursor: pointer;
+  }
+  .#{$prefix}-input[type="file"]::file-selector-button {
+    margin-inline-end: var(--#{$prefix}-space-3);
+    padding-block: 0;
+    padding-inline: var(--#{$prefix}-control-padding-x);
+    block-size: 100%;
+    border: 0;
+    border-inline-end: 1px solid var(--#{$prefix}-field-border);
+    background: var(--#{$prefix}-color-surface-alt);
+    color: var(--#{$prefix}-color-text);
+    font: inherit;
+    font-weight: var(--#{$prefix}-weight-medium);
+    cursor: pointer;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-input[type="file"]:hover::file-selector-button {
+    background: var(--#{$prefix}-color-surface-sunken);
+  }
 
   // ── Fieldset + legend ──
   .#{$prefix}-fieldset {
