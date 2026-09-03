@@ -1683,6 +1683,17 @@ function replayMotion() {
     setTimeout(function () { t.remove(); }, 5000);
   });
 })();
+
+/* ---- wishlist demo: toggle the saved state (aria-pressed drives the CSS) ---- */
+(function () {
+  document.querySelectorAll(".sk-wishlist").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var saved = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", String(!saved));
+      btn.setAttribute("aria-label", saved ? "Add to wishlist" : "Remove from wishlist");
+    });
+  });
+})();
 </script>
 </body>
 </html>

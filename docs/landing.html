@@ -430,5 +430,19 @@ npm install shopkit
 </footer>
 
 <script src="customizer.js" defer></script>
+<script>
+/* ---- wishlist demo: toggle the saved state. aria-pressed drives the CSS
+   (the heart fills on "true"), so the handler only flips the DOM signal —
+   exactly the state contract every ShopKit component follows. ---- */
+(function () {
+  document.querySelectorAll(".sk-wishlist").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var saved = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", String(!saved));
+      btn.setAttribute("aria-label", saved ? "Add to wishlist" : "Remove from wishlist");
+    });
+  });
+})();
+</script>
 </body>
 </html>
