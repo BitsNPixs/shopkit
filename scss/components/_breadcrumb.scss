@@ -34,14 +34,8 @@
 @use "../base/mixins" as *;
 
 @layer #{$prefix}.components {
+  .#{$prefix}-breadcrumb { --#{$prefix}-breadcrumb-sep: "/"; }   // Bootstrap .breadcrumb block — override the divider here
   .#{$prefix}-breadcrumb__list {
-    // ── Tier-3 tokens ──
-    // Declared on the LIST — the outermost class every documented usage
-    // actually carries (the <nav> wrapper is classless; a root `.sk-breadcrumb`
-    // rule used to hold this token and was silently never applied, leaving the
-    // separator's `content: var(…)` invalid → no separator rendered).
-    --#{$prefix}-breadcrumb-sep: "/";
-
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -61,8 +55,7 @@
 
   // Separator sits before every item except the first.
   .#{$prefix}-breadcrumb__item + .#{$prefix}-breadcrumb__item::before {
-    content: var(--#{$prefix}-breadcrumb-sep);
-    margin-inline-end: var(--#{$prefix}-space-2);
+    content: var(--#{$prefix}-breadcrumb-sep, "/");    // the two gaps already space it symmetrically
     color: var(--#{$prefix}-color-text-subtle);
   }
 
@@ -80,7 +73,8 @@
   }
 
   // Current page — emphasised, non-interactive.
-  .#{$prefix}-breadcrumb__item[aria-current="page"] {
+  .#{$prefix}-breadcrumb__item[aria-current="page"],
+  .#{$prefix}-breadcrumb__item:has(> [aria-current="page"]) {
     color: var(--#{$prefix}-color-text);
     font-weight: var(--#{$prefix}-weight-medium);
   }

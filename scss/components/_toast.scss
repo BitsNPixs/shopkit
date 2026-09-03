@@ -36,14 +36,17 @@
 @layer #{$prefix}.components {
   // ── The fixed stacking region ──
   .#{$prefix}-toasts {
+    --#{$prefix}-toast-width: 22rem;
+    --#{$prefix}-toasts-inset-block:  auto var(--#{$prefix}-space-4);   // block-end by default
+    --#{$prefix}-toasts-inset-inline: auto var(--#{$prefix}-space-4);   // inline-end by default
     position: fixed;
-    inset-block-end: var(--#{$prefix}-space-4);
-    inset-inline-end: var(--#{$prefix}-space-4);
+    inset-block: var(--#{$prefix}-toasts-inset-block);
+    inset-inline: var(--#{$prefix}-toasts-inset-inline);
     z-index: var(--#{$prefix}-z-toast);
     display: flex;
     flex-direction: column;
     gap: var(--#{$prefix}-space-2);
-    inline-size: min(22rem, calc(100vw - var(--#{$prefix}-space-4) * 2));
+    inline-size: min(var(--#{$prefix}-toast-width), calc(100dvw - var(--#{$prefix}-space-4) * 2));
     pointer-events: none;   // the region never blocks the page…
   }
 
@@ -97,4 +100,8 @@
   .#{$prefix}-toast--danger  { --#{$prefix}-toast-accent: var(--#{$prefix}-color-danger); }
   .#{$prefix}-toast--warning { --#{$prefix}-toast-accent: var(--#{$prefix}-color-warning); }
   .#{$prefix}-toast--info    { --#{$prefix}-toast-accent: var(--#{$prefix}-color-info); }
+  // ── Placement (Bootstrap .toast-container + position utilities) ──
+  .#{$prefix}-toasts--top    { --#{$prefix}-toasts-inset-block:  var(--#{$prefix}-space-4) auto; }
+  .#{$prefix}-toasts--start  { --#{$prefix}-toasts-inset-inline: var(--#{$prefix}-space-4) auto; }
+  .#{$prefix}-toasts--center { --#{$prefix}-toasts-inset-inline: 0; margin-inline: auto; }
 }

@@ -49,6 +49,7 @@
     border-radius: 50%;
     background: var(--#{$prefix}-wishlist-bg);
     color: var(--#{$prefix}-wishlist-fg);
+    font-size: var(--#{$prefix}-text-md);          // stable em basis for the 1.25em icon
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
@@ -78,10 +79,22 @@
   .#{$prefix}-wishlist:focus-visible { @include focus-ring; }
 
   // ── Saved state — coloured, filled heart ──
-  .#{$prefix}-wishlist[aria-pressed="true"] {
-    color: var(--#{$prefix}-wishlist-fg-active);
+  .#{$prefix}-wishlist[aria-pressed="true"],
+  .#{$prefix}-wishlist-input:checked + .#{$prefix}-wishlist {
+    --#{$prefix}-wishlist-fg:       var(--#{$prefix}-wishlist-fg-active);
+    --#{$prefix}-wishlist-fg-hover: var(--#{$prefix}-wishlist-fg-active);   // hover never "un-saves" the heart
+    --#{$prefix}-wishlist-border:   var(--#{$prefix}-wishlist-fg-active);
+    color: var(--#{$prefix}-wishlist-fg);
   }
-  .#{$prefix}-wishlist[aria-pressed="true"] svg {
+  .#{$prefix}-wishlist[aria-pressed="true"] svg,
+  .#{$prefix}-wishlist-input:checked + .#{$prefix}-wishlist svg {
     fill: currentColor;
   }
+  // Bootstrap .btn-check parity — <input class="sk-wishlist-input" type="checkbox"> + <label class="sk-wishlist">.
+  .#{$prefix}-wishlist-input { @include visually-hidden; }
+  .#{$prefix}-wishlist-input:focus-visible + .#{$prefix}-wishlist { @include focus-ring; }
+
+  // ── Sizes ──
+  .#{$prefix}-wishlist--sm { --#{$prefix}-wishlist-size: var(--#{$prefix}-control-height-sm); }
+  .#{$prefix}-wishlist--lg { --#{$prefix}-wishlist-size: var(--#{$prefix}-control-height-lg); }
 }

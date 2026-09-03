@@ -47,7 +47,7 @@
 
     // ── Structure ──
     display: inline-flex;
-    align-items: center;
+    align-items: stretch;                   // buttons + dividers always span the full control height
     min-block-size: var(--#{$prefix}-stepper-height);
     border: 1px solid var(--#{$prefix}-stepper-border);
     border-radius: var(--#{$prefix}-stepper-radius);
@@ -63,7 +63,7 @@
     justify-content: center;
     flex: none;
     inline-size: var(--#{$prefix}-stepper-height);
-    block-size: var(--#{$prefix}-stepper-height);
+    align-self: stretch;
     padding: 0;
     border: 0;
     background: transparent;
@@ -116,11 +116,7 @@
     @include focus-ring;
     outline-offset: calc(var(--#{$prefix}-focus-ring-offset) * -1);
   }
-  .#{$prefix}-stepper__input:disabled,
-  .#{$prefix}-stepper__input[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
+  .#{$prefix}-stepper__input { @include disabled(0.5); }
 
   // ═════════════════════════════ SIZES ════════════════════════════════
   .#{$prefix}-stepper--sm {
@@ -130,5 +126,14 @@
   .#{$prefix}-stepper--lg {
     --#{$prefix}-stepper-height:  var(--#{$prefix}-control-height-lg);
     --#{$prefix}-stepper-input-w: 3.5rem;
+  }
+  // ── Whole-control states — hang off the real signals on the children ──
+  .#{$prefix}-stepper:has(.#{$prefix}-stepper__input:disabled),
+  .#{$prefix}-stepper[aria-disabled="true"] {
+    background: var(--#{$prefix}-color-surface-sunken);
+    cursor: not-allowed;
+  }
+  .#{$prefix}-stepper:has([aria-invalid="true"]) {
+    --#{$prefix}-stepper-border: var(--#{$prefix}-color-danger);
   }
 }

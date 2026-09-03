@@ -26,17 +26,30 @@
     --#{$prefix}-spinner-track: color-mix(in srgb, currentColor 25%, transparent);
 
     display: inline-block;
+    vertical-align: -0.125em;                 // Bootstrap .spinner-border — sits on the text line
     flex: none;
     inline-size: var(--#{$prefix}-spinner-size);
     block-size: var(--#{$prefix}-spinner-size);
     border: 2px solid var(--#{$prefix}-spinner-track);
     border-block-start-color: currentColor;   // the moving arc
     border-radius: 50%;
-    animation: #{$prefix}-spinner-spin var(--#{$prefix}-dur-slow) linear infinite;
+    animation: #{$prefix}-spinner-spin var(--#{$prefix}-dur-loop, var(--#{$prefix}-dur-slow)) linear infinite;
   }
   @keyframes #{$prefix}-spinner-spin { to { transform: rotate(360deg); } }
 
   // ── Sizes ──
   .#{$prefix}-spinner--sm { --#{$prefix}-spinner-size: 1rem; }
   .#{$prefix}-spinner--lg { --#{$prefix}-spinner-size: 2.25rem; border-width: 3px; }
+  // ── Grow (Bootstrap .spinner-grow) — a pulsing disc instead of a ring ──
+  .#{$prefix}-spinner--grow {
+    border: 0;
+    background: currentColor;
+    opacity: 0;
+    animation: #{$prefix}-spinner-grow var(--#{$prefix}-dur-loop, var(--#{$prefix}-dur-slow)) linear infinite;
+  }
+  @keyframes #{$prefix}-spinner-grow {
+    0%   { scale: 0; opacity: 0; }
+    50%  { scale: 1; opacity: 1; }
+    100% { scale: 1; opacity: 0; }
+  }
 }

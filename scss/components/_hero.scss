@@ -59,12 +59,11 @@
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
     --#{$prefix}-hero-min:     60vh;
     --#{$prefix}-hero-measure: 46ch;
-    --#{$prefix}-hero-title-measure: 18ch;
+    --#{$prefix}-hero-title-measure: none;         // --centered narrows this to 18ch
+    --#{$prefix}-hero-image:       none;            // --image: url(...) set per hero
+    --#{$prefix}-hero-media-ratio: auto;            // e.g. 4 / 3 for --split media
 
     // ── Structure ──
-    display: flex;
-    flex-direction: column;
-    gap: var(--#{$prefix}-space-5);
     padding-block: var(--#{$prefix}-space-section);
     padding-inline: calc(var(--#{$prefix}-space-gutter) * 0.5);
     background: var(--#{$prefix}-color-surface);
@@ -72,6 +71,9 @@
 
   // Centering wrapper — caps line length + centers within the band.
   .#{$prefix}-hero__inner {
+    display: flex;                          // the rhythm between eyebrow / title / lede / actions
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-5);
     inline-size: 100%;
     @include container-steps;
     margin-inline: auto;
@@ -120,6 +122,7 @@
 
   // Media frame — clips the image to the rounded corner.
   .#{$prefix}-hero__media {
+    aspect-ratio: var(--#{$prefix}-hero-media-ratio);
     overflow: clip;
     border-radius: var(--#{$prefix}-radius-2xl);
     background: var(--#{$prefix}-color-surface-alt);
@@ -144,8 +147,10 @@
   }
 
   // ── Centered — everything on the centreline, narrower measure. ──
+  .#{$prefix}-hero--centered { --#{$prefix}-hero-title-measure: 18ch; }
   .#{$prefix}-hero--centered .#{$prefix}-hero__inner {
     max-inline-size: var(--#{$prefix}-container-narrow);
+    align-items: center;
     text-align: center;
   }
   .#{$prefix}-hero--centered .#{$prefix}-hero__title,
@@ -170,7 +175,9 @@
     display: grid;
     place-items: center;
     min-block-size: var(--#{$prefix}-hero-min);
-    color: var(--#{$prefix}-color-text-inverse);
+    color: var(--#{$prefix}-white);                 // the scrim is dark in every theme, so the ink is always light
+    text-align: center;
+    background-color: var(--#{$prefix}-black);      // legible before / without the photo
     background-image: var(--#{$prefix}-hero-image);
     background-position: center;
     background-size: cover;
@@ -186,15 +193,17 @@
   .#{$prefix}-hero--image .#{$prefix}-hero__inner {
     position: relative;
     z-index: 1;
+    align-items: center;
   }
+  .#{$prefix}-hero--image .#{$prefix}-hero__actions { justify-content: center; }
   // Inherit the inverse ink; keep the eyebrow visible on the dark scrim.
   .#{$prefix}-hero--image .#{$prefix}-hero__eyebrow {
-    color: var(--#{$prefix}-color-text-inverse);
+    color: var(--#{$prefix}-white);
   }
   .#{$prefix}-hero--image .#{$prefix}-hero__title {
     color: currentColor;
   }
   .#{$prefix}-hero--image .#{$prefix}-hero__lede {
-    color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 82%, transparent);
+    color: color-mix(in srgb, var(--#{$prefix}-white) 82%, transparent);
   }
 }

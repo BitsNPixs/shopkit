@@ -43,7 +43,8 @@
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
     --#{$prefix}-drawer-width:  min(20rem, 80vw);
     --#{$prefix}-drawer-radius: var(--#{$prefix}-radius-lg);
-    --#{$prefix}-drawer-from:   -100%;              // logical-intent slide offset
+    --#{$prefix}-drawer-from:   -100%;              // inline slide offset (flipped for RTL below)
+    --#{$prefix}-drawer-from-y: 0;                  // block slide offset (--top / --bottom)
 
     margin: 0;
     margin-inline-end: auto;                        // hug the inline-start edge
@@ -61,20 +62,22 @@
 
     // Enter transition (slide + fade). Exit runs in reverse automatically.
     opacity: 0;
-    transform: translateX(var(--#{$prefix}-drawer-from));
+    transform: translate(var(--#{$prefix}-drawer-from), var(--#{$prefix}-drawer-from-y));
     transition: transform var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
                 opacity var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-out),
                 overlay var(--#{$prefix}-dur-base) allow-discrete,
                 display var(--#{$prefix}-dur-base) allow-discrete;
   }
   .#{$prefix}-drawer[open] {
+    display: flex;                                  // Bootstrap .offcanvas: header pinned, body scrolls
+    flex-direction: column;
     opacity: 1;
-    transform: translateX(0);
+    transform: translate(0, 0);
   }
   @starting-style {
     .#{$prefix}-drawer[open] {
       opacity: 0;
-      transform: translateX(var(--#{$prefix}-drawer-from));
+      transform: translate(var(--#{$prefix}-drawer-from), var(--#{$prefix}-drawer-from-y));
     }
   }
 
@@ -119,6 +122,8 @@
   .#{$prefix}-drawer__body {
     padding-block: var(--#{$prefix}-space-4);
     padding-inline: var(--#{$prefix}-space-5);
+    flex: 1 1 auto;
+    min-block-size: 0;
     overflow-y: auto;
   }
 
@@ -145,6 +150,7 @@
   .#{$prefix}-drawer__nav a:hover {
     background: var(--#{$prefix}-color-surface-sunken);
   }
+  .#{$prefix}-drawer__nav a[aria-current="page"] { color: var(--#{$prefix}-color-primary); }
   .#{$prefix}-drawer__nav a:focus-visible {
     @include focus-ring;
     outline-offset: calc(var(--#{$prefix}-focus-ring-offset) * -1);   // inset ring
@@ -161,4 +167,34 @@
     border-start-start-radius: var(--#{$prefix}-drawer-radius);
     border-end-start-radius: var(--#{$prefix}-drawer-radius);
   }
+  // ── Variants: slide from the block-START / block-END edges (offcanvas-top / -bottom) ──
+  .#{$prefix}-drawer--top,
+  .#{$prefix}-drawer--bottom {
+    --#{$prefix}-drawer-height: min(24rem, 80vh);
+    --#{$prefix}-drawer-from: 0;
+    inline-size: 100%;
+    max-inline-size: none;
+    block-size: var(--#{$prefix}-drawer-height);
+    margin-inline: 0;
+    inset-inline: 0;
+    border-radius: 0;
+  }
+  .#{$prefix}-drawer--top {
+    --#{$prefix}-drawer-from-y: -100%;
+    margin-block: 0 auto;
+    border-end-start-radius: var(--#{$prefix}-drawer-radius);
+    border-end-end-radius: var(--#{$prefix}-drawer-radius);
+  }
+  .#{$prefix}-drawer--bottom {
+    --#{$prefix}-drawer-from-y: 100%;
+    margin-block: auto 0;
+    border-start-start-radius: var(--#{$prefix}-drawer-radius);
+    border-start-end-radius: var(--#{$prefix}-drawer-radius);
+  }
+
+  // ── RTL — the slide is a physical translate, so flip the inline offset by direction ──
+  [dir="rtl"] .#{$prefix}-drawer      { --#{$prefix}-drawer-from: 100%; }
+  [dir="rtl"] .#{$prefix}-drawer--end { --#{$prefix}-drawer-from: -100%; }
+  [dir="rtl"] .#{$prefix}-drawer--top,
+  [dir="rtl"] .#{$prefix}-drawer--bottom { --#{$prefix}-drawer-from: 0; }
 }

@@ -69,7 +69,7 @@
     inline-size: var(--#{$prefix}-cart-width);
     block-size: 100%;
     max-block-size: none;
-    // Pin to the inline-end edge and fill the block axis (cart convention).
+    max-inline-size: none;                    // the UA caps <dialog> at calc(100% - 6px - 2em)
     margin-block: 0;
     margin-inline-start: auto;
     margin-inline-end: 0;
@@ -215,7 +215,9 @@
     cursor: pointer;
     transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
-  .#{$prefix}-cart-item__remove:hover { color: var(--#{$prefix}-color-danger); }
+  .#{$prefix}-cart-item__remove:not(:disabled):not([aria-disabled="true"]):hover { color: var(--#{$prefix}-color-danger); }
+  .#{$prefix}-cart-item__remove:disabled,
+  .#{$prefix}-cart-item__remove[aria-disabled="true"] { cursor: not-allowed; opacity: 0.55; }
   .#{$prefix}-cart-item__remove:focus-visible { @include focus-ring; }
 
   // Price sits in the trailing grid cell.
@@ -263,4 +265,12 @@
     color: var(--#{$prefix}-color-text-subtle);
     font-size: var(--#{$prefix}-text-xs);
   }
+  // ── Line separators (Bootstrap .list-group-item) ──
+  .#{$prefix}-cart-item + .#{$prefix}-cart-item {
+    padding-block-start: var(--#{$prefix}-space-4);
+    border-block-start: 1px solid var(--#{$prefix}-color-border-subtle);
+  }
+
+  // ── RTL — the slide is a physical translate; the inline-end edge is on the left ──
+  [dir="rtl"] .#{$prefix}-cart { --#{$prefix}-cart-from: -100%; }
 }

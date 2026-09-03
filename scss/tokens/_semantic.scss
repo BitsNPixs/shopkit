@@ -243,6 +243,7 @@ $brands: (
       --#{$prefix}-dur-fast: 0ms;
       --#{$prefix}-dur-base: 0ms;
       --#{$prefix}-dur-slow: 0ms;
+      --#{$prefix}-dur-loop: 3s;       // a frozen spinner reads as "broken", so it slows instead (Bootstrap: 1.5s)
     }
   }
   [data-motion="off"] {
@@ -250,5 +251,6 @@ $brands: (
     --#{$prefix}-dur-fast: 0ms;
     --#{$prefix}-dur-base: 0ms;
     --#{$prefix}-dur-slow: 0ms;
+    --#{$prefix}-dur-loop: 3s;
   }
 }

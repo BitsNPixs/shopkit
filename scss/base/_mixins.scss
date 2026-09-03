@@ -51,6 +51,7 @@
 // PLACEMENT (negative header margins etc.) stays on the per-component class.
 // The element it lands on is icon-only → REQUIRES an aria-label.
 @mixin close-button {
+  --#{$prefix}-close-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 3l10 10M13 3L3 13' stroke='black' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -68,11 +69,28 @@
   transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
               color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
 
-  &:hover {
+  &:not(:disabled):not([aria-disabled="true"]):hover {
     background: var(--#{$prefix}-color-surface-sunken);
     color: var(--#{$prefix}-color-text);
   }
   &:focus-visible { @include focus-ring; }
+  // Bootstrap .btn-close parity: an EMPTY button still shows an × (masked, so it
+  // takes currentColor). Author-supplied glyphs / SVGs keep working as before.
+  &:empty::before {
+    content: "";
+    inline-size: 1em;
+    block-size: 1em;
+    background: currentColor;
+    -webkit-mask: var(--#{$prefix}-close-icon) center / contain no-repeat;
+    mask: var(--#{$prefix}-close-icon) center / contain no-repeat;
+  }
+  // Bootstrap .btn-close:disabled parity — real DOM signals, inert + dimmed.
+  &:disabled,
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.35;
+    pointer-events: none;
+  }
 }
 
 // Bootstrap-style stepped container cap — see $container-max-widths in _config.

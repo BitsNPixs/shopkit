@@ -21,13 +21,24 @@
   }
 
   // Square every segment, then re-round the two outer ends only.
-  .#{$prefix}-btn-group > .#{$prefix}-btn {
+  .#{$prefix}-btn-group > .#{$prefix}-btn,
+  .#{$prefix}-btn-group > .#{$prefix}-btn-group {
+    position: relative;
+    flex: 1 1 auto;                 // Bootstrap: segments share width when the group is constrained
     border-radius: 0;
   }
-
-  // Merge the shared border (pull each non-first segment onto the previous).
-  .#{$prefix}-btn-group > .#{$prefix}-btn:not(:first-child) {
+  .#{$prefix}-btn-group > .#{$prefix}-btn:not(:first-child),
+  .#{$prefix}-btn-group > .#{$prefix}-btn-group:not(:first-child) {
     margin-inline-start: -1px;
+  }
+  // Nested groups (split buttons): square the inner-facing corners.
+  .#{$prefix}-btn-group > .#{$prefix}-btn-group:not(:first-child) > .#{$prefix}-btn:first-child {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+  .#{$prefix}-btn-group > .#{$prefix}-btn-group:not(:last-child) > .#{$prefix}-btn:last-child {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
   }
 
   // Lift the interactive segment so its (coloured) border wins the overlap.
@@ -60,11 +71,16 @@
   .#{$prefix}-btn-group--vertical > .#{$prefix}-btn:first-child {
     border-start-start-radius: var(--#{$prefix}-btn-radius);
     border-start-end-radius: var(--#{$prefix}-btn-radius);
-    border-end-start-radius: 0;
   }
   .#{$prefix}-btn-group--vertical > .#{$prefix}-btn:last-child {
     border-end-start-radius: var(--#{$prefix}-btn-radius);
     border-end-end-radius: var(--#{$prefix}-btn-radius);
-    border-start-end-radius: 0;
+  }
+  // ── Toolbar (Bootstrap .btn-toolbar) — a wrapping row of groups ──
+  .#{$prefix}-btn-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--#{$prefix}-space-2);
   }
 }

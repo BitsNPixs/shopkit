@@ -43,10 +43,13 @@
     --#{$prefix}-mega-radius:  var(--#{$prefix}-radius-lg);
     --#{$prefix}-mega-shadow:  var(--#{$prefix}-shadow-xl);
     --#{$prefix}-mega-pad:     var(--#{$prefix}-space-6);
+    --#{$prefix}-mega-min:     40rem;            // floor, so a narrow <li> anchor still gets a real panel
 
     position: absolute;
-    inset-inline: 0;                       // full width of the positioned ancestor
+    inset-inline: 0;                       // full width of the positioned ancestor (.sk-navbar by default)
     inset-block-start: 100%;               // directly beneath the trigger
+    min-inline-size: min(var(--#{$prefix}-mega-min), 100vw);
+    max-inline-size: 100vw;
     z-index: var(--#{$prefix}-z-dropdown);
     padding: var(--#{$prefix}-mega-pad);
     border: 1px solid var(--#{$prefix}-mega-border);
@@ -112,6 +115,11 @@
   }
   .#{$prefix}-mega__link:hover {
     color: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-mega__link[aria-current] { color: var(--#{$prefix}-color-primary); }   // Bootstrap .dropdown-item.active
+  .#{$prefix}-mega__link[aria-disabled="true"] {                                   // Bootstrap .dropdown-item.disabled
+    color: var(--#{$prefix}-color-text-subtle);
+    pointer-events: none;
   }
   .#{$prefix}-mega__link:focus-visible { @include focus-ring; }
 

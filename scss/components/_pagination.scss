@@ -86,6 +86,7 @@
   .#{$prefix}-pagination__link[aria-disabled="true"] {
     color: var(--#{$prefix}-color-text-subtle);
     cursor: not-allowed;
+    pointer-events: none;                   // Bootstrap .page-item.disabled — an <a> really is inert
   }
 
   // Ellipsis — a non-interactive gap marker matching the control footprint.
@@ -95,8 +96,12 @@
     justify-content: center;
     min-inline-size: var(--#{$prefix}-pagination-size);
     min-block-size: var(--#{$prefix}-pagination-size);
+    padding-inline: var(--#{$prefix}-space-2);
     color: var(--#{$prefix}-color-text-subtle);
     -webkit-user-select: none;
     user-select: none;
   }
+  // ── Sizes (Bootstrap .pagination-sm / .pagination-lg) ──
+  .#{$prefix}-pagination--sm { --#{$prefix}-pagination-size: 1.75rem; font-size: var(--#{$prefix}-text-xs); }
+  .#{$prefix}-pagination--lg { --#{$prefix}-pagination-size: var(--#{$prefix}-control-height); font-size: var(--#{$prefix}-text-md); }
 }

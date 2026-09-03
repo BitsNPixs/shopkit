@@ -35,12 +35,10 @@
   .#{$prefix}-tabs__list {
     display: flex;
     gap: var(--#{$prefix}-space-1);
-    border-block-end: 1px solid var(--#{$prefix}-tabs-border);
+    box-shadow: inset 0 -1px 0 0 var(--#{$prefix}-tabs-border);   // the strip rule, drawn inside the padding box
     overflow-x: auto;
-    // `overflow-x:auto` forces `overflow-y:auto` too, which would clip the tab's
-    // :focus-visible ring and the -1px underline overlap on the block edges. A
-    // little block padding keeps both off the scroll-clipped axis.
     padding-block: 2px;
+    padding-inline: var(--#{$prefix}-focus-ring-offset);           // the end tabs' focus ring stays unclipped
     scrollbar-width: none;                 // horizontal scroll on narrow screens
   }
   .#{$prefix}-tabs__list::-webkit-scrollbar { display: none; }
@@ -56,7 +54,7 @@
     padding-inline: var(--#{$prefix}-space-3);
     border: 0;
     border-block-end: var(--#{$prefix}-tabs-underline) solid transparent;
-    margin-block-end: -1px;                // sit the underline on the strip rule
+    margin-block-end: -2px;                // pull the underline down onto the strip rule (list padding is 2px)
     background: transparent;
     color: var(--#{$prefix}-color-text-muted);
     font: inherit;
@@ -84,6 +82,7 @@
     color: var(--#{$prefix}-color-text-subtle);
     cursor: not-allowed;
   }
+  .#{$prefix}-tab[aria-disabled="true"] { pointer-events: none; }   // Bootstrap .nav-link.disabled — really inert
 
   // Panels.
   .#{$prefix}-tabs__panel {
@@ -94,7 +93,7 @@
   // ── Pill variant — segmented control instead of underline ──
   .#{$prefix}-tabs--pill .#{$prefix}-tabs__list {
     gap: var(--#{$prefix}-space-2);
-    border-block-end: 0;
+    box-shadow: none;
   }
   .#{$prefix}-tabs--pill .#{$prefix}-tab {
     border-block-end: 0;
@@ -106,4 +105,19 @@
     background: var(--#{$prefix}-tabs-accent);
     color: var(--#{$prefix}-color-primary-contrast);
   }
+  // ── Boxed (Bootstrap .nav-tabs, its default look) — the selected tab merges with its panel ──
+  .#{$prefix}-tabs--boxed .#{$prefix}-tab {
+    border: 1px solid transparent;
+    border-block-end: 0;
+    border-start-start-radius: var(--#{$prefix}-radius-sm);
+    border-start-end-radius: var(--#{$prefix}-radius-sm);
+  }
+  .#{$prefix}-tabs--boxed .#{$prefix}-tab[aria-selected="true"] {
+    background: var(--#{$prefix}-color-surface);
+    border-color: var(--#{$prefix}-tabs-border);
+  }
+
+  // ── Fill / justified (Bootstrap .nav-fill / .nav-justified) ──
+  .#{$prefix}-tabs--fill .#{$prefix}-tab      { flex: 1 1 auto; justify-content: center; }
+  .#{$prefix}-tabs--justified .#{$prefix}-tab { flex: 1 1 0; justify-content: center; }
 }

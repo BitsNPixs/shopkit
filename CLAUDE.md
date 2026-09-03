@@ -138,6 +138,11 @@ fails.
   Grid. Gutters come from `.sk-g-*` / `.sk-gx-*` / `.sk-gy-*` or `--sk-gutter-x/-y`; never put
   `.sk-gap-*` on it — a real `gap` makes `sk-col-6 + sk-col-6` wrap. Breakpoints and container
   steps are Bootstrap 5's (`_config.scss`), with `2xl` standing in for `xxl`.
+- **The Bootstrap-parity audit (2026-09-03) changed a few defaults:** `.sk-error` is hidden unless
+  it follows an `[aria-invalid="true"]` control (or carries `--visible`); `.sk-menu` positions
+  itself under its toggle (`--static` opts out); `.sk-check` is block-level (`--inline` flows);
+  an empty close button (`.sk-close` or any `__close`) draws its own ×; looping indicators read
+  `--sk-dur-loop`, which slows to 3s under reduced motion instead of stopping.
 
 ## Adding a component
 

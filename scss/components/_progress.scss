@@ -44,9 +44,18 @@
   }
 
   .#{$prefix}-progress__bar {
+    display: flex;                            // Bootstrap .progress-bar can carry a label
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
     inline-size: calc(var(--#{$prefix}-progress-value) * 1%);
     border-radius: inherit;
     background: var(--#{$prefix}-progress-fill);
+    color: var(--#{$prefix}-color-primary-contrast);
+    font-size: var(--#{$prefix}-text-2xs);
+    line-height: 1;
     @include transition(inline-size, $dur: "base", $ease: "out");
   }
 
@@ -58,4 +67,16 @@
   // ── Sizes ──
   .#{$prefix}-progress--sm { --#{$prefix}-progress-height: 0.25rem; }
   .#{$prefix}-progress--lg { --#{$prefix}-progress-height: 0.875rem; }
+  // ── Striped / animated (Bootstrap .progress-bar-striped / -animated) ──
+  .#{$prefix}-progress--striped .#{$prefix}-progress__bar {
+    background-image: linear-gradient(45deg,
+      color-mix(in srgb, var(--#{$prefix}-white) 15%, transparent) 25%, transparent 25%, transparent 50%,
+      color-mix(in srgb, var(--#{$prefix}-white) 15%, transparent) 50%, color-mix(in srgb, var(--#{$prefix}-white) 15%, transparent) 75%,
+      transparent 75%);
+    background-size: 1rem 1rem;
+  }
+  .#{$prefix}-progress--animated .#{$prefix}-progress__bar {
+    animation: #{$prefix}-progress-stripes var(--#{$prefix}-dur-loop, var(--#{$prefix}-dur-slow)) linear infinite;
+  }
+  @keyframes #{$prefix}-progress-stripes { to { background-position-x: -1rem; } }
 }

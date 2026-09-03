@@ -49,6 +49,7 @@
   .#{$prefix}-empty__icon {
     inline-size: 3rem;
     block-size: 3rem;
+    flex: none;
     color: var(--#{$prefix}-color-text-subtle);
   }
   .#{$prefix}-empty__icon svg {
@@ -75,7 +76,14 @@
   // ── Action row (holds .sk-btn controls) ──
   .#{$prefix}-empty__actions {
     display: flex;
+    flex-wrap: wrap;                          // two buttons never overflow a phone
+    justify-content: center;
     gap: var(--#{$prefix}-space-3);
     margin-block-start: var(--#{$prefix}-space-2);
+  }
+  // ── Compact — for drawers, facet lists and other tight contexts ──
+  .#{$prefix}-empty--compact {
+    --#{$prefix}-empty-pad-block:  var(--#{$prefix}-space-6);
+    --#{$prefix}-empty-pad-inline: var(--#{$prefix}-space-4);
   }
 }

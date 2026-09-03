@@ -61,12 +61,17 @@
 @layer #{$prefix}.components {
   .#{$prefix}-footer {
     // ── Tier-3 tokens (defaults resolve to the semantic layer) ──
-    --#{$prefix}-footer-bg: var(--#{$prefix}-color-surface-alt);
-    --#{$prefix}-footer-fg: var(--#{$prefix}-color-text);
-
+    --#{$prefix}-footer-bg:         var(--#{$prefix}-color-surface-alt);
+    --#{$prefix}-footer-fg:         var(--#{$prefix}-color-text);
+    --#{$prefix}-footer-fg-muted:   var(--#{$prefix}-color-text-muted);
+    --#{$prefix}-footer-fg-subtle:  var(--#{$prefix}-color-text-subtle);
+    --#{$prefix}-footer-border:     var(--#{$prefix}-color-border);
+    --#{$prefix}-footer-line:       var(--#{$prefix}-color-border-subtle);
+    --#{$prefix}-footer-hover-bg:   var(--#{$prefix}-color-surface-sunken);
+    --#{$prefix}-footer-link-hover: var(--#{$prefix}-color-primary);
     padding-block: var(--#{$prefix}-space-section);
     padding-inline: calc(var(--#{$prefix}-space-gutter) * 0.5);
-    border-block-start: 1px solid var(--#{$prefix}-color-border);
+    border-block-start: 1px solid var(--#{$prefix}-footer-border);
     background: var(--#{$prefix}-footer-bg);
     color: var(--#{$prefix}-footer-fg);
   }
@@ -85,6 +90,9 @@
     gap: var(--#{$prefix}-space-8);
     align-items: start;
 
+    @media (min-width: bp("sm")) {
+      grid-template-columns: repeat(2, 1fr);     // Bootstrap footer example: two-up on phones-landscape
+    }
     @media (min-width: bp("md")) {
       grid-template-columns: 2fr repeat(3, 1fr);
     }
@@ -101,10 +109,10 @@
     font-family: var(--#{$prefix}-font-heading);
     font-weight: var(--#{$prefix}-weight-bold);
     font-size: var(--#{$prefix}-text-lg);
-    color: var(--#{$prefix}-color-text);
+    color: var(--#{$prefix}-footer-fg);
   }
   .#{$prefix}-footer__tagline {
-    color: var(--#{$prefix}-color-text-muted);
+    color: var(--#{$prefix}-footer-fg-muted);
     font-size: var(--#{$prefix}-text-sm);
     line-height: var(--#{$prefix}-leading-body);
   }
@@ -119,17 +127,18 @@
     margin-block: 0 var(--#{$prefix}-space-1);
     font-size: var(--#{$prefix}-text-sm);
     font-weight: var(--#{$prefix}-weight-semibold);
-    color: var(--#{$prefix}-color-text);
+    color: var(--#{$prefix}-footer-fg);
   }
   .#{$prefix}-footer__link {
-    color: var(--#{$prefix}-color-text-muted);
+    color: var(--#{$prefix}-footer-fg-muted);
     font-size: var(--#{$prefix}-text-sm);
     text-decoration: none;
     transition: color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
   .#{$prefix}-footer__link:hover {
-    color: var(--#{$prefix}-color-primary);
+    color: var(--#{$prefix}-footer-link-hover);
   }
+  .#{$prefix}-footer__link[aria-current] { color: var(--#{$prefix}-color-primary); }
   .#{$prefix}-footer__link:focus-visible { @include focus-ring; }
 
   // ── Social row (icon-only links — each NEEDS an aria-label) ──
@@ -144,13 +153,13 @@
     inline-size: 2.25rem;
     block-size: 2.25rem;
     border-radius: var(--#{$prefix}-radius-md);
-    color: var(--#{$prefix}-color-text-muted);
+    color: var(--#{$prefix}-footer-fg-muted);
     transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
                 color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
   .#{$prefix}-footer__social a:hover {
-    background: var(--#{$prefix}-color-surface-sunken);
-    color: var(--#{$prefix}-color-text);
+    background: var(--#{$prefix}-footer-hover-bg);
+    color: var(--#{$prefix}-footer-fg);
   }
   .#{$prefix}-footer__social a:focus-visible { @include focus-ring; }
   .#{$prefix}-footer__social a svg {
@@ -160,10 +169,7 @@
 
   // ── Newsletter block (reuses .sk-input + .sk-btn) ──
   .#{$prefix}-footer__newsletter {
-    display: flex;
-    flex-direction: column;
-    gap: var(--#{$prefix}-space-3);
-    max-inline-size: 22rem;
+    max-inline-size: 22rem;                  // composes onto .sk-footer__col (already a flex column)
   }
   .#{$prefix}-footer__newsletter-form {
     display: flex;
@@ -180,8 +186,8 @@
     gap: var(--#{$prefix}-space-3);
     margin-block-start: var(--#{$prefix}-space-8);
     padding-block-start: var(--#{$prefix}-space-6);
-    border-block-start: 1px solid var(--#{$prefix}-color-border-subtle);
-    color: var(--#{$prefix}-color-text-subtle);
+    border-block-start: 1px solid var(--#{$prefix}-footer-line);
+    color: var(--#{$prefix}-footer-fg-subtle);
     font-size: var(--#{$prefix}-text-xs);
   }
   .#{$prefix}-footer__legal {
@@ -200,6 +206,7 @@
     gap: var(--#{$prefix}-space-4);
     text-align: center;
   }
+  .#{$prefix}-footer--minimal .#{$prefix}-footer__grid { display: contents; }   // the grid really collapses
   .#{$prefix}-footer--minimal .#{$prefix}-footer__bottom {
     margin-block-start: 0;
     padding-block-start: 0;
@@ -207,42 +214,30 @@
     justify-content: center;
   }
 
-  // ── Inverse — dark panel. Remap the Tier-3 tokens; adjust contrast within ──
+  // ── Inverse — dark panel. A pure token remap: every descendant reads the
+  // footer's own tier-3 tokens, so nothing needs re-patching here. ──
   .#{$prefix}-footer--inverse {
-    --#{$prefix}-footer-bg: var(--#{$prefix}-color-surface-inverse);
-    --#{$prefix}-footer-fg: var(--#{$prefix}-color-text-inverse);
-
-    border-block-start-color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 15%, transparent);
+    --#{$prefix}-footer-bg:         var(--#{$prefix}-color-surface-inverse);
+    --#{$prefix}-footer-fg:         var(--#{$prefix}-color-text-inverse);
+    --#{$prefix}-footer-fg-muted:   color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 72%, transparent);
+    --#{$prefix}-footer-fg-subtle:  color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 60%, transparent);
+    --#{$prefix}-footer-border:     color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 15%, transparent);
+    --#{$prefix}-footer-line:       color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 15%, transparent);
+    --#{$prefix}-footer-hover-bg:   color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 12%, transparent);
+    --#{$prefix}-footer-link-hover: var(--#{$prefix}-color-text-inverse);
   }
-  // Headings + logo take the inverse foreground.
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__logo,
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__heading {
-    color: var(--#{$prefix}-color-text-inverse);
-  }
-  // Tagline + muted text read a softened inverse.
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__tagline,
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__bottom {
-    color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 72%, transparent);
-  }
-  // Links: muted inverse → full inverse on hover.
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__link,
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__social a {
-    color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 72%, transparent);
-  }
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__link:hover,
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__social a:hover {
-    color: var(--#{$prefix}-color-text-inverse);
-  }
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__social a:hover {
-    background: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 12%, transparent);
-  }
-  // Translucent light rules so borders read on the dark panel.
-  .#{$prefix}-footer--inverse .#{$prefix}-footer__bottom {
-    border-block-start-color: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 15%, transparent);
+  // The newsletter controls sit on the dark panel too.
+  .#{$prefix}-footer--inverse .#{$prefix}-input {
+    --#{$prefix}-field-bg:     color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 8%, transparent);
+    --#{$prefix}-field-fg:     var(--#{$prefix}-color-text-inverse);
+    --#{$prefix}-field-border: color-mix(in srgb, var(--#{$prefix}-color-text-inverse) 25%, transparent);
   }
 
   // ── Newsletter — semantic flag; the brand column already sizes for the block ──
-  .#{$prefix}-footer--newsletter .#{$prefix}-footer__brand {
-    max-inline-size: 32ch;
+  .#{$prefix}-footer--newsletter .#{$prefix}-footer__brand { max-inline-size: 32ch; }
+  @media (min-width: bp("md")) {
+    .#{$prefix}-footer--newsletter .#{$prefix}-footer__grid {
+      grid-template-columns: 2fr repeat(2, 1fr) 1.5fr;   // room for the signup column
+    }
   }
 }

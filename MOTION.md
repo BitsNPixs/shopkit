@@ -17,6 +17,7 @@ the durations and the motion stops. Codified as [`scss/base/_motion.scss`](scss/
 | | `--sk-dur-fast` | 150ms | hover / focus / press (the default) |
 | | `--sk-dur-base` | 300ms | enter/exit of panels, cards |
 | | `--sk-dur-slow` | 600ms | loaders, ambient loops |
+| | `--sk-dur-loop` | 900ms | looping *status* indicators (spinners, striped progress) — slows to 3s under reduced motion instead of stopping, so "busy" still reads as busy (Bootstrap slows to 1.5s) |
 | easing | `--sk-ease-standard` | `cubic-bezier(.2,.6,.35,1)` | in-out, the default |
 | | `--sk-ease-out` | `cubic-bezier(.16,1,.3,1)` | decelerate — enters |
 | | `--sk-ease-spring` | `cubic-bezier(.34,1.56,.64,1)` | slight overshoot — pops |
@@ -34,7 +35,7 @@ Three layers, no `!important`, fully token-driven:
 /* tokens/_semantic.scss — zeroes durations when the OS asks for less motion … */
 @media (prefers-reduced-motion: reduce) {
   :root:not([data-motion="full"]) {
-    --sk-dur-instant: 0ms; --sk-dur-fast: 0ms; --sk-dur-base: 0ms; --sk-dur-slow: 0ms;
+    --sk-dur-instant: 0ms; --sk-dur-fast: 0ms; --sk-dur-base: 0ms; --sk-dur-slow: 0ms; --sk-dur-loop: 3s;
   }
 }
 /* … and a hard switch either direction */

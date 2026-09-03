@@ -53,7 +53,13 @@
   .#{$prefix}-accordion__trigger:hover { color: var(--#{$prefix}-color-primary); }
 
   // Chevron marker — a masked triangle so it inherits text colour.
+  // Chevron — Bootstrap .accordion-button::after parity: drawn on the trigger
+  // itself, so NO extra markup is required. An explicit
+  // <span class="sk-accordion__marker"> is still honoured (the pseudo then steps aside).
+  .#{$prefix}-accordion__trigger::after,
   .#{$prefix}-accordion__marker {
+    --#{$prefix}-accordion-marker-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' stroke='black' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    content: "";
     inline-size: 0.7em;
     block-size: 0.7em;
     flex: none;
@@ -61,10 +67,14 @@
     transition: transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
     -webkit-mask: var(--#{$prefix}-accordion-marker-icon) center / contain no-repeat;
     mask: var(--#{$prefix}-accordion-marker-icon) center / contain no-repeat;
-    --#{$prefix}-accordion-marker-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' stroke='black' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
+  .#{$prefix}-accordion__trigger:has(.#{$prefix}-accordion__marker)::after { content: none; }
+  .#{$prefix}-accordion__item[open] .#{$prefix}-accordion__trigger::after,
   .#{$prefix}-accordion__item[open] .#{$prefix}-accordion__marker {
     transform: rotate(180deg);
+  }
+  .#{$prefix}-accordion__item[open] > .#{$prefix}-accordion__trigger {
+    color: var(--#{$prefix}-color-primary);           // Bootstrap: the open header reads as active
   }
 
   // The revealed content.
@@ -75,4 +85,24 @@
     font-size: var(--#{$prefix}-text-sm);
     line-height: var(--#{$prefix}-leading-body);
   }
+  // ── Flush (Bootstrap .accordion-flush) — no outer rules, for cards / drawers ──
+  .#{$prefix}-accordion--flush { border-block-start: 0; }
+  .#{$prefix}-accordion--flush > .#{$prefix}-accordion__item:last-child { border-block-end: 0; }
+
+  // ── Collapse motion (Bootstrap .collapsing) — progressive: engines without
+  // ::details-content / interpolate-size simply snap, exactly as before. The
+  // duration is a token, so reduced motion zeroes it.
+  .#{$prefix}-accordion__item {
+    // stylelint-disable-next-line property-no-unknown
+    interpolate-size: allow-keywords;
+  }
+  // stylelint-disable-next-line selector-pseudo-element-no-unknown
+  .#{$prefix}-accordion__item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size var(--#{$prefix}-dur-base) var(--#{$prefix}-ease-standard),
+                content-visibility var(--#{$prefix}-dur-base) allow-discrete;
+  }
+  // stylelint-disable-next-line selector-pseudo-element-no-unknown
+  .#{$prefix}-accordion__item[open]::details-content { block-size: auto; }
 }

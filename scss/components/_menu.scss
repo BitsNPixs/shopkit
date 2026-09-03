@@ -39,6 +39,9 @@
     --#{$prefix}-menu-shadow:  var(--#{$prefix}-shadow-lg);
     --#{$prefix}-menu-min:     12rem;
 
+    position: absolute;                     // Bootstrap .dropdown-menu: under its toggle by default
+    inset-block-start: 100%;
+    inset-inline-start: 0;
     display: flex;
     flex-direction: column;
     min-inline-size: var(--#{$prefix}-menu-min);
@@ -50,10 +53,7 @@
     border-radius: var(--#{$prefix}-menu-radius);
     background: var(--#{$prefix}-menu-bg);
     box-shadow: var(--#{$prefix}-menu-shadow);
-    // Inert until the author establishes a stacking context (the panel is
-    // statically positioned here); kept so an anchored/positioned menu layers
-    // above page content without restating the token.
-    z-index: var(--#{$prefix}-z-dropdown);
+    z-index: var(--#{$prefix}-z-dropdown);        // layers above page content; --static opts out of self-positioning
 
     // Enter transition (fade + rise). Exit runs in reverse automatically.
     opacity: 0;
@@ -97,8 +97,8 @@
     transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
                 color var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
-  .#{$prefix}-menu__item:not([aria-disabled="true"]):hover,
-  .#{$prefix}-menu__item:not([aria-disabled="true"]):focus {
+  .#{$prefix}-menu__item:not([aria-disabled="true"]):not(:disabled):hover,
+  .#{$prefix}-menu__item:not([aria-disabled="true"]):not(:disabled):focus {
     background: var(--#{$prefix}-color-surface-sunken);
   }
   .#{$prefix}-menu__item:focus-visible {
@@ -115,9 +115,18 @@
   }
 
   // Disabled item (ARIA — kept in the a11y tree, just muted + inert-looking).
-  .#{$prefix}-menu__item[aria-disabled="true"] {
+  .#{$prefix}-menu__item[aria-disabled="true"],
+  .#{$prefix}-menu__item:disabled {
     color: var(--#{$prefix}-color-text-subtle);
     cursor: not-allowed;
+    pointer-events: none;                   // Bootstrap .dropdown-item.disabled
+  }
+  // Bootstrap .dropdown-item.active — the selected entry of a sort / filter menu.
+  .#{$prefix}-menu__item[aria-current],
+  .#{$prefix}-menu__item[aria-checked="true"],
+  .#{$prefix}-menu__item[aria-selected="true"] {
+    color: var(--#{$prefix}-color-primary);
+    font-weight: var(--#{$prefix}-weight-semibold);
   }
 
   // Destructive action.
@@ -144,4 +153,8 @@
     border: 0;
     background: var(--#{$prefix}-color-border-subtle);
   }
+  // ── Placement (Bootstrap .dropdown-menu-end / .dropup / static) ──
+  .#{$prefix}-menu--end    { inset-inline: auto 0; }
+  .#{$prefix}-menu--up     { inset-block: auto 100%; }
+  .#{$prefix}-menu--static { position: static; }
 }

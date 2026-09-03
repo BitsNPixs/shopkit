@@ -103,4 +103,34 @@
     text-decoration: underline;
   }
   .#{$prefix}-facets__clear:focus-visible { @include focus-ring; }
+  // ── Collapsible groups — <details class="sk-facet"><summary class="sk-facet__title"> ──
+  // [open] is the real DOM signal; the chevron is drawn on the summary itself.
+  .#{$prefix}-facet > summary.#{$prefix}-facet__title {
+    cursor: pointer;
+    list-style: none;
+  }
+  .#{$prefix}-facet > summary.#{$prefix}-facet__title::-webkit-details-marker { display: none; }
+  .#{$prefix}-facet > summary.#{$prefix}-facet__title::after {
+    content: "";
+    flex: none;
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    margin-inline-start: var(--#{$prefix}-space-2);
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    rotate: 45deg;
+    transition: rotate var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+  .#{$prefix}-facet[open] > summary.#{$prefix}-facet__title::after { rotate: -135deg; }
+  .#{$prefix}-facet:not([open]) > summary.#{$prefix}-facet__title { margin-block-end: 0; }
+  .#{$prefix}-facet > summary.#{$prefix}-facet__title:focus-visible {
+    @include focus-ring;
+    border-radius: var(--#{$prefix}-radius-xs);
+  }
+
+  // ── Long option lists scroll instead of pushing every other group away ──
+  .#{$prefix}-facet__list--scroll {
+    max-block-size: 14rem;
+    overflow-y: auto;
+  }
 }

@@ -36,18 +36,23 @@
     --#{$prefix}-announcement-bg: var(--#{$prefix}-color-surface-inverse);
     --#{$prefix}-announcement-fg: var(--#{$prefix}-color-text-inverse);
 
+    position: relative;                     // the close button parks in the inline-end gutter
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: var(--#{$prefix}-space-2);
     padding-block: var(--#{$prefix}-space-2);
-    padding-inline: calc(var(--#{$prefix}-space-gutter) * 0.5);
+    padding-inline: calc(var(--#{$prefix}-space-gutter) * 0.5 + var(--#{$prefix}-space-8));   // symmetric, so the message stays centred
     background: var(--#{$prefix}-announcement-bg);
     color: var(--#{$prefix}-announcement-fg);
     font-size: var(--#{$prefix}-text-sm);
     line-height: var(--#{$prefix}-leading-snug);
     text-align: center;
   }
+
+  // Self-contained dismissal — does not depend on the display-utility group being built.
+  .#{$prefix}-announcement[hidden] { display: none; }
 
   // Inline call-to-action — inherits the bar's colour, always underlined.
   .#{$prefix}-announcement__link {
@@ -63,8 +68,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    position: absolute;                     // Bootstrap .alert-dismissible: out of flow, so centring holds
+    inset-inline-end: var(--#{$prefix}-space-3);
+    inset-block-start: 50%;
+    translate: 0 -50%;
     flex: none;
-    margin-inline-start: auto;
     padding: 0;
     border: 0;
     background: transparent;

@@ -33,7 +33,7 @@
     background: linear-gradient(
       to right,
       var(--#{$prefix}-color-star) 0
-        calc(var(--#{$prefix}-rating-value) / var(--#{$prefix}-rating-max) * 100%),
+        clamp(0%, calc(var(--#{$prefix}-rating-value) / var(--#{$prefix}-rating-max) * 100%), 100%),
       var(--#{$prefix}-color-out-of-stock) 0
     );
     // … then punch out the row of stars.

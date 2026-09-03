@@ -17,6 +17,6 @@
 
 @layer #{$prefix}.components {
   .#{$prefix}-close {
-    @include close-button;
+    @include close-button;                  // the × for an empty button lives in the mixin
   }
 }

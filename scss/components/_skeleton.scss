@@ -23,6 +23,7 @@
     --#{$prefix}-skeleton-radius: var(--#{$prefix}-radius-sm);
 
     display: block;
+    cursor: wait;                             // Bootstrap .placeholder
     inline-size: 100%;
     block-size: 1em;
     border-radius: var(--#{$prefix}-skeleton-radius);
@@ -44,7 +45,7 @@
     block-size: 0.75em;
     margin-block: 0.2em;
   }
-  .#{$prefix}-skeleton--text:last-child { inline-size: 70%; }  // ragged last line
+  .#{$prefix}-skeleton--text + .#{$prefix}-skeleton--text:last-child { inline-size: 70%; }  // ragged last line
 
   .#{$prefix}-skeleton--title {
     block-size: 1.4em;
@@ -66,9 +67,15 @@
 
   // Static fallback: no moving sheen when motion is unwelcome.
   @media (prefers-reduced-motion: reduce) {
-    .#{$prefix}-skeleton {
+    :root:not([data-motion="full"]) .#{$prefix}-skeleton {   // honours the library's opt-back-in
       background-image: none;
       animation: none;
     }
+  }
+  // ── Inline placeholder (Bootstrap .placeholder is inline-block) — replaces a word in running text ──
+  .#{$prefix}-skeleton--inline {
+    display: inline-block;
+    inline-size: 6em;
+    vertical-align: middle;
   }
 }

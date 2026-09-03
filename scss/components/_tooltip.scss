@@ -20,18 +20,19 @@
 
 @layer #{$prefix}.components {
   [data-#{$prefix}-tooltip] {
+    --#{$prefix}-tooltip-bg: var(--#{$prefix}-color-surface-inverse);
+    --#{$prefix}-tooltip-fg: var(--#{$prefix}-color-text-inverse);
+    --#{$prefix}-tooltip-offset: var(--#{$prefix}-space-2);
+    --#{$prefix}-tooltip-arrow: 0.35rem;
     position: relative;
   }
 
   // The bubble. Hidden until hover/focus; content pulled from the attribute.
   [data-#{$prefix}-tooltip]::after {
-    --#{$prefix}-tooltip-bg: var(--#{$prefix}-color-surface-inverse);
-    --#{$prefix}-tooltip-fg: var(--#{$prefix}-color-text-inverse);
-
     content: attr(data-#{$prefix}-tooltip);
     position: absolute;
     z-index: var(--#{$prefix}-z-tooltip);
-    inset-block-end: calc(100% + 0.5rem);   // default: above
+    inset-block-end: calc(100% + var(--#{$prefix}-tooltip-offset));   // default: above
     inset-inline-start: 50%;
     inline-size: max-content;
     max-inline-size: 16rem;
@@ -46,26 +47,69 @@
     text-align: center;
     white-space: normal;
     box-shadow: var(--#{$prefix}-shadow-md);
+    display: none;                          // out of layout while hidden — no phantom scroll extent
     opacity: 0;
     transform: translateX(-50%) translateY(2px);
     pointer-events: none;
     transition: opacity var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
-                transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+                transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                display var(--#{$prefix}-dur-fast) allow-discrete;
   }
-
   [data-#{$prefix}-tooltip]:hover::after,
   [data-#{$prefix}-tooltip]:focus-visible::after {
+    display: block;
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
-
-  // Empty attribute → no bubble (lets you toggle it off from markup).
   [data-#{$prefix}-tooltip=""]::after { content: none; }
+
+  // Arrow (Bootstrap .tooltip-arrow) — a border triangle sitting in the offset gap.
+  [data-#{$prefix}-tooltip]::before {
+    content: "";
+    position: absolute;
+    z-index: var(--#{$prefix}-z-tooltip);
+    display: none;
+    inset-block-end: calc(100% + var(--#{$prefix}-tooltip-offset) - var(--#{$prefix}-tooltip-arrow));
+    inset-inline-start: 50%;
+    border: var(--#{$prefix}-tooltip-arrow) solid transparent;
+    border-block-start-color: var(--#{$prefix}-tooltip-bg);
+    border-block-end: 0;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  [data-#{$prefix}-tooltip]:hover::before,
+  [data-#{$prefix}-tooltip]:focus-visible::before { display: block; }
+  [data-#{$prefix}-tooltip=""]::before { content: none; }
+  [data-#{$prefix}-tooltip-pos="bottom"]::before {
+    inset-block-end: auto;
+    inset-block-start: calc(100% + var(--#{$prefix}-tooltip-offset) - var(--#{$prefix}-tooltip-arrow));
+    border-block-start: 0;
+    border-block-end: var(--#{$prefix}-tooltip-arrow) solid var(--#{$prefix}-tooltip-bg);
+  }
+  [data-#{$prefix}-tooltip-pos="start"]::before,
+  [data-#{$prefix}-tooltip-pos="end"]::before {
+    inset-block-end: auto;
+    inset-block-start: 50%;
+    border-block-start: var(--#{$prefix}-tooltip-arrow) solid transparent;
+    border-block-end: var(--#{$prefix}-tooltip-arrow) solid transparent;
+    transform: translateY(-50%);
+  }
+  [data-#{$prefix}-tooltip-pos="start"]::before {
+    inset-inline-start: auto;
+    inset-inline-end: calc(100% + var(--#{$prefix}-tooltip-offset) - var(--#{$prefix}-tooltip-arrow));
+    border-inline-end: 0;
+    border-inline-start: var(--#{$prefix}-tooltip-arrow) solid var(--#{$prefix}-tooltip-bg);
+  }
+  [data-#{$prefix}-tooltip-pos="end"]::before {
+    inset-inline-start: calc(100% + var(--#{$prefix}-tooltip-offset) - var(--#{$prefix}-tooltip-arrow));
+    border-inline-start: 0;
+    border-inline-end: var(--#{$prefix}-tooltip-arrow) solid var(--#{$prefix}-tooltip-bg);
+  }
 
   // ── Placements ──
   [data-#{$prefix}-tooltip-pos="bottom"]::after {
     inset-block-end: auto;
-    inset-block-start: calc(100% + 0.5rem);
+    inset-block-start: calc(100% + var(--#{$prefix}-tooltip-offset));
     transform: translateX(-50%) translateY(-2px);
   }
   [data-#{$prefix}-tooltip-pos="bottom"]:hover::after,
@@ -77,7 +121,7 @@
     inset-block-end: auto;
     inset-block-start: 50%;
     inset-inline-start: auto;
-    inset-inline-end: calc(100% + 0.5rem);
+    inset-inline-end: calc(100% + var(--#{$prefix}-tooltip-offset));
     transform: translateY(-50%) translateX(2px);
   }
   [data-#{$prefix}-tooltip-pos="start"]:hover::after,
@@ -88,11 +132,22 @@
   [data-#{$prefix}-tooltip-pos="end"]::after {
     inset-block-end: auto;
     inset-block-start: 50%;
-    inset-inline-start: calc(100% + 0.5rem);
+    inset-inline-start: calc(100% + var(--#{$prefix}-tooltip-offset));
     transform: translateY(-50%) translateX(-2px);
   }
   [data-#{$prefix}-tooltip-pos="end"]:hover::after,
   [data-#{$prefix}-tooltip-pos="end"]:focus-visible::after {
     transform: translateY(-50%) translateX(0);
+  }
+  // Entry motion from display:none — the starting values per placement.
+  @starting-style {
+    [data-#{$prefix}-tooltip]:hover::after,
+    [data-#{$prefix}-tooltip]:focus-visible::after { opacity: 0; transform: translateX(-50%) translateY(2px); }
+    [data-#{$prefix}-tooltip-pos="bottom"]:hover::after,
+    [data-#{$prefix}-tooltip-pos="bottom"]:focus-visible::after { transform: translateX(-50%) translateY(-2px); }
+    [data-#{$prefix}-tooltip-pos="start"]:hover::after,
+    [data-#{$prefix}-tooltip-pos="start"]:focus-visible::after { transform: translateY(-50%) translateX(2px); }
+    [data-#{$prefix}-tooltip-pos="end"]:hover::after,
+    [data-#{$prefix}-tooltip-pos="end"]:focus-visible::after { transform: translateY(-50%) translateX(-2px); }
   }
 }

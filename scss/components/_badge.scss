@@ -36,10 +36,9 @@
     font-weight: var(--#{$prefix}-weight-medium);
     line-height: 1.2;
     white-space: nowrap;
-    vertical-align: middle;
+    vertical-align: baseline;               // Bootstrap .badge — sits on the text baseline
   }
-
-  // Leading status dot (inherits currentColor).
+  .#{$prefix}-badge:empty { display: none; }     // Bootstrap .badge:empty — a zero count draws nothing
   .#{$prefix}-badge__dot {
     inline-size: 0.5em;
     block-size: 0.5em;
@@ -94,7 +93,7 @@
 
   // ═══════════════════════════════ CHIP ═══════════════════════════════
   // Interactive, larger tap area, optional remove button. Inherits the badge
-  // colour tokens (so `.sk-chip.sk-badge--primary` works).
+  // colour tokens (so `.sk-badge.sk-chip.sk-badge--primary` works).
   .#{$prefix}-chip {
     --#{$prefix}-badge-radius: var(--#{$prefix}-radius-pill);
     --#{$prefix}-badge-pad-x:  var(--#{$prefix}-space-3);
@@ -128,4 +127,12 @@
     background: color-mix(in srgb, currentColor 18%, transparent);
   }
   .#{$prefix}-chip__remove:focus-visible { @include focus-ring; }
+  // ── Positioned counter (Bootstrap .position-absolute.top-0.start-100.translate-middle) ──
+  // The host needs position: relative.
+  .#{$prefix}-badge--float {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    translate: 50% -50%;
+  }
 }

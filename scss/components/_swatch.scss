@@ -42,11 +42,25 @@
     color: var(--#{$prefix}-color-text);
     font: inherit;
     font-size: var(--#{$prefix}-text-sm);
+    line-height: 1;
     cursor: pointer;
     transition: box-shadow var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
                 transform var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
   .#{$prefix}-swatch:focus-visible { @include focus-ring; }
+  // Bootstrap .btn-check parity: a real <input> (radio / checkbox) can drive the
+  // state with zero JS — <input class="sk-swatch-input"> + <label class="sk-swatch">.
+  .#{$prefix}-swatch-input { @include visually-hidden; }
+  .#{$prefix}-swatch-input:focus-visible + .#{$prefix}-swatch { @include focus-ring; }
+  // 44px hit area around the visual chip (WCAG 2.5.8) — invisible, centred.
+  .#{$prefix}-swatch::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    inline-size: max(100%, var(--#{$prefix}-tap-target));
+    block-size: max(100%, var(--#{$prefix}-tap-target));
+  }
 
   // Hover — a subtle lift (scale) that reads as interactive without competing
   // with the selected ring. Duration token → reduced-motion zeroes it (snaps).
@@ -55,6 +69,7 @@
   }
 
   // Selected — a brand ring floating just off the chip.
+  .#{$prefix}-swatch-input:checked + .#{$prefix}-swatch,
   .#{$prefix}-swatch[aria-pressed="true"],
   .#{$prefix}-swatch[aria-checked="true"] {
     box-shadow:
@@ -63,11 +78,13 @@
   }
 
   // Out of stock / disabled — a diagonal strike across the chip.
+  .#{$prefix}-swatch-input:disabled + .#{$prefix}-swatch,
   .#{$prefix}-swatch:disabled,
   .#{$prefix}-swatch[aria-disabled="true"] {
     cursor: not-allowed;
     opacity: 0.6;
   }
+  .#{$prefix}-swatch-input:disabled + .#{$prefix}-swatch::after,
   .#{$prefix}-swatch:disabled::after,
   .#{$prefix}-swatch[aria-disabled="true"]::after {
     content: "";
@@ -92,9 +109,17 @@
     background: var(--#{$prefix}-color-surface);
     font-weight: var(--#{$prefix}-weight-medium);
   }
+  .#{$prefix}-swatch-input:checked + .#{$prefix}-swatch--size,
   .#{$prefix}-swatch--size[aria-pressed="true"],
   .#{$prefix}-swatch--size[aria-checked="true"] {
     border-color: var(--#{$prefix}-color-primary);
     box-shadow: inset 0 0 0 1px var(--#{$prefix}-color-primary);
+  }
+  // Selected + unavailable resolves to one muted ring (Bootstrap :checked:disabled).
+  .#{$prefix}-swatch:disabled[aria-pressed="true"],
+  .#{$prefix}-swatch[aria-disabled="true"][aria-pressed="true"] {
+    box-shadow:
+      0 0 0 2px var(--#{$prefix}-color-surface),
+      0 0 0 4px var(--#{$prefix}-color-border-strong);
   }
 }

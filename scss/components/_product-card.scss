@@ -70,6 +70,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    min-inline-size: 0;                       // Bootstrap .card — never wider than its grid track
+    overflow-wrap: anywhere;
     border: 1px solid var(--#{$prefix}-color-border-subtle);
     border-radius: var(--#{$prefix}-card-radius);
     background: var(--#{$prefix}-color-surface);
@@ -163,6 +165,9 @@
   // layer (so the entire tile navigates) while badges/wishlist/actions stay
   // interactive above it via their own stacking. Give the anchor real text for
   // AT; the ::after is purely a hit area.
+  // Stretched link (Bootstrap .stretched-link) — usable on any anchor in the card.
+  .#{$prefix}-product-card__link { color: inherit; text-decoration: none; }
+  .#{$prefix}-product-card__link:focus-visible { @include focus-ring; }
   .#{$prefix}-product-card__link::after {
     content: "";
     position: absolute;
@@ -221,4 +226,5 @@
     box-shadow: none;
     transform: none;
   }
+  .#{$prefix}-product-card--flat:hover .#{$prefix}-product-card__img { transform: none; }   // --flat means no hover chrome at all
 }

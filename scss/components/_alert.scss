@@ -60,32 +60,21 @@
   }
 
   // Dismiss button — bare, trailing edge, needs an aria-label.
+  // Bootstrap .alert-link — a link that keeps contrast on the tinted surface.
+  .#{$prefix}-alert__link {
+    color: var(--#{$prefix}-alert-accent);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  // Shared dismiss affordance (Bootstrap .btn-close) — one definition, no drift,
+  // and a 2rem target instead of the old 1.5em one.
   .#{$prefix}-alert__close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-    inline-size: 1.5em;
-    block-size: 1.5em;
+    @include close-button;
     margin-inline-start: var(--#{$prefix}-space-2);
-    margin-block-start: -0.15em;
-    padding: 0;
-    border: 0;
-    border-radius: var(--#{$prefix}-radius-sm);
-    background: transparent;
+    margin-block: calc(var(--#{$prefix}-space-2) * -1);
     color: inherit;
-    font: inherit;
-    line-height: 1;
-    cursor: pointer;
-    opacity: 0.65;
-    transition: opacity var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
-                background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
   }
-  .#{$prefix}-alert__close:hover {
-    opacity: 1;
-    background: color-mix(in srgb, currentColor 12%, transparent);
-  }
-  .#{$prefix}-alert__close:focus-visible { @include focus-ring; }
 
   // ── Variants — remap the three colour tokens only ──
   .#{$prefix}-alert--success {

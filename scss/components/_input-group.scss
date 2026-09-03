@@ -25,6 +25,7 @@
 @layer #{$prefix}.components {
   .#{$prefix}-input-group {
     display: flex;
+    flex-wrap: wrap;                        // Bootstrap .input-group wraps on narrow viewports
     align-items: stretch;
     inline-size: 100%;
   }
@@ -40,9 +41,11 @@
   // Static affix — text/icon context sharing the control's chrome.
   .#{$prefix}-input-group__text {
     display: inline-flex;
+    flex: none;
     align-items: center;
-    padding-inline: var(--#{$prefix}-control-padding-x);
-    border: var(--#{$prefix}-control-border);
+    justify-content: center;
+    padding-inline: var(--#{$prefix}-field-padding-x, var(--#{$prefix}-control-padding-x));
+    border: 1px solid var(--#{$prefix}-color-border-strong);   // same hairline as .sk-input: the collapsed seam matches
     border-radius: var(--#{$prefix}-control-radius);
     background: var(--#{$prefix}-color-surface-alt);
     color: var(--#{$prefix}-color-text-muted);
@@ -58,12 +61,12 @@
     margin-inline-start: -1px;
   }
   .#{$prefix}-input-group > :first-child {
-    border-start-start-radius: var(--#{$prefix}-control-radius);
-    border-end-start-radius: var(--#{$prefix}-control-radius);
+    border-start-start-radius: var(--#{$prefix}-btn-radius, var(--#{$prefix}-field-radius, var(--#{$prefix}-control-radius)));
+    border-end-start-radius: var(--#{$prefix}-btn-radius, var(--#{$prefix}-field-radius, var(--#{$prefix}-control-radius)));
   }
   .#{$prefix}-input-group > :last-child {
-    border-start-end-radius: var(--#{$prefix}-control-radius);
-    border-end-end-radius: var(--#{$prefix}-control-radius);
+    border-start-end-radius: var(--#{$prefix}-btn-radius, var(--#{$prefix}-field-radius, var(--#{$prefix}-control-radius)));
+    border-end-end-radius: var(--#{$prefix}-btn-radius, var(--#{$prefix}-field-radius, var(--#{$prefix}-control-radius)));
   }
 
   // Lift the focused/hovered segment so its border + focus ring win the overlap.
@@ -71,5 +74,22 @@
   .#{$prefix}-input-group > .#{$prefix}-btn:hover {
     position: relative;
     z-index: var(--#{$prefix}-z-raised);
+  }
+  // ── Sizes (Bootstrap .input-group-sm / -lg) — resize every segment at once ──
+  .#{$prefix}-input-group--sm > * {
+    --#{$prefix}-field-height:    var(--#{$prefix}-control-height-sm);
+    --#{$prefix}-field-padding-x: var(--#{$prefix}-space-3);
+    --#{$prefix}-btn-height:      var(--#{$prefix}-control-height-sm);
+    --#{$prefix}-btn-padding-x:   var(--#{$prefix}-space-3);
+    --#{$prefix}-btn-font-size:   var(--#{$prefix}-text-xs);
+    font-size: var(--#{$prefix}-text-xs);
+  }
+  .#{$prefix}-input-group--lg > * {
+    --#{$prefix}-field-height:    var(--#{$prefix}-control-height-lg);
+    --#{$prefix}-field-padding-x: var(--#{$prefix}-space-6);
+    --#{$prefix}-btn-height:      var(--#{$prefix}-control-height-lg);
+    --#{$prefix}-btn-padding-x:   var(--#{$prefix}-space-6);
+    --#{$prefix}-btn-font-size:   var(--#{$prefix}-text-md);
+    font-size: var(--#{$prefix}-text-md);
   }
 }

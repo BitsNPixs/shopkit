@@ -184,3 +184,24 @@ What it **verified clean** (no action needed):
 
 Guards after everything: build · lint · size **20.1 KB gzip (67%)** · react tsc · parity —
 all green. Full change log: `PHASES.md` Phase 8.5.
+
+## Bootstrap parity audit — 2026-09-03
+
+Every `sk-*` layout / utility class and component was diffed against Bootstrap 5.3 behaviour and
+fixed in place (each partial header carries the mapping). Added along the way: `.sk-btn-toolbar`,
+nested `.sk-btn-group`, `.sk-input-group--sm/--lg`, `.sk-textarea--sm/--lg`, `.sk-check--inline`,
+`.sk-swatch-input` / `.sk-wishlist-input` (`:checked`-driven toggles, no JS), `.sk-modal--xl/--full`
++ page scroll lock, `.sk-alert__link`, `.sk-toasts--top/--start/--center`, tooltip arrows,
+`.sk-tabs--boxed/--fill/--justified`, `.sk-accordion--flush` + collapse motion, the `.sk-breadcrumb`
+block, `.sk-pagination--sm/--lg`, `.sk-table--borderless/--sm` + `.sk-table-wrap-{bp}`,
+`.sk-badge--float`, `.sk-progress--striped/--animated` (+ in-bar labels), `.sk-skeleton--inline`,
+`.sk-spinner--grow`, `.sk-navbar--centered` (fixed) / `--expand(-{bp})` / `__inner`,
+`.sk-drawer--top/--bottom` (+ RTL flip), `.sk-mega` width floor + states, `.sk-menu`
+self-positioning + `--end/--up/--static`, `.sk-footer--newsletter` (its own grid track) and
+`--inverse` (pure token remap), `.sk-hero` inner rhythm + `--sk-hero-media-ratio`, `.sk-cart` RTL,
+`.sk-empty--compact`, collapsible `<details>` facets, `.sk-product-grid` tokens, `--sk-dur-loop`.
+
+Deliberate divergences: `.sk-cluster` wraps (add `.sk-flex-nowrap` for an exact `.hstack`),
+spacing keys follow the 4px token scale rather than 0–5, there is no `.sk-d-grid` (the row is
+`.sk-grid`) or `.sk-d-table*` (the table component owns the name), and the drawer has no
+responsive inline mode because it is a modal `<dialog>`.

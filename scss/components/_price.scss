@@ -22,7 +22,9 @@
 @layer #{$prefix}.components {
   .#{$prefix}-price {
     --#{$prefix}-price-now:  var(--#{$prefix}-color-price);
-    --#{$prefix}-price-size: var(--#{$prefix}-text-lg);
+    --#{$prefix}-price-size:     var(--#{$prefix}-text-lg);
+    --#{$prefix}-price-was-size: var(--#{$prefix}-text-sm);     // scales with the size modifiers
+    --#{$prefix}-price-off:      var(--#{$prefix}-color-sale);
 
     display: inline-flex;
     align-items: baseline;
@@ -41,7 +43,7 @@
 
   .#{$prefix}-price__was {
     color: var(--#{$prefix}-color-text-muted);
-    font-size: var(--#{$prefix}-text-sm);
+    font-size: var(--#{$prefix}-price-was-size);
     font-weight: var(--#{$prefix}-weight-regular);
     text-decoration: line-through;
   }
@@ -52,8 +54,8 @@
     padding-block: 0.1em;
     padding-inline: var(--#{$prefix}-space-2);
     border-radius: var(--#{$prefix}-radius-sm);
-    background: color-mix(in srgb, var(--#{$prefix}-color-sale) 14%, transparent);
-    color: var(--#{$prefix}-color-sale);
+    background: color-mix(in srgb, var(--#{$prefix}-price-off) 14%, transparent);
+    color: var(--#{$prefix}-price-off);
     font-size: var(--#{$prefix}-text-xs);
     font-weight: var(--#{$prefix}-weight-semibold);
     line-height: 1.4;
@@ -66,6 +68,6 @@
   .#{$prefix}-price--sale { --#{$prefix}-price-now: var(--#{$prefix}-color-sale); }
 
   // ── Sizes ──
-  .#{$prefix}-price--sm { --#{$prefix}-price-size: var(--#{$prefix}-text-md); }
-  .#{$prefix}-price--lg { --#{$prefix}-price-size: var(--#{$prefix}-text-2xl); }
+  .#{$prefix}-price--sm { --#{$prefix}-price-size: var(--#{$prefix}-text-md);  --#{$prefix}-price-was-size: var(--#{$prefix}-text-xs); }
+  .#{$prefix}-price--lg { --#{$prefix}-price-size: var(--#{$prefix}-text-2xl); --#{$prefix}-price-was-size: var(--#{$prefix}-text-md); }
 }

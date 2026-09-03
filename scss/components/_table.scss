@@ -88,6 +88,7 @@
   }
 
   // Tighter density.
+  .#{$prefix}-table--sm,                          // Bootstrap .table-sm (--compact kept as an alias)
   .#{$prefix}-table--compact {
     --#{$prefix}-table-pad-y: var(--#{$prefix}-space-2);
     --#{$prefix}-table-pad-x: var(--#{$prefix}-space-3);
@@ -97,5 +98,17 @@
   .#{$prefix}-table-wrap {
     inline-size: 100%;
     overflow-x: auto;
+  }
+  // ── Borderless (Bootstrap .table-borderless) ──
+  .#{$prefix}-table--borderless th,
+  .#{$prefix}-table--borderless td,
+  .#{$prefix}-table--borderless thead th { border: 0; }
+
+  // ── Responsive wrappers (Bootstrap .table-responsive-{bp}) — scroll only below the breakpoint ──
+  @each $bp, $min in $breakpoints {
+    .#{$prefix}-table-wrap-#{$bp} { inline-size: 100%; }
+    @media (max-width: #{$min - 0.02px}) {
+      .#{$prefix}-table-wrap-#{$bp} { overflow-x: auto; }
+    }
   }
 }

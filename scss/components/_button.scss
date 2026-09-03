@@ -46,11 +46,12 @@
 
     // ── Structure ──
     display: inline-flex;
+    vertical-align: middle;                 // Bootstrap .btn — aligns with adjacent inline text
     align-items: center;
     justify-content: center;
     gap: var(--#{$prefix}-btn-gap);
     min-block-size: var(--#{$prefix}-btn-height);
-    padding-block: 0;
+    padding-block: var(--#{$prefix}-space-1);     // room for a wrapped label (Bootstrap .btn wraps)
     padding-inline: var(--#{$prefix}-btn-padding-x);
     border: 1px solid var(--#{$prefix}-btn-border-color);
     border-radius: var(--#{$prefix}-btn-radius);
@@ -62,7 +63,6 @@
     line-height: 1.1;
     text-align: center;
     text-decoration: none;            // for <a class="sk-btn">
-    white-space: nowrap;
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
@@ -156,9 +156,7 @@
     --#{$prefix}-btn-bg-active: transparent;
     --#{$prefix}-btn-fg:        var(--#{$prefix}-color-link);
     --#{$prefix}-btn-padding-x: var(--#{$prefix}-space-1);
-    --#{$prefix}-btn-height:    auto;
-    min-block-size: auto;
-    text-decoration: underline;
+    text-decoration: underline;               // keeps the control height (Bootstrap .btn-link)
     text-underline-offset: 0.18em;
   }
   .#{$prefix}-btn--link:not(:disabled):not([aria-disabled="true"]):hover {
@@ -194,12 +192,15 @@
   }
 
   // ── Loading: spinner overlay, label hidden but width preserved ──
-  .#{$prefix}-btn--loading {
+  .#{$prefix}-btn--loading,
+  .#{$prefix}-btn[aria-busy="true"] {
     position: relative;
     color: transparent;
     pointer-events: none;
+    cursor: progress;
   }
-  .#{$prefix}-btn--loading::after {
+  .#{$prefix}-btn--loading::after,
+  .#{$prefix}-btn[aria-busy="true"]::after {
     content: "";
     position: absolute;
     inset-block-start: 50%;
@@ -211,7 +212,7 @@
     border: 2px solid var(--#{$prefix}-btn-fg);
     border-block-start-color: transparent;   // the ring gap
     border-radius: 50%;
-    animation: #{$prefix}-btn-spin var(--#{$prefix}-dur-slow) linear infinite;
+    animation: #{$prefix}-btn-spin var(--#{$prefix}-dur-loop, var(--#{$prefix}-dur-slow)) linear infinite;
   }
   // Reduced-motion users zero the duration tokens → the ring simply stops.
   @keyframes #{$prefix}-btn-spin { to { transform: rotate(360deg); } }

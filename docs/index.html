@@ -243,7 +243,17 @@ input[type=range] { accent-color: var(--sk-color-primary); inline-size: 8.5rem; 
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .g-cell--alt > i { background: var(--sk-color-accent); color: var(--sk-color-accent-contrast);
   border-style:solid; border-color:transparent; }
-
+/* ---- utility-demo helpers (phase 2 audit fill) ---- */
+.u-frame--flush { padding:0; overflow:clip; }
+.u-tall { min-block-size:8rem; }
+.u-tall2 { block-size:12rem; }
+.u-wide { inline-size:60rem; }
+.u-scroll { max-block-size:6rem; overflow:auto; border:1px dashed var(--sk-color-border-strong); border-radius: calc(var(--sk-radius) * .6); padding: var(--sk-space-2); }
+.u-bar--alt { background: var(--sk-color-primary-soft); border-color: color-mix(in srgb, var(--sk-color-primary) 55%, transparent); color: var(--sk-color-text); }
+.u-chip--big { font-size:1.6rem; line-height:1; }
+.u-frame--stage { position:relative; min-block-size:11rem; }
+.u-frame--stage .sk-toasts { position:absolute; --sk-toast-width:9rem; }
+.u-frame--stage .sk-menu { inset-block-start:calc(100% + var(--sk-space-1)); }
 .footnote { color: var(--sk-color-text-subtle); font-size:.82rem; }
 mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25em; border-radius:4px; }
 
@@ -595,6 +605,32 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <span class="ey">@layer sk.layout</span>
     </div>
 
+    <!-- containers · sections -->
+    <div class="u-demo">
+      <p class="ey">containers · <code>.sk-container</code> steps 540 · 720 · 960 · 1140 · 1320 · <code>-narrow</code> · <code>-fluid</code> · <code>-{bp}</code> (100% until its breakpoint)</p>
+      <div class="u-frame sk-stack sk-gap-2">
+        <div class="sk-container"><div class="u-bar">.sk-container — stepped max-width, ½-gutter padding</div></div>
+        <div class="sk-container-narrow"><div class="u-bar">.sk-container-narrow — reading measure (--sk-container-narrow)</div></div>
+        <div class="sk-container-fluid"><div class="u-bar">.sk-container-fluid — always 100%</div></div>
+        <div class="sk-container-sm"><div class="u-bar">.sk-container-sm — fluid below 576, stepped after</div></div>
+        <div class="sk-container-md"><div class="u-bar">.sk-container-md — fluid below 768</div></div>
+        <div class="sk-container-lg"><div class="u-bar">.sk-container-lg — fluid below 992</div></div>
+        <div class="sk-container-xl"><div class="u-bar">.sk-container-xl — fluid below 1200</div></div>
+        <div class="sk-container-2xl"><div class="u-bar">.sk-container-2xl — fluid below 1400 (Bootstrap xxl)</div></div>
+      </div>
+    </div>
+
+    <div class="u-demo sk-mt-6">
+      <p class="ey">sections · <code>.sk-section</code> rhythm variants · <code>--tight</code> · <code>--loose</code> · <code>--flush</code> · surfaces <code>--alt</code> · <code>--sunken</code> · <code>--inverse</code></p>
+      <div class="sk-grid sk-g-3 sk-grid-cols-1 sk-grid-cols-md-3">
+        <div><div class="u-frame u-frame--flush"><section class="sk-section sk-section--tight sk-text-center"><span class="u-chip">.sk-section--tight</span></section></div></div>
+        <div><div class="u-frame u-frame--flush"><section class="sk-section sk-section--loose sk-text-center"><span class="u-chip">.sk-section--loose</span></section></div></div>
+        <div><div class="u-frame u-frame--flush"><section class="sk-section sk-section--flush sk-text-center"><span class="u-chip">.sk-section--flush — no block padding</span></section></div></div>
+        <div><div class="u-frame u-frame--flush"><section class="sk-section sk-section--tight sk-section--alt sk-text-center"><span class="u-chip">.sk-section--alt</span></section></div></div>
+        <div><div class="u-frame u-frame--flush"><section class="sk-section sk-section--tight sk-section--sunken sk-text-center"><span class="u-chip">.sk-section--sunken</span></section></div></div>
+        <div><div class="u-frame u-frame--flush"><section class="sk-section sk-section--tight sk-section--inverse sk-text-center"><span class="u-chip">.sk-section--inverse — inverse surface + text</span></section></div></div>
+      </div>
+    </div>
     <!-- 12-column ruler -->
     <div class="u-demo">
       <p class="ey">12-column ruler · <code>.sk-grid.sk-g-2</code> › <code>.sk-col-1</code> × 12</p>
@@ -806,6 +842,54 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </div>
     </div>
 
+    <!-- responsive equal-width · auto · row-cols-auto · responsive gutters · responsive order · full alias -->
+    <div class="u-demo sk-mt-6">
+      <p class="ey">responsive auto layout · <code>.sk-col-12 .sk-col-md</code> stacks, then shares equally from md · <code>.sk-col-md-auto</code> · <code>.sk-grid-cols-auto</code></p>
+      <div class="u-frame sk-stack sk-gap-3">
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-12 sk-col-md"><i>.sk-col-12 .sk-col-md</i></div>
+          <div class="g-cell sk-col-12 sk-col-md"><i>.sk-col-12 .sk-col-md</i></div>
+          <div class="g-cell sk-col-12 sk-col-md"><i>.sk-col-12 .sk-col-md</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+          <div class="g-cell g-cell--alt sk-col-6 sk-col-md-auto"><i>.sk-col-6 .sk-col-md-auto — half, then content width</i></div>
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+        </div>
+        <div class="sk-grid sk-g-3 sk-grid-cols-auto">
+          <div class="g-cell"><i>.sk-grid-cols-auto</i></div>
+          <div class="g-cell"><i>every child is content-sized</i></div>
+          <div class="g-cell"><i>like Bootstrap .row-cols-auto</i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="u-demo sk-mt-6">
+      <p class="ey">responsive gutters &amp; order · <code>.sk-g-2 .sk-g-md-6</code> grows the gutter at md · <code>.sk-gx-md-8 .sk-gy-md-2</code> · <code>.sk-order-md-first</code> / <code>.sk-order-md-last</code> reorder from md only</p>
+      <div class="u-frame sk-stack sk-gap-3">
+        <div class="sk-grid sk-g-2 sk-g-md-6">
+          <div class="g-cell sk-col-6"><i>.sk-g-2 .sk-g-md-6</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-g-2 .sk-g-md-6</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-g-2 .sk-g-md-6</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-g-2 .sk-g-md-6</i></div>
+        </div>
+        <div class="sk-grid sk-gx-md-8 sk-gy-md-2">
+          <div class="g-cell sk-col-6"><i>.sk-gx-md-8 .sk-gy-md-2</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-gx-md-8 .sk-gy-md-2</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-gx-md-8 .sk-gy-md-2</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-gx-md-8 .sk-gy-md-2</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-4 sk-order-md-last"><i>DOM 1 · .sk-order-md-last</i></div>
+          <div class="g-cell sk-col-4 sk-order-md-2"><i>DOM 2 · .sk-order-md-2</i></div>
+          <div class="g-cell g-cell--alt sk-col-4 sk-order-md-first"><i>DOM 3 · .sk-order-md-first</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-6 sk-col-md-full"><i>.sk-col-6 .sk-col-md-full — ShopKit alias of -12</i></div>
+          <div class="g-cell g-cell--alt sk-col-full"><i>.sk-col-full</i></div>
+        </div>
+      </div>
+    </div>
     <!-- mapping table -->
     <div class="u-demo sk-mt-6">
       <p class="ey">bootstrap → shopkit</p>
@@ -889,6 +973,81 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </div>
       </div>
     </div>
+    <div class="u-grid sk-mt-5">
+      <!-- every side, padding -->
+      <div class="u-demo">
+        <p class="ey">padding sides · <code>.sk-p-4</code> · <code>-px</code> · <code>-py</code> · <code>-pt</code> · <code>-pb</code> · <code>-ps</code> · <code>-pe</code></p>
+        <div class="sk-cluster sk-gap-2 sk-items-start">
+          <span class="u-pad sk-p-4"><i>.sk-p-4</i></span>
+          <span class="u-pad sk-px-4"><i>.sk-px-4</i></span>
+          <span class="u-pad sk-py-4"><i>.sk-py-4</i></span>
+          <span class="u-pad sk-pt-4"><i>.sk-pt-4</i></span>
+          <span class="u-pad sk-pb-4"><i>.sk-pb-4</i></span>
+          <span class="u-pad sk-ps-4"><i>.sk-ps-4</i></span>
+          <span class="u-pad sk-pe-4"><i>.sk-pe-4</i></span>
+        </div>
+      </div>
+
+      <!-- every side, margin -->
+      <div class="u-demo">
+        <p class="ey">margin sides · <code>.sk-m-4</code> · <code>-mx</code> · <code>-my</code> · <code>-mt</code> · <code>-mb</code> · <code>-ms</code> · <code>-me</code> (gap is 0 — the space is the margin)</p>
+        <div class="u-frame sk-flex sk-flex-wrap sk-gap-0 sk-items-start">
+          <span class="u-chip sk-m-4">.sk-m-4</span>
+          <span class="u-chip sk-mx-4">.sk-mx-4</span>
+          <span class="u-chip sk-my-4">.sk-my-4</span>
+          <span class="u-chip sk-mt-4">.sk-mt-4</span>
+          <span class="u-chip sk-mb-4">.sk-mb-4</span>
+          <span class="u-chip sk-ms-4">.sk-ms-4</span>
+          <span class="u-chip sk-me-4">.sk-me-4</span>
+        </div>
+      </div>
+
+      <!-- negative margins -->
+      <div class="u-demo">
+        <p class="ey">negative margins · <code>.sk-mx-n4</code> bleeds through the frame's padding · <code>.sk-mt-n4</code> overlaps the row above</p>
+        <div class="u-frame">
+          <span class="u-bar sk-mx-n4">.sk-mx-n4 — full-bleed inside a padded frame</span>
+          <span class="u-bar sk-mt-4">.sk-mt-4</span>
+          <span class="u-bar u-bar--alt sk-mt-n4 sk-ms-4 sk-me-4">.sk-mt-n4 .sk-ms-4 .sk-me-4 — pulled up over the bar above</span>
+          <div class="sk-cluster sk-gap-0 sk-mt-4">
+            <span class="u-chip">base</span>
+            <span class="u-chip u-chip--alt sk-ms-n2">.sk-ms-n2 — tucks under</span>
+            <span class="u-chip sk-m-n1">.sk-m-n1</span>
+            <span class="u-chip u-chip--alt sk-me-n3">.sk-me-n3</span>
+            <span class="u-chip">next</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- auto margins -->
+      <div class="u-demo">
+        <p class="ey">auto margins · <code>.sk-mx-auto</code> centres a block · <code>.sk-ms-auto</code> pushes to inline-end · <code>.sk-mt-auto</code> pins to the bottom of a column</p>
+        <div class="u-frame">
+          <div class="u-bar sk-w-50 sk-mx-auto">.sk-w-50 .sk-mx-auto</div>
+          <div class="u-bar sk-w-25 sk-ms-auto sk-mt-3">.sk-w-25 .sk-ms-auto</div>
+          <div class="u-bar sk-w-25 sk-me-auto sk-mt-3">.sk-w-25 .sk-me-auto</div>
+          <div class="u-bar sk-w-25 sk-m-auto sk-mt-3">.sk-m-auto</div>
+          <div class="u-tall sk-flex sk-flex-col sk-mt-3">
+            <span class="u-chip sk-self-start">.sk-flex-col</span>
+            <span class="u-chip sk-self-start sk-my-auto">.sk-my-auto — vertically centred</span>
+            <span class="u-chip u-chip--alt sk-self-start sk-mt-auto">.sk-mt-auto — pinned to the bottom</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- responsive spacing -->
+      <div class="u-demo">
+        <p class="ey">responsive · <code>.sk-p-2 .sk-p-md-6</code> · <code>.sk-mt-0 .sk-mt-md-8</code> · <code>.sk-ms-md-auto</code> — curated keys 0 · 2 · 3 · 4 · 6 · 8 · 12 · 16 at every breakpoint</p>
+        <div class="u-frame">
+          <span class="u-pad sk-p-2 sk-p-md-6"><i>.sk-p-2 .sk-p-md-6</i></span>
+          <span class="u-bar sk-mt-0 sk-mt-md-8 sk-px-lg-12">.sk-mt-0 .sk-mt-md-8 .sk-px-lg-12 — margin from md, extra padding from lg</span>
+          <div class="sk-flex sk-mt-3">
+            <span class="u-chip u-chip--alt sk-ms-md-auto">.sk-ms-md-auto — pushed to the end from md</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <p class="footnote sk-mt-4">Every class maps to a <code>--sk-space-*</code> token and lives in the
       <code>sk.utilities</code> layer, so your own unlayered CSS overrides it with zero specificity fights and
       zero <code>!important</code>.</p>
@@ -925,6 +1084,130 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     <div class="u-frame sk-flex sk-flex-wrap sk-gap-3 sk-items-center">
       <span class="u-chip sk-hidden sk-md-inline-block">.sk-hidden .sk-md-inline-block → shows ≥ md</span>
       <span class="u-chip u-chip--alt sk-md-hidden">.sk-md-hidden → hides ≥ md</span>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">direction · <code>.sk-flex-row</code> · <code>-row-reverse</code> · <code>-col</code> · <code>-col-reverse</code> · responsive <code>.sk-flex-col .sk-flex-md-row</code></p>
+    <div class="sk-grid sk-g-3 sk-grid-cols-1 sk-grid-cols-sm-2 sk-grid-cols-lg-5">
+      <div><div class="u-frame sk-flex sk-flex-row sk-gap-2"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">.sk-flex-row</span></div></div>
+      <div><div class="u-frame sk-flex sk-flex-row-reverse sk-gap-2"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">.sk-flex-row-reverse</span></div></div>
+      <div><div class="u-frame sk-flex sk-flex-col sk-gap-2 sk-items-start"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">.sk-flex-col</span></div></div>
+      <div><div class="u-frame sk-flex sk-flex-col-reverse sk-gap-2 sk-items-start"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">.sk-flex-col-reverse</span></div></div>
+      <div><div class="u-frame sk-flex sk-flex-col sk-flex-md-row sk-gap-2 sk-items-start sk-items-md-center"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip u-chip--alt">.sk-flex-col .sk-flex-md-row</span></div></div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">flex shorthands · <code>.sk-flex-1</code> equal · <code>.sk-flex-auto</code> by content · <code>.sk-flex-initial</code> · <code>.sk-flex-none</code> · <code>.sk-grow-0</code> · <code>.sk-shrink</code> / <code>.sk-shrink-0</code></p>
+    <div class="u-frame sk-stack sk-gap-2">
+      <div class="sk-flex sk-gap-2"><span class="u-chip sk-flex-1">.sk-flex-1</span><span class="u-chip sk-flex-1">.sk-flex-1</span><span class="u-chip sk-flex-1">.sk-flex-1 — equal thirds</span></div>
+      <div class="sk-flex sk-gap-2"><span class="u-chip sk-flex-auto">.sk-flex-auto</span><span class="u-chip sk-flex-auto">.sk-flex-auto — grows from its content width</span><span class="u-chip sk-flex-none">.sk-flex-none</span></div>
+      <div class="sk-flex sk-gap-2"><span class="u-chip sk-flex-initial">.sk-flex-initial — may shrink, never grows</span><span class="u-chip sk-grow sk-grow-0">.sk-grow .sk-grow-0 — the 0 wins</span><span class="u-chip u-chip--alt sk-grow sk-grow-md-0">.sk-grow .sk-grow-md-0 — grows below md only</span></div>
+      <div class="sk-flex sk-gap-2 sk-flex-nowrap"><span class="u-chip sk-shrink">.sk-shrink — this long label is allowed to shrink and overflow its box when the row is tight</span><span class="u-chip u-chip--alt sk-shrink-0">.sk-shrink-0 — never shrinks</span></div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">justify-content · <code>.sk-justify-start</code> · <code>-center</code> · <code>-end</code> · <code>-between</code> · <code>-around</code> · <code>-evenly</code> · responsive <code>.sk-justify-center .sk-justify-md-end</code></p>
+    <div class="sk-stack sk-gap-2">
+      <div class="u-frame sk-flex sk-justify-start sk-gap-2"><span class="u-chip">a</span><span class="u-chip">b</span><span class="u-chip">.sk-justify-start</span></div>
+      <div class="u-frame sk-flex sk-justify-center sk-gap-2"><span class="u-chip">a</span><span class="u-chip">b</span><span class="u-chip">.sk-justify-center</span></div>
+      <div class="u-frame sk-flex sk-justify-end sk-gap-2"><span class="u-chip">a</span><span class="u-chip">b</span><span class="u-chip">.sk-justify-end</span></div>
+      <div class="u-frame sk-flex sk-justify-around"><span class="u-chip">a</span><span class="u-chip">b</span><span class="u-chip">.sk-justify-around</span></div>
+      <div class="u-frame sk-flex sk-justify-evenly"><span class="u-chip">a</span><span class="u-chip">b</span><span class="u-chip">.sk-justify-evenly</span></div>
+      <div class="u-frame sk-flex sk-justify-center sk-justify-md-end sk-gap-2"><span class="u-chip">a</span><span class="u-chip">b</span><span class="u-chip u-chip--alt">.sk-justify-center .sk-justify-md-end</span></div>
+      <div class="u-frame sk-cluster sk-cluster--between"><span class="u-chip">.sk-cluster--between</span><span class="sk-cluster sk-gap-2"><span class="u-chip">group</span><span class="u-chip">at end</span></span></div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">align-items · <code>.sk-items-start</code> · <code>-center</code> · <code>-end</code> · <code>-baseline</code> · <code>-stretch</code> · responsive <code>.sk-items-start .sk-items-md-end</code></p>
+    <div class="sk-grid sk-g-3 sk-grid-cols-2 sk-grid-cols-lg-6">
+      <div><div class="u-frame u-tall sk-flex sk-items-start sk-gap-2"><span class="u-chip">a</span><span class="u-chip">.sk-items-start</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-items-center sk-gap-2"><span class="u-chip">a</span><span class="u-chip">.sk-items-center</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-items-end sk-gap-2"><span class="u-chip">a</span><span class="u-chip">.sk-items-end</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-items-baseline sk-gap-2"><span class="u-chip u-chip--big">Aa</span><span class="u-chip">.sk-items-baseline</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-items-stretch sk-gap-2"><span class="u-chip">a</span><span class="u-chip">.sk-items-stretch</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-items-start sk-items-md-end sk-gap-2"><span class="u-chip">a</span><span class="u-chip u-chip--alt">.sk-items-start .sk-items-md-end</span></div></div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">align-self · <code>.sk-self-auto</code> · <code>-start</code> · <code>-center</code> · <code>-end</code> · <code>-baseline</code> · <code>-stretch</code> · responsive <code>.sk-self-start .sk-self-md-end</code></p>
+    <div class="u-frame u-tall sk-flex sk-items-stretch sk-gap-2">
+      <span class="u-chip sk-self-auto">.sk-self-auto</span>
+      <span class="u-chip sk-self-start">.sk-self-start</span>
+      <span class="u-chip sk-self-center">.sk-self-center</span>
+      <span class="u-chip sk-self-end">.sk-self-end</span>
+      <span class="u-chip sk-self-baseline">.sk-self-baseline</span>
+      <span class="u-chip sk-self-stretch">.sk-self-stretch</span>
+      <span class="u-chip u-chip--alt sk-self-start sk-self-md-end">.sk-self-start .sk-self-md-end</span>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">align-content · multi-line cross axis · <code>.sk-content-start</code> · <code>-center</code> · <code>-end</code> · <code>-between</code> · <code>-around</code> · <code>-stretch</code> · responsive <code>.sk-content-start .sk-content-md-end</code></p>
+    <div class="sk-grid sk-g-3 sk-grid-cols-2 sk-grid-cols-lg-6">
+      <div><div class="u-frame u-tall sk-flex sk-flex-wrap sk-content-start sk-gap-1"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">3</span><span class="u-chip">4</span><span class="u-chip">.sk-content-start</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-flex-wrap sk-content-center sk-gap-1"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">3</span><span class="u-chip">4</span><span class="u-chip">.sk-content-center</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-flex-wrap sk-content-end sk-gap-1"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">3</span><span class="u-chip">4</span><span class="u-chip">.sk-content-end</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-flex-wrap sk-content-between sk-gap-1"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">3</span><span class="u-chip">4</span><span class="u-chip">.sk-content-between</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-flex-wrap sk-content-around sk-gap-1"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">3</span><span class="u-chip">4</span><span class="u-chip">.sk-content-around</span></div></div>
+      <div><div class="u-frame u-tall sk-flex sk-flex-wrap sk-content-stretch sk-content-md-end sk-gap-1"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">3</span><span class="u-chip">4</span><span class="u-chip u-chip--alt">.sk-content-stretch .sk-content-md-end</span></div></div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">gaps &amp; wrapping · <code>.sk-row-gap-4 .sk-column-gap-1</code> set one axis each · <code>.sk-flex-wrap-reverse</code> · <code>.sk-flex-nowrap</code> · responsive <code>.sk-flex-wrap .sk-flex-md-nowrap</code></p>
+    <div class="sk-stack sk-gap-2">
+      <div class="u-frame sk-flex sk-flex-wrap sk-row-gap-4 sk-column-gap-1"><span class="u-chip">.sk-row-gap-4</span><span class="u-chip">.sk-column-gap-1</span><span class="u-chip">tight columns</span><span class="u-chip">tall rows</span><span class="u-chip">wrap</span><span class="u-chip">to</span><span class="u-chip">see</span><span class="u-chip">the</span><span class="u-chip">row</span><span class="u-chip">gap</span><span class="u-chip">grow</span><span class="u-chip">between</span><span class="u-chip">lines</span></div>
+      <div class="u-frame sk-flex sk-flex-wrap-reverse sk-gap-2"><span class="u-chip">1</span><span class="u-chip">2</span><span class="u-chip">3</span><span class="u-chip">4</span><span class="u-chip">5</span><span class="u-chip">6</span><span class="u-chip">7</span><span class="u-chip">8</span><span class="u-chip">9</span><span class="u-chip">10</span><span class="u-chip">11</span><span class="u-chip">12</span><span class="u-chip u-chip--alt">.sk-flex-wrap-reverse — first line at the bottom</span></div>
+      <div class="u-frame sk-flex sk-flex-wrap sk-flex-md-nowrap sk-gap-2"><span class="u-chip">wraps below md</span><span class="u-chip">single line from md</span><span class="u-chip">even if the labels are long</span><span class="u-chip">and the row gets tight</span><span class="u-chip u-chip--alt">.sk-flex-wrap .sk-flex-md-nowrap</span></div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">display · <code>.sk-block</code> · <code>.sk-inline</code> · <code>.sk-inline-block</code> · <code>.sk-inline-flex</code> · <code>.sk-inline-grid</code> · <code>.sk-contents</code></p>
+    <div class="u-frame">
+      <span class="u-chip sk-block">.sk-block — takes the whole line</span>
+      <span class="u-chip sk-inline sk-mt-2">.sk-inline</span>
+      <span class="u-chip sk-inline-block sk-mt-2">.sk-inline-block</span>
+      <span class="u-chip sk-inline-flex sk-gap-1 sk-mt-2">.sk-inline-flex <span class="sk-badge sk-badge--new">flex child</span></span>
+      <span class="u-chip sk-inline-grid sk-gap-1 sk-mt-2">.sk-inline-grid <span class="sk-badge sk-badge--sale">grid child</span></span>
+      <span class="sk-contents"><span class="u-chip u-chip--alt sk-inline-block sk-mt-2">.sk-contents — the wrapper box vanishes, its children lay out here</span></span>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">responsive display · every value at every breakpoint · print · <code>.sk-print-hidden</code> · <code>.sk-hidden .sk-print-block</code></p>
+    <div class="u-frame sk-flex sk-flex-wrap sk-gap-2 sk-items-center">
+      <span class="u-chip sk-hidden sk-sm-inline-block">.sk-hidden .sk-sm-inline-block → ≥ sm</span>
+      <span class="u-chip sk-hidden sk-md-flex sk-gap-1">.sk-hidden .sk-md-flex → ≥ md <span class="sk-badge">flex</span></span>
+      <span class="u-chip sk-hidden sk-lg-block">.sk-hidden .sk-lg-block → ≥ lg</span>
+      <span class="u-chip sk-hidden sk-xl-inline">.sk-hidden .sk-xl-inline → ≥ xl</span>
+      <span class="u-chip sk-hidden sk-2xl-inline-flex">.sk-hidden .sk-2xl-inline-flex → ≥ 2xl</span>
+      <span class="u-chip u-chip--alt sk-lg-hidden">.sk-lg-hidden → hides ≥ lg</span>
+      <span class="u-chip u-chip--alt sk-sm-hidden sk-md-inline-block">.sk-sm-hidden .sk-md-inline-block → only &lt; sm and ≥ md</span>
+      <span class="u-chip u-chip--alt sk-xl-hidden">.sk-xl-hidden → hides ≥ xl</span>
+      <span class="u-chip sk-print-hidden">.sk-print-hidden — gone on paper</span>
+      <span class="u-chip u-chip--alt sk-hidden sk-print-block">.sk-hidden .sk-print-block — only on paper (try print preview)</span>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">text alignment · <code>.sk-text-start</code> · <code>-center</code> · <code>-end</code> — logical, so they flip under RTL · responsive <code>.sk-text-center .sk-text-md-end</code></p>
+    <div class="u-frame sk-stack sk-gap-2">
+      <div class="u-bar sk-text-start">.sk-text-start</div>
+      <div class="u-bar sk-text-center">.sk-text-center</div>
+      <div class="u-bar sk-text-end">.sk-text-end</div>
+      <div class="u-bar u-bar--alt sk-text-center sk-text-md-end">.sk-text-center .sk-text-md-end — centred, then end-aligned from md</div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">sizing · <code>.sk-w-25/50/75/100/auto</code> · <code>.sk-h-*</code> · <code>.sk-mw-100</code> · <code>.sk-mh-100</code> · <code>.sk-vw-100</code> · <code>.sk-vh-100</code> · <code>.sk-min-vw-100</code> · <code>.sk-min-vh-100</code></p>
+    <div class="u-frame sk-stack sk-gap-2">
+      <div class="u-bar sk-w-25">.sk-w-25</div>
+      <div class="u-bar sk-w-50">.sk-w-50</div>
+      <div class="u-bar sk-w-75">.sk-w-75</div>
+      <div class="u-bar sk-w-100">.sk-w-100</div>
+      <div class="u-bar sk-w-auto sk-inline-block">.sk-w-auto — shrink-wraps</div>
+      <div class="u-bar u-bar--alt u-wide sk-mw-100">.u-wide (60rem) + .sk-mw-100 — capped at its container</div>
+      <div class="u-tall sk-flex sk-items-start sk-gap-2">
+        <span class="u-chip sk-h-25">.sk-h-25</span>
+        <span class="u-chip sk-h-50">.sk-h-50</span>
+        <span class="u-chip sk-h-75">.sk-h-75</span>
+        <span class="u-chip sk-h-100">.sk-h-100</span>
+        <span class="u-chip sk-h-auto">.sk-h-auto</span>
+        <span class="u-chip u-chip--alt u-tall2 sk-mh-100">.sk-mh-100 — 12rem box capped at the 8rem frame</span>
+      </div>
+      <div class="u-scroll sk-flex sk-gap-2">
+        <span class="u-chip sk-vw-100 sk-shrink-0">.sk-vw-100 — as wide as the viewport (scroll →)</span>
+        <span class="u-chip u-chip--alt sk-min-vw-100 sk-shrink-0">.sk-min-vw-100</span>
+      </div>
+      <div class="u-scroll sk-flex sk-gap-2 sk-items-start">
+        <span class="u-chip sk-vh-100">.sk-vh-100 — as tall as the viewport (scroll ↓)</span>
+        <span class="u-chip u-chip--alt sk-min-vh-100">.sk-min-vh-100</span>
+      </div>
     </div>
   </section>
 
@@ -977,6 +1260,32 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <button type="button" class="sk-btn sk-btn--block">Block button — 100% width</button>
       <a class="sk-btn sk-btn--secondary sk-btn--block" href="#main" role="button">Anchor styled as button</a>
     </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">icon slot <code>.sk-btn__icon</code> · busy <code>[aria-busy="true"]</code> · screen-reader label <code>.sk-sr-only</code> · <code>.sk-sr-only-focusable</code> (press Tab — it appears on focus)</p>
+    <div class="sk-cluster sk-gap-3">
+      <button type="button" class="sk-btn sk-btn--secondary"><span class="sk-btn__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>Icon slot</button>
+      <button type="button" class="sk-btn" aria-busy="true">Saving…</button>
+      <button type="button" class="sk-btn sk-btn--outline sk-btn--icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="sk-sr-only">Add to wishlist</span></button>
+      <a class="sk-sr-only-focusable sk-btn sk-btn--soft" href="#main">Skip to content — visible only while focused</a>
+      <button type="button" class="sk-btn sk-btn--ghost">Wrapping labels are allowed, like Bootstrap</button>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">toolbar <code>.sk-btn-toolbar</code> · vertical group <code>.sk-btn-group--vertical</code> · single-segment group keeps all four corners</p>
+    <div class="sk-btn-toolbar" role="toolbar" aria-label="Catalogue tools">
+      <div class="sk-btn-group" role="group" aria-label="Sort">
+        <button type="button" class="sk-btn sk-btn--outline" aria-pressed="true">A–Z</button>
+        <button type="button" class="sk-btn sk-btn--outline">Price</button>
+        <button type="button" class="sk-btn sk-btn--outline">Newest</button>
+      </div>
+      <div class="sk-btn-group sk-btn-group--vertical" role="group" aria-label="Density">
+        <button type="button" class="sk-btn sk-btn--outline" aria-pressed="true">Comfortable</button>
+        <button type="button" class="sk-btn sk-btn--outline">Compact</button>
+        <button type="button" class="sk-btn sk-btn--outline">Dense</button>
+      </div>
+      <div class="sk-btn-group sk-btn-group--vertical" role="group" aria-label="Single">
+        <button type="button" class="sk-btn sk-btn--secondary">Lone segment</button>
+      </div>
+    </div>
   </section>
 
   <!-- ══════════════════ FORM CONTROLS (PHASE 2) ══════════════════ -->
@@ -1024,8 +1333,49 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
               <label class="sk-check"><input class="sk-checkbox" type="checkbox" checked> Gift wrap</label>
               <label class="sk-check"><input class="sk-switch" type="checkbox" checked> Email me order updates</label>
               <label class="sk-check"><input class="sk-checkbox" type="checkbox" disabled> Out of stock option</label>
+              <label class="sk-check"><input class="sk-checkbox" type="checkbox"> A long label that wraps onto a second line keeps its box aligned with the first line, exactly like Bootstrap's .form-check</label>
             </div>
           </fieldset>
+        </div>
+      </div>
+    </div>
+
+    <p class="ey sk-mt-6 sk-mb-3">sizes <code>.sk-select--sm</code> / <code>--lg</code> · <code>.sk-textarea--sm</code> · <code>.sk-input-group--sm</code> / <code>--lg</code> · inline checks <code>.sk-check--inline</code> · <code>[multiple]</code> · native radios driving swatches <code>.sk-swatch-input</code> · <code>.sk-wishlist-input</code></p>
+    <div class="sk-grid sk-g-5">
+      <div class="sk-col-12 sk-col-md-6">
+        <div class="sk-stack sk-gap-3">
+          <select class="sk-select sk-select--sm" aria-label="Sort, small"><option>Small select</option><option>Price: low to high</option></select>
+          <select class="sk-select sk-select--lg" aria-label="Sort, large"><option>Large select</option><option>Price: low to high</option></select>
+          <textarea class="sk-textarea sk-textarea--sm" aria-label="Small textarea" placeholder="Small textarea"></textarea>
+          <textarea class="sk-textarea sk-textarea--lg" aria-label="Large textarea" placeholder="Large textarea"></textarea>
+          <div class="sk-input-group sk-input-group--sm"><span class="sk-input-group__text">@</span><input class="sk-input" type="text" aria-label="Handle, small" placeholder="input-group--sm"><button class="sk-btn sk-btn--secondary" type="button">Check</button></div>
+          <div class="sk-input-group sk-input-group--lg"><span class="sk-input-group__text">$</span><input class="sk-input" type="text" inputmode="decimal" aria-label="Amount, large" placeholder="input-group--lg"><button class="sk-btn" type="button">Pay</button></div>
+          <div class="sk-field"><input class="sk-input" aria-label="Disabled via ARIA" value="aria-disabled" aria-disabled="true"><span class="sk-error sk-error--visible">.sk-error--visible shows without an invalid control</span></div>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-6">
+        <div class="sk-stack sk-gap-3">
+          <div class="sk-cluster sk-gap-4">
+            <label class="sk-check sk-check--inline"><input class="sk-checkbox" type="checkbox" checked> Inline</label>
+            <label class="sk-check sk-check--inline"><input class="sk-radio" type="radio" name="inl" checked> One</label>
+            <label class="sk-check sk-check--inline"><input class="sk-radio" type="radio" name="inl"> Two</label>
+            <label class="sk-check sk-check--inline"><input class="sk-checkbox" type="checkbox" aria-invalid="true"> Invalid</label>
+            <label class="sk-check sk-check--inline"><input class="sk-switch" type="checkbox" aria-invalid="true"> Invalid switch</label>
+          </div>
+          <div class="sk-field">
+            <label class="sk-label" for="f-multi">Fabric — <code>[multiple]</code> drops the chevron</label>
+            <select class="sk-select" id="f-multi" multiple size="3"><option selected>Cotton</option><option>Linen</option><option>Wool</option></select>
+          </div>
+          <div class="sk-cluster sk-gap-4">
+            <div class="sk-swatches" role="radiogroup" aria-label="Colour, native radios">
+              <input class="sk-swatch-input" type="radio" name="sw" id="sw-1" checked><label class="sk-swatch" for="sw-1" style="--sk-swatch-color:#4F46E5"><span class="sk-sr-only">Indigo</span></label>
+              <input class="sk-swatch-input" type="radio" name="sw" id="sw-2"><label class="sk-swatch" for="sw-2" style="--sk-swatch-color:#0D8580"><span class="sk-sr-only">Teal</span></label>
+              <input class="sk-swatch-input" type="radio" name="sw" id="sw-3" disabled><label class="sk-swatch" for="sw-3" style="--sk-swatch-color:#C20E3A"><span class="sk-sr-only">Rose, sold out</span></label>
+              <input class="sk-swatch-input" type="radio" name="sw" id="sw-4"><label class="sk-swatch sk-swatch--size" for="sw-4">M</label>
+            </div>
+            <input class="sk-wishlist-input" type="checkbox" id="wl-1" checked><label class="sk-wishlist sk-wishlist--sm" for="wl-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="sk-sr-only">Saved to wishlist</span></label>
+            <button type="button" class="sk-wishlist sk-wishlist--lg" aria-pressed="false" aria-label="Add to wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
+          </div>
         </div>
       </div>
     </div>
@@ -1054,6 +1404,10 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         <span class="sk-badge sk-badge--outline">Outline</span>
         <span class="sk-badge sk-chip sk-badge--primary">Size: M
           <button class="sk-chip__remove" type="button" aria-label="Remove size filter">✕</button></span>
+        <span class="sk-badge sk-badge--pill sk-badge--danger">4</span>
+        <span class="sk-badge sk-badge--pill sk-badge--outline">pill · outline</span>
+        <button type="button" class="sk-btn sk-btn--secondary sk-btn--sm" style="position:relative">Inbox <span class="sk-badge sk-badge--pill sk-badge--danger sk-badge--float">9+<span class="sk-sr-only"> unread</span></span></button>
+        <span class="sk-badge sk-badge--pill sk-badge--success"></span>
       </div>
 
       <p class="ey sk-mt-6 sk-mb-3">alerts · callouts</p>
@@ -1075,6 +1429,11 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
           <span class="sk-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg></span>
           <div class="sk-alert__body"><p class="sk-alert__title">Payment failed</p>Your card was declined. Try another method.</div>
         </div>
+        <div class="sk-alert sk-alert--info" role="status">
+          <span class="sk-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+          <div class="sk-alert__body">Restock expected next week. <a class="sk-alert__link" href="#main">Notify me</a> when it lands.</div>
+          <button class="sk-alert__close" type="button" aria-label="Dismiss"></button>
+        </div>
       </div>
 
       <div class="sk-grid sk-g-6 sk-mt-6">
@@ -1086,6 +1445,14 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
             <div class="sk-skeleton sk-skeleton--text"></div>
             <div class="sk-skeleton sk-skeleton--text"></div>
           </div>
+          <div class="sk-cluster sk-gap-3 sk-mt-4" aria-hidden="true">
+            <span class="sk-skeleton sk-skeleton--circle"></span>
+            <div class="sk-grow">
+              <div class="sk-skeleton sk-skeleton--title"></div>
+              <div class="sk-skeleton sk-skeleton--text"></div>
+            </div>
+          </div>
+          <p class="sk-mt-3">Loading <span class="sk-skeleton sk-skeleton--inline" aria-hidden="true"></span> results for <span class="sk-skeleton sk-skeleton--inline" aria-hidden="true"></span> — <code>.sk-skeleton--inline</code> sits in running text</p>
         </div>
         <div class="sk-col-12 sk-col-md-6">
           <p class="ey sk-mb-3">tooltip — hover or tab to a control</p>
@@ -1095,6 +1462,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
             </button>
             <button class="sk-btn sk-btn--secondary" data-sk-tooltip="Ships in 1–2 business days" data-sk-tooltip-pos="bottom">Delivery info</button>
             <button class="sk-btn sk-btn--secondary" data-sk-tooltip="Opens on the trailing edge" data-sk-tooltip-pos="end">End</button>
+            <button class="sk-btn sk-btn--secondary" data-sk-tooltip="Opens on the leading edge" data-sk-tooltip-pos="start">Start</button>
           </div>
         </div>
       </div>
@@ -1122,6 +1490,10 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         <button type="button" class="sk-btn sk-btn--outline" aria-label="Decrease">−</button>
         <button type="button" class="sk-btn sk-btn--outline" aria-disabled="true">3</button>
         <button type="button" class="sk-btn sk-btn--outline" aria-label="Increase">+</button>
+      </div>
+      <div class="sk-btn-group" role="group" aria-label="Nested split button">
+        <button type="button" class="sk-btn">Add to cart</button>
+        <div class="sk-btn-group" role="group"><button type="button" class="sk-btn sk-btn--icon" aria-label="More options">▾</button></div>
       </div>
     </div>
 
@@ -1161,13 +1533,100 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
             <div class="sk-accordion__panel">You'll get a tracking link by email the moment your order ships.</div>
           </details>
         </div>
+        <p class="ey sk-mt-5 sk-mb-3">flush · exclusive group via <code>name</code> · chevron drawn by CSS (no marker span)</p>
+        <div class="sk-accordion sk-accordion--flush">
+          <details class="sk-accordion__item" name="faq2" open>
+            <summary class="sk-accordion__trigger">Sizing guide</summary>
+            <div class="sk-accordion__panel">True to size — order your usual fit. Between sizes? Size down.</div>
+          </details>
+          <details class="sk-accordion__item" name="faq2">
+            <summary class="sk-accordion__trigger">Care instructions</summary>
+            <div class="sk-accordion__panel">Machine wash cold, line dry. Opening this closes the one above.</div>
+          </details>
+        </div>
       </div>
     </div>
 
-    <p class="ey sk-mt-7 sk-mb-3">modal — native &lt;dialog&gt;</p>
+    <p class="ey sk-mt-7 sk-mb-3">tab variants · <code>.sk-tabs--pill</code> · <code>.sk-tabs--boxed</code> · <code>.sk-tabs--fill</code> · a disabled tab</p>
+    <div class="sk-grid sk-g-6">
+      <div class="sk-col-12 sk-col-lg-4">
+        <div class="sk-tabs sk-tabs--pill">
+          <div class="sk-tabs__list" role="tablist" aria-label="View">
+            <button class="sk-tab" role="tab" id="pt-1" aria-controls="pp-1" aria-selected="true">Grid</button>
+            <button class="sk-tab" role="tab" id="pt-2" aria-controls="pp-2" aria-selected="false" tabindex="-1">List</button>
+            <button class="sk-tab" role="tab" id="pt-3" aria-controls="pp-3" aria-selected="false" tabindex="-1" aria-disabled="true">Map</button>
+          </div>
+          <div class="sk-tabs__panel" role="tabpanel" id="pp-1" aria-labelledby="pt-1" tabindex="0"><p>Pill tabs — the selected pill takes the accent fill.</p></div>
+          <div class="sk-tabs__panel" role="tabpanel" id="pp-2" aria-labelledby="pt-2" tabindex="0" hidden><p>List view.</p></div>
+          <div class="sk-tabs__panel" role="tabpanel" id="pp-3" aria-labelledby="pt-3" tabindex="0" hidden><p>Map view.</p></div>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-lg-4">
+        <div class="sk-tabs sk-tabs--boxed">
+          <div class="sk-tabs__list" role="tablist" aria-label="Details">
+            <button class="sk-tab" role="tab" id="bt-1" aria-controls="bp-1" aria-selected="true">Details</button>
+            <button class="sk-tab" role="tab" id="bt-2" aria-controls="bp-2" aria-selected="false" tabindex="-1">Reviews</button>
+          </div>
+          <div class="sk-tabs__panel" role="tabpanel" id="bp-1" aria-labelledby="bt-1" tabindex="0"><p>Boxed tabs — Bootstrap's <code>.nav-tabs</code> look; the selected tab merges with its panel.</p></div>
+          <div class="sk-tabs__panel" role="tabpanel" id="bp-2" aria-labelledby="bt-2" tabindex="0" hidden><p>Rated 4.8/5.</p></div>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-lg-4">
+        <div class="sk-tabs sk-tabs--fill">
+          <div class="sk-tabs__list" role="tablist" aria-label="Delivery">
+            <button class="sk-tab" role="tab" id="ft-1" aria-controls="fp-1" aria-selected="true">Ship</button>
+            <button class="sk-tab" role="tab" id="ft-2" aria-controls="fp-2" aria-selected="false" tabindex="-1">Collect</button>
+          </div>
+          <div class="sk-tabs__panel" role="tabpanel" id="fp-1" aria-labelledby="ft-1" tabindex="0"><p>Fill tabs share the row (<code>.sk-tabs--justified</code> makes them equal).</p></div>
+          <div class="sk-tabs__panel" role="tabpanel" id="fp-2" aria-labelledby="ft-2" tabindex="0" hidden><p>Free collection from 40 stores.</p></div>
+        </div>
+        <div class="sk-tabs sk-tabs--justified sk-mt-4">
+          <div class="sk-tabs__list" role="tablist" aria-label="Payment">
+            <button class="sk-tab" role="tab" id="jt-1" aria-controls="jp-1" aria-selected="true">Card</button>
+            <button class="sk-tab" role="tab" id="jt-2" aria-controls="jp-2" aria-selected="false" tabindex="-1">Wallet or bank transfer</button>
+          </div>
+          <div class="sk-tabs__panel" role="tabpanel" id="jp-1" aria-labelledby="jt-1" tabindex="0"><p><code>.sk-tabs--justified</code> — equal widths regardless of label length.</p></div>
+          <div class="sk-tabs__panel" role="tabpanel" id="jp-2" aria-labelledby="jt-2" tabindex="0" hidden><p>Pay with a wallet.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">modal — native &lt;dialog&gt; · sizes <code>--sm</code> · <code>--lg</code> · <code>--xl</code> · <code>--full</code> · the page behind is scroll-locked while open</p>
     <div class="sk-cluster sk-gap-3">
       <button type="button" class="sk-btn" onclick="document.getElementById('demo-modal').showModal()">Open dialog</button>
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-modal-sm').showModal()">Small</button>
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-modal-lg').showModal()">Large</button>
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-modal-xl').showModal()">Extra large</button>
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-modal-full').showModal()">Fullscreen</button>
     </div>
+    <dialog class="sk-modal sk-modal--xl" id="demo-modal-xl" aria-labelledby="demo-modal-xl-title">
+      <form method="dialog" class="sk-modal__panel">
+        <header class="sk-modal__header"><h2 class="sk-modal__title" id="demo-modal-xl-title">Compare items</h2><button class="sk-modal__close" value="cancel" aria-label="Close">✕</button></header>
+        <div class="sk-modal__body"><p><code>.sk-modal--xl</code> — 66rem, for comparison tables and galleries.</p></div>
+        <footer class="sk-modal__footer"><button type="submit" class="sk-btn" value="ok">Done</button></footer>
+      </form>
+    </dialog>
+    <dialog class="sk-modal sk-modal--sm" id="demo-modal-sm" aria-labelledby="demo-modal-sm-title">
+      <form method="dialog" class="sk-modal__panel">
+        <header class="sk-modal__header"><h2 class="sk-modal__title" id="demo-modal-sm-title">Remove item?</h2><button class="sk-modal__close" value="cancel" aria-label="Close">✕</button></header>
+        <div class="sk-modal__body"><p><code>.sk-modal--sm</code> — a 24rem confirm.</p></div>
+        <footer class="sk-modal__footer"><button type="submit" class="sk-btn sk-btn--ghost" value="cancel">Keep</button><button type="submit" class="sk-btn sk-btn--danger" value="remove">Remove</button></footer>
+      </form>
+    </dialog>
+    <dialog class="sk-modal sk-modal--lg" id="demo-modal-lg" aria-labelledby="demo-modal-lg-title">
+      <form method="dialog" class="sk-modal__panel">
+        <header class="sk-modal__header"><h2 class="sk-modal__title" id="demo-modal-lg-title">Size guide</h2><button class="sk-modal__close" value="cancel" aria-label="Close">✕</button></header>
+        <div class="sk-modal__body"><p><code>.sk-modal--lg</code> — 46rem, capped to the viewport minus a gutter. <code>--xl</code> is 66rem.</p></div>
+        <footer class="sk-modal__footer"><button type="submit" class="sk-btn" value="ok">Done</button></footer>
+      </form>
+    </dialog>
+    <dialog class="sk-modal sk-modal--full" id="demo-modal-full" aria-labelledby="demo-modal-full-title">
+      <form method="dialog" class="sk-modal__panel">
+        <header class="sk-modal__header"><h2 class="sk-modal__title" id="demo-modal-full-title">Fullscreen</h2><button class="sk-modal__close" value="cancel" aria-label="Close">✕</button></header>
+        <div class="sk-modal__body"><p><code>.sk-modal--full</code> — edge to edge, no radius (Bootstrap <code>.modal-fullscreen</code>).</p></div>
+        <footer class="sk-modal__footer"><button type="submit" class="sk-btn" value="ok">Close</button></footer>
+      </form>
+    </dialog>
     <dialog class="sk-modal" id="demo-modal" aria-labelledby="demo-modal-title">
       <form method="dialog" class="sk-modal__panel">
         <header class="sk-modal__header">
@@ -1211,13 +1670,32 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
               <div class="sk-toast__body"><p class="sk-toast__title">Payment failed</p>Your card was declined.</div>
               <button class="sk-close" type="button" aria-label="Dismiss">✕</button>
             </div>
+            <div class="sk-toast sk-toast--warning" role="alert">
+              <span class="sk-toast__icon" aria-hidden="true">!</span>
+              <div class="sk-toast__body"><p class="sk-toast__title">Only 2 left</p>Order soon — this size is nearly gone.</div>
+              <button class="sk-close" type="button" aria-label="Dismiss"></button>
+            </div>
+            <div class="sk-toast sk-toast--info" role="status">
+              <span class="sk-toast__icon" aria-hidden="true">i</span>
+              <div class="sk-toast__body"><p class="sk-toast__title">Cart restored</p>We kept your 3 items from last time.</div>
+              <button class="sk-close" type="button" aria-label="Dismiss"></button>
+            </div>
           </div>
+          <p class="ey sk-mt-4 sk-mb-3">region placement · <code>.sk-toasts--top .sk-toasts--start</code> · <code>--top --center</code> · default block-end / inline-end</p>
+          <div class="u-frame u-frame--stage">
+            <div class="sk-toasts sk-toasts--top sk-toasts--start" aria-hidden="true"><div class="sk-toast sk-toast--info"><div class="sk-toast__body">top · start</div></div></div>
+            <div class="sk-toasts sk-toasts--top sk-toasts--center" aria-hidden="true"><div class="sk-toast"><div class="sk-toast__body">top · center</div></div></div>
+            <div class="sk-toasts" aria-hidden="true"><div class="sk-toast sk-toast--success"><div class="sk-toast__body">default corner</div></div></div>
+          </div>
+          <p class="footnote sk-mt-2">The empty close buttons above draw their own ×.</p>
 
           <p class="ey sk-mt-6 sk-mb-3">progress — one variable drives the bar</p>
           <div class="sk-stack" style="--sk-gap:var(--sk-space-3)">
             <div class="sk-progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="Free-shipping goal" style="--sk-progress-value:70"><div class="sk-progress__bar"></div></div>
             <div class="sk-progress sk-progress--success sk-progress--sm" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Upload complete" style="--sk-progress-value:100"><div class="sk-progress__bar"></div></div>
             <div class="sk-progress sk-progress--warning sk-progress--lg" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Stock remaining" style="--sk-progress-value:35"><div class="sk-progress__bar"></div></div>
+            <div class="sk-progress sk-progress--danger" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100" aria-label="Stock critical" style="--sk-progress-value:12"><div class="sk-progress__bar"></div></div>
+            <div class="sk-progress sk-progress--striped sk-progress--animated sk-progress--lg" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="Uploading" style="--sk-progress-value:60"><div class="sk-progress__bar">60%</div></div>
           </div>
 
           <p class="ey sk-mt-6 sk-mb-3">input group · spinner · close</p>
@@ -1236,6 +1714,10 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
               <span class="sk-spinner" role="status" aria-label="Loading"></span>
               <span class="sk-spinner sk-spinner--lg" role="status" aria-label="Loading" style="color:var(--sk-color-primary)"></span>
               <button class="sk-close" type="button" aria-label="Close">✕</button>
+              <button class="sk-close" type="button" aria-label="Close, empty markup"></button>
+              <button class="sk-close" type="button" aria-label="Close, disabled" disabled></button>
+              <span class="sk-spinner sk-spinner--grow" role="status" aria-label="Loading"></span>
+              <span class="sk-spinner sk-spinner--grow sk-spinner--sm" role="status" aria-label="Loading" style="color:var(--sk-color-primary)"></span>
             </div>
           </div>
         </div>
@@ -1253,6 +1735,30 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
                 <tr><td>#1039</td><td>Aug 02</td><td><span class="sk-badge sk-badge--danger">Refunded</span></td><td>$49.00</td></tr>
               </tbody>
             </table>
+          </div>
+
+          <p class="ey sk-mt-6 sk-mb-3">bordered · borderless + <code>--sm</code> · <code>.sk-table-wrap-md</code> scrolls only below md</p>
+          <div class="sk-grid sk-g-4 sk-grid-cols-1 sk-grid-cols-lg-2">
+            <div class="sk-table-wrap-md">
+              <table class="sk-table sk-table--bordered">
+                <caption>Size guide — bordered</caption>
+                <thead><tr><th scope="col">Size</th><th scope="col">Chest</th><th scope="col">Waist</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">S</th><td>36″</td><td>30″</td></tr>
+                  <tr><th scope="row">M</th><td>38″</td><td>32″</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="sk-table-wrap-sm">
+              <table class="sk-table sk-table--borderless sk-table--sm">
+                <caption>Borderless, small</caption>
+                <thead><tr><th scope="col">Item</th><th scope="col">Qty</th></tr></thead>
+                <tbody>
+                  <tr><td>Merino crew</td><td>1</td></tr>
+                  <tr><td>Canvas daypack</td><td>2</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <p class="ey sk-mt-6 sk-mb-3">range + file — native, brand-tinted</p>
@@ -1281,7 +1787,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <span class="ey">@layer sk.components</span>
     </div>
 
-    <nav aria-label="Breadcrumb">
+    <nav class="sk-breadcrumb" aria-label="Breadcrumb">
       <ol class="sk-breadcrumb__list">
         <li class="sk-breadcrumb__item"><a class="sk-breadcrumb__link" href="#main">Home</a></li>
         <li class="sk-breadcrumb__item"><a class="sk-breadcrumb__link" href="#main">Men</a></li>
@@ -1298,6 +1804,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
           <p class="sk-price sk-price--sale"><span class="sk-price__now">$39</span><span class="sk-price__was">$59</span><span class="sk-price__off">-34%</span></p>
           <p class="sk-price"><span class="sk-price__now">$18</span><span class="sk-price__sep">–</span><span class="sk-price__now">$42</span></p>
           <p class="sk-price sk-price--lg sk-price--sale"><span class="sk-price__now">$63</span><span class="sk-price__was">$84</span></p>
+          <p class="sk-price sk-price--sm sk-price--sale"><span class="sk-price__now">$34</span><span class="sk-price__was">$49</span><span class="sk-price__off">-30%</span></p>
         </div>
 
         <p class="ey sk-mt-6 sk-mb-3">rating — sizes &amp; fractions</p>
@@ -1359,6 +1866,46 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </div>
     </article>
 
+    <p class="ey sk-mt-7 sk-mb-3">card variants · <code>--compact</code> · <code>--flat</code> · <code>__img</code> · stretched <code>__link</code> · <code>.sk-product-grid--fit</code> stretches the last row</p>
+    <div class="sk-product-grid sk-product-grid--fit" style="--sk-product-min:13rem">
+      <article class="sk-product-card">
+        <div class="sk-product-card__media">
+          <img class="sk-product-card__img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Crect width='4' height='5' fill='%23c7d2fe'/%3E%3Ccircle cx='2' cy='2.2' r='1.1' fill='%234f46e5'/%3E%3C/svg%3E" alt="">
+          
+        </div>
+        <div class="sk-product-card__body">
+          <p class="sk-product-card__eyebrow">Studio</p>
+          <h3 class="sk-product-card__title"><a class="sk-product-card__link" href="#main">Stretched link — the whole card is the target</a></h3>
+          <div class="sk-product-card__meta"><p class="sk-price sk-price--sm"><span class="sk-price__now">$48</span></p></div>
+          <div class="sk-product-card__actions"><button type="button" class="sk-btn sk-btn--sm sk-btn--block">Add to cart</button></div>
+        </div>
+      </article>
+      <article class="sk-product-card sk-product-card--compact">
+        <div class="sk-product-card__media">
+          <img class="sk-product-card__img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Crect width='4' height='5' fill='%23c7d2fe'/%3E%3Ccircle cx='2' cy='2.2' r='1.1' fill='%234f46e5'/%3E%3C/svg%3E" alt="">
+          <div class="sk-product-card__badges"><span class="sk-badge sk-badge--new">New</span></div>
+        </div>
+        <div class="sk-product-card__body">
+          <p class="sk-product-card__eyebrow">Studio</p>
+          <h3 class="sk-product-card__title"><a class="sk-product-card__link" href="#main">Compact card</a></h3>
+          <div class="sk-product-card__meta"><p class="sk-price sk-price--sm"><span class="sk-price__now">$48</span></p></div>
+          <div class="sk-product-card__actions"><button type="button" class="sk-btn sk-btn--sm sk-btn--block">Add to cart</button></div>
+        </div>
+      </article>
+      <article class="sk-product-card sk-product-card--flat">
+        <div class="sk-product-card__media">
+          <img class="sk-product-card__img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Crect width='4' height='5' fill='%23c7d2fe'/%3E%3Ccircle cx='2' cy='2.2' r='1.1' fill='%234f46e5'/%3E%3C/svg%3E" alt="">
+          <div class="sk-product-card__wishlist"><button type="button" class="sk-wishlist sk-wishlist--sm" aria-pressed="false" aria-label="Add to wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button></div>
+        </div>
+        <div class="sk-product-card__body">
+          <p class="sk-product-card__eyebrow">Studio</p>
+          <h3 class="sk-product-card__title"><a class="sk-product-card__link" href="#main">Flat card — no border, no hover lift</a></h3>
+          <div class="sk-product-card__meta"><p class="sk-price sk-price--sm"><span class="sk-price__now">$48</span></p></div>
+          <div class="sk-product-card__actions"><button type="button" class="sk-btn sk-btn--sm sk-btn--block">Add to cart</button></div>
+        </div>
+      </article>
+    </div>
+
     <p class="ey sk-mt-7 sk-mb-3">pagination</p>
     <nav aria-label="Pagination">
       <ul class="sk-pagination">
@@ -1371,6 +1918,22 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         <li><a class="sk-pagination__link" href="#main">Next ›</a></li>
       </ul>
     </nav>
+    <nav aria-label="Pagination, large" class="sk-mt-3">
+      <ul class="sk-pagination sk-pagination--lg">
+        <li><a class="sk-pagination__link" href="#main" aria-disabled="true">‹</a></li>
+        <li><a class="sk-pagination__link" href="#main" aria-current="page">1</a></li>
+        <li><a class="sk-pagination__link" href="#main">2</a></li>
+        <li><a class="sk-pagination__link" href="#main">›</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Pagination, small" class="sk-mt-3">
+      <ul class="sk-pagination sk-pagination--sm">
+        <li><a class="sk-pagination__link" href="#main" aria-current="page">1</a></li>
+        <li><a class="sk-pagination__link" href="#main">2</a></li>
+        <li><a class="sk-pagination__link" href="#main">3</a></li>
+        <li><a class="sk-pagination__link" href="#main">Next ›</a></li>
+      </ul>
+    </nav>
 
     <div class="sk-grid sk-g-6 sk-mt-7">
       <div class="sk-col-12 sk-col-md-5 sk-col-lg-4">
@@ -1379,16 +1942,16 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
           <div class="sk-facet">
             <h3 class="sk-facet__title">Brand
               <button class="sk-facets__clear" type="button">Clear</button></h3>
-            <ul class="sk-facet__list">
+            <ul class="sk-facet__list sk-facet__list--scroll">
               <li><label class="sk-check"><input class="sk-checkbox" type="checkbox" checked> Aurora <span class="sk-facet__count">128</span></label></li>
               <li><label class="sk-check"><input class="sk-checkbox" type="checkbox"> Verde <span class="sk-facet__count">64</span></label></li>
               <li><label class="sk-check"><input class="sk-checkbox" type="checkbox"> Ember <span class="sk-facet__count">31</span></label></li>
             </ul>
           </div>
-          <div class="sk-facet">
-            <h3 class="sk-facet__title">Max price</h3>
+          <details class="sk-facet" open>
+            <summary class="sk-facet__title">Max price — collapsible &lt;details&gt;</summary>
             <input class="sk-range" type="range" min="0" max="500" value="250" aria-label="Maximum price">
-          </div>
+          </details>
           <div class="sk-facet">
             <h3 class="sk-facet__title">Size</h3>
             <div class="sk-swatches" role="group" aria-label="Filter by size">
@@ -1401,12 +1964,13 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </div>
       <div class="sk-col-12 sk-col-md-7 sk-col-lg-8">
         <p class="ey sk-mb-3">empty state — zero results</p>
-        <div class="sk-empty" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg)">
+        <div class="sk-empty sk-empty--compact" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg)">
       <span class="sk-empty__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M8 11h6"/></svg></span>
       <p class="sk-empty__title">No products match your filters</p>
       <p class="sk-empty__desc">Try widening your price range or clearing a colour to see more of the catalogue.</p>
       <div class="sk-empty__actions">
         <button type="button" class="sk-btn sk-btn--soft">Clear all filters</button>
+        <button type="button" class="sk-btn sk-btn--ghost">Browse everything</button>
       </div>
     </div>
       </div>
@@ -1427,9 +1991,9 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
       <div class="sk-announcement sk-announcement--primary">Free shipping on orders over $50 ·
         <a class="sk-announcement__link" href="#main">Shop now</a>
-        <button class="sk-announcement__close" type="button" aria-label="Dismiss">✕</button></div>
+        <button class="sk-announcement__close" type="button" aria-label="Dismiss"><svg class="sk-announcement__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button></div>
       <header class="sk-navbar">
-        <button class="sk-navbar__toggle" type="button" aria-label="Open menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        <button class="sk-navbar__toggle" type="button" aria-label="Open menu" aria-expanded="false"><svg class="sk-navbar__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
         <a class="sk-navbar__brand" href="#main">ShopKit</a>
         <ul class="sk-navbar__nav">
           <li><a class="sk-navbar__link" href="#main" aria-current="page">New</a></li>
@@ -1440,10 +2004,124 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         <div class="sk-navbar__search"><input class="sk-input sk-input--sm" type="search" placeholder="Search products…" aria-label="Search"></div>
         <div class="sk-navbar__actions">
           <button type="button" class="sk-navbar__cart" aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
-          <button type="button" class="sk-navbar__cart" aria-label="Cart, 3 items" onclick="document.getElementById('demo-cart').showModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="sk-navbar__cart-count">3</span></button>
+          <button type="button" class="sk-navbar__cart" aria-label="Cart, 3 items" onclick="document.getElementById('demo-cart').showModal()"><svg class="sk-navbar__cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="sk-navbar__cart-count">3</span></button>
         </div>
       </header>
     </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">navbar — <code>--centered</code> · <code>--expand-lg</code> (toggle until 992px) · <code>__inner</code> content column · <code>--sticky</code> is the landing page header</p>
+    <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+      <header class="sk-navbar sk-navbar--centered sk-navbar--expand-lg">
+        <button class="sk-navbar__toggle" type="button" aria-label="Open menu" aria-expanded="false" onclick="document.getElementById('demo-drawer').showModal()"><svg class="sk-navbar__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        <ul class="sk-navbar__nav">
+          <li><a class="sk-navbar__link" href="#main" aria-current="page">Women</a></li>
+          <li><a class="sk-navbar__link" href="#main">Men</a></li>
+          <li><a class="sk-navbar__link" href="#main" aria-disabled="true">Kids (soon)</a></li>
+        </ul>
+        <a class="sk-navbar__brand" href="#main">ShopKit</a>
+        <div class="sk-navbar__actions">
+          <button type="button" class="sk-navbar__cart" aria-label="Cart, empty"><svg class="sk-navbar__cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></button>
+        </div>
+      </header>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">mega menu — <code>.sk-mega</code> anchored to the navbar (<code>__grid</code> · <code>__col</code> · <code>__heading</code> · <code>__link</code> · <code>__featured</code>) — shown open</p>
+    <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);min-block-size:21rem;position:relative">
+      <header class="sk-navbar sk-navbar--expand">
+        <div class="sk-navbar__inner">
+          <a class="sk-navbar__brand" href="#main">ShopKit</a>
+          <ul class="sk-navbar__nav">
+            <li><button class="sk-navbar__link" type="button" aria-haspopup="true" aria-expanded="true" aria-controls="demo-mega">Shop ▾</button></li>
+            <li><a class="sk-navbar__link" href="#main">Journal</a></li>
+          </ul>
+        </div>
+        <div class="sk-mega" id="demo-mega">
+          <div class="sk-mega__grid">
+            <div class="sk-mega__col">
+              <h3 class="sk-mega__heading">Women</h3>
+              <a class="sk-mega__link" href="#main" aria-current="page">New in</a>
+              <a class="sk-mega__link" href="#main">Dresses</a>
+              <a class="sk-mega__link" href="#main">Knitwear</a>
+            </div>
+            <div class="sk-mega__col">
+              <h3 class="sk-mega__heading">Men</h3>
+              <a class="sk-mega__link" href="#main">Shirts</a>
+              <a class="sk-mega__link" href="#main">Outerwear</a>
+              <a class="sk-mega__link" href="#main" aria-disabled="true">Tailoring (soon)</a>
+            </div>
+            <div class="sk-mega__col sk-mega__featured">
+              <h3 class="sk-mega__heading">Featured</h3>
+              <p class="sk-mb-2">Autumn edit — up to 30% off knitwear.</p>
+              <a class="sk-btn sk-btn--sm" href="#main">Shop the edit</a>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">drawer — native &lt;dialog&gt; off-canvas · start (default) · <code>--end</code> · <code>--top</code> · <code>--bottom</code></p>
+    <div class="sk-cluster sk-gap-3">
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-drawer').showModal()">Open drawer</button>
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-drawer-end').showModal()">End</button>
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-drawer-top').showModal()">Top</button>
+      <button type="button" class="sk-btn sk-btn--secondary" onclick="document.getElementById('demo-drawer-bottom').showModal()">Bottom</button>
+    </div>
+    <dialog class="sk-drawer" id="demo-drawer" aria-label="Menu">
+      <div class="sk-drawer__header">
+        <h2 class="sk-drawer__title">Menu</h2>
+        <button class="sk-drawer__close" type="button" aria-label="Close menu" autofocus onclick="this.closest('dialog').close()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+      </div>
+      <div class="sk-drawer__body">
+        <nav class="sk-drawer__nav" aria-label="Mobile">
+          <a href="#main" aria-current="page">New in</a>
+          <a href="#main">Men</a>
+          <a href="#main">Women</a>
+          <a href="#main">Sale</a>
+        </nav>
+      </div>
+    </dialog>
+    <dialog class="sk-drawer sk-drawer--end" id="demo-drawer-end" aria-label="Filters">
+      <div class="sk-drawer__header">
+        <h2 class="sk-drawer__title">Filters</h2>
+        <button class="sk-drawer__close" type="button" aria-label="Close menu" autofocus onclick="this.closest('dialog').close()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+      </div>
+      <div class="sk-drawer__body">
+        <nav class="sk-drawer__nav" aria-label="Mobile">
+          <a href="#main" aria-current="page">New in</a>
+          <a href="#main">Men</a>
+          <a href="#main">Women</a>
+          <a href="#main">Sale</a>
+        </nav>
+      </div>
+    </dialog>
+    <dialog class="sk-drawer sk-drawer--top" id="demo-drawer-top" aria-label="Search">
+      <div class="sk-drawer__header">
+        <h2 class="sk-drawer__title">Search</h2>
+        <button class="sk-drawer__close" type="button" aria-label="Close menu" autofocus onclick="this.closest('dialog').close()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+      </div>
+      <div class="sk-drawer__body">
+        <nav class="sk-drawer__nav" aria-label="Mobile">
+          <a href="#main" aria-current="page">New in</a>
+          <a href="#main">Men</a>
+          <a href="#main">Women</a>
+          <a href="#main">Sale</a>
+        </nav>
+      </div>
+    </dialog>
+    <dialog class="sk-drawer sk-drawer--bottom" id="demo-drawer-bottom" aria-label="Share">
+      <div class="sk-drawer__header">
+        <h2 class="sk-drawer__title">Share</h2>
+        <button class="sk-drawer__close" type="button" aria-label="Close menu" autofocus onclick="this.closest('dialog').close()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+      </div>
+      <div class="sk-drawer__body">
+        <nav class="sk-drawer__nav" aria-label="Mobile">
+          <a href="#main" aria-current="page">New in</a>
+          <a href="#main">Men</a>
+          <a href="#main">Women</a>
+          <a href="#main">Sale</a>
+        </nav>
+      </div>
+    </dialog>
 
     <p class="ey sk-mt-7 sk-mb-3">hero — split</p>
     <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
@@ -1458,6 +2136,39 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
           <div class="sk-hero__media" style="aspect-ratio:4/3;background:linear-gradient(135deg,var(--sk-color-primary),var(--sk-color-accent))"></div>
         </div>
       </section>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">hero — <code>--centered</code> · <code>--minimal</code> · <code>--image</code> (photo via <code>--sk-hero-image</code>, scrim, inverse text)</p>
+    <div class="sk-stack sk-gap-4">
+      <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+        <section class="sk-hero sk-hero--centered" style="--sk-space-section:var(--sk-space-10)">
+          <div class="sk-hero__inner">
+            <p class="sk-hero__eyebrow">Centered</p>
+            <h2 class="sk-hero__title">Everything your store needs</h2>
+            <p class="sk-hero__lede">Eyebrow, title, lede and actions on the centreline, with a narrow measure.</p>
+            <div class="sk-hero__actions"><a class="sk-btn" href="#main">Shop now</a><a class="sk-btn sk-btn--ghost" href="#main">Learn more</a></div>
+          </div>
+        </section>
+      </div>
+      <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+        <section class="sk-hero sk-hero--minimal">
+          <div class="sk-hero__inner">
+            <p class="sk-hero__eyebrow">Minimal</p>
+            <h2 class="sk-hero__title">Compact rhythm, smaller title</h2>
+            <p class="sk-hero__lede">For category pages and campaign strips.</p>
+          </div>
+        </section>
+      </div>
+      <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+        <section class="sk-hero sk-hero--image" style="--sk-hero-image:linear-gradient(135deg,var(--sk-color-primary),var(--sk-color-accent));--sk-hero-min:16rem;--sk-space-section:var(--sk-space-10)">
+          <div class="sk-hero__inner">
+            <p class="sk-hero__eyebrow">Image</p>
+            <h2 class="sk-hero__title">Background photo + legibility scrim</h2>
+            <p class="sk-hero__lede">Inverse text stays readable over any photo.</p>
+            <div class="sk-hero__actions"><a class="sk-btn sk-btn--secondary" href="#main">Shop the edit</a></div>
+          </div>
+        </section>
+      </div>
     </div>
 
     <div class="sk-grid sk-g-8 sk-mt-7">
@@ -1475,13 +2186,41 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </div>
       <div class="sk-col-12 sk-col-md-5">
         <p class="ey sk-mb-3">dropdown menu</p>
-        <div class="sk-menu" style="position:static;max-inline-size:15rem">
+        <div class="sk-menu sk-menu--static" style="max-inline-size:15rem">
           <span class="sk-menu__label">Account</span>
-          <a class="sk-menu__item" href="#main">Orders</a>
+          <a class="sk-menu__item" href="#main"><span class="sk-menu__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></span>Orders</a>
           <a class="sk-menu__item" href="#main">Wishlist</a>
           <a class="sk-menu__item" href="#main">Settings</a>
           <hr class="sk-menu__separator">
           <button class="sk-menu__item sk-menu__item--danger" type="button">Sign out</button>
+          <button class="sk-menu__item" type="button" disabled>Disabled (native)</button>
+        </div>
+        <p class="ey sk-mt-5 sk-mb-3">self-positioned under its toggle · <code>--end</code> aligns to the trailing edge · <code>--up</code> opens above · <code>[aria-current]</code> marks the active choice</p>
+        <div class="u-frame u-frame--stage sk-flex sk-justify-between sk-items-start" style="min-block-size:14rem">
+          <div style="position:relative">
+            <button type="button" class="sk-btn sk-btn--secondary sk-btn--sm" aria-haspopup="true" aria-expanded="true" aria-controls="demo-menu-sort">Sort ▾</button>
+            <div class="sk-menu" id="demo-menu-sort" role="menu">
+              <button class="sk-menu__item" type="button" role="menuitemradio" aria-checked="true">Featured</button>
+              <button class="sk-menu__item" type="button" role="menuitemradio" aria-checked="false">Price: low to high</button>
+              <button class="sk-menu__item" type="button" role="menuitemradio" aria-checked="false">Newest</button>
+            </div>
+          </div>
+          <div style="position:relative">
+            <button type="button" class="sk-btn sk-btn--secondary sk-btn--sm" aria-haspopup="true" aria-expanded="true" aria-controls="demo-menu-end">Account ▾</button>
+            <div class="sk-menu sk-menu--end" id="demo-menu-end">
+              <a class="sk-menu__item" href="#main" aria-current="page">Orders</a>
+              <a class="sk-menu__item" href="#main">Wishlist</a>
+            </div>
+          </div>
+        </div>
+        <div class="u-frame u-frame--stage sk-flex sk-items-end">
+          <div style="position:relative">
+            <div class="sk-menu sk-menu--up" id="demo-menu-up" style="inset-block-start:auto">
+              <a class="sk-menu__item" href="#main">Share link</a>
+              <a class="sk-menu__item" href="#main">Copy SKU</a>
+            </div>
+            <button type="button" class="sk-btn sk-btn--secondary sk-btn--sm" aria-haspopup="true" aria-expanded="true" aria-controls="demo-menu-up">More ▴ (opens up)</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1503,6 +2242,55 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
           <div class="sk-footer__bottom"><span>© 2026 ShopKit</span><div class="sk-footer__legal"><a class="sk-footer__link" href="#main">Privacy</a><a class="sk-footer__link" href="#main">Terms</a></div></div>
         </div>
       </footer>
+    </div>
+
+    <p class="ey sk-mt-7 sk-mb-3">footer — <code>--newsletter</code> (signup column gets its own track) · <code>--inverse</code> with <code>__social</code> · <code>--minimal</code></p>
+    <div class="sk-stack sk-gap-4">
+      <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+        <footer class="sk-footer sk-footer--newsletter" style="--sk-space-section:var(--sk-space-8)">
+          <div class="sk-footer__inner">
+            <div class="sk-footer__grid">
+              <div class="sk-footer__brand"><span class="sk-footer__logo">ShopKit</span><p class="sk-footer__tagline">The e-commerce design system you can copy-paste.</p></div>
+              <div class="sk-footer__col"><h3 class="sk-footer__heading">Shop</h3><a class="sk-footer__link" href="#main" aria-current="page">New in</a><a class="sk-footer__link" href="#main">Men</a></div>
+              <div class="sk-footer__col"><h3 class="sk-footer__heading">Help</h3><a class="sk-footer__link" href="#main">Shipping</a><a class="sk-footer__link" href="#main">Returns</a></div>
+              <div class="sk-footer__col sk-footer__newsletter"><h3 class="sk-footer__heading">Newsletter</h3>
+                <form class="sk-footer__newsletter-form" onsubmit="return false"><input class="sk-input sk-input--sm" type="email" placeholder="Email" aria-label="Email"><button class="sk-btn sk-btn--sm" type="submit">Join</button></form></div>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+        <footer class="sk-footer sk-footer--inverse" style="--sk-space-section:var(--sk-space-8)">
+          <div class="sk-footer__inner">
+            <div class="sk-footer__grid">
+              <div class="sk-footer__brand">
+                <span class="sk-footer__logo">ShopKit</span>
+                <p class="sk-footer__tagline">Dark panel — one token remap, nothing re-patched.</p>
+                <div class="sk-footer__social">
+                  <a href="#main" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+                  <a href="#main" aria-label="Instagram, second account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+                </div>
+              </div>
+              <div class="sk-footer__col"><h3 class="sk-footer__heading">Shop</h3><a class="sk-footer__link" href="#main">New in</a><a class="sk-footer__link" href="#main">Sale</a></div>
+              <div class="sk-footer__col"><h3 class="sk-footer__heading">Help</h3><a class="sk-footer__link" href="#main">Shipping</a><a class="sk-footer__link" href="#main">Contact</a></div>
+              <div class="sk-footer__col sk-footer__newsletter"><h3 class="sk-footer__heading">Newsletter</h3>
+                <form class="sk-footer__newsletter-form" onsubmit="return false"><input class="sk-input sk-input--sm" type="email" placeholder="Email" aria-label="Email"><button class="sk-btn sk-btn--sm" type="submit">Join</button></form></div>
+            </div>
+            <div class="sk-footer__bottom"><span>© 2026 ShopKit</span><div class="sk-footer__legal"><a class="sk-footer__link" href="#main">Privacy</a><a class="sk-footer__link" href="#main">Terms</a></div></div>
+          </div>
+        </footer>
+      </div>
+      <div style="border:1px solid var(--sk-color-border);border-radius:var(--sk-radius-lg);overflow:clip">
+        <footer class="sk-footer sk-footer--minimal" style="--sk-space-section:var(--sk-space-8)">
+          <div class="sk-footer__inner">
+            <span class="sk-footer__logo">ShopKit</span>
+            <div class="sk-footer__social">
+              <a href="#main" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+            </div>
+            <div class="sk-footer__bottom"><span>© 2026 ShopKit</span><div class="sk-footer__legal"><a class="sk-footer__link" href="#main">Privacy</a><a class="sk-footer__link" href="#main">Terms</a></div></div>
+          </div>
+        </footer>
+      </div>
     </div>
 
     <!-- Cart drawer (opened by the navbar cart button + the button above) -->
@@ -1598,6 +2386,8 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <div class="motile sk-animate-fade-up">fade-up</div>
       <div class="motile sk-animate-fade-down">fade-down</div>
       <div class="motile sk-animate-scale-in">scale-in</div>
+      <div class="motile sk-animate-fade-up sk-animate-fast">fade-up · fast</div>
+      <div class="motile sk-animate-scale-in sk-animate-slow">scale-in · slow</div>
     </div>
     <div class="sk-cluster sk-gap-3" style="margin-block-start:var(--sk-space-4);align-items:center">
       <button type="button" class="sk-btn sk-btn--outline sk-btn--sm" onclick="replayMotion()">↻ Replay</button>

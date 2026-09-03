@@ -44,7 +44,9 @@
     --#{$prefix}-navbar-bg:     var(--#{$prefix}-color-surface);
     --#{$prefix}-navbar-height: var(--#{$prefix}-control-height-lg);
 
+    position: relative;                     // anchors .sk-mega panels to the bar
     display: flex;
+    flex-wrap: wrap;                        // Bootstrap .navbar wraps
     align-items: center;
     gap: var(--#{$prefix}-space-5);
     min-block-size: max(var(--#{$prefix}-navbar-height), 4rem);
@@ -53,6 +55,18 @@
     background: var(--#{$prefix}-navbar-bg);
     border-block-end: 1px solid var(--#{$prefix}-color-border);
     color: var(--#{$prefix}-color-text);
+  }
+
+  // ── Optional content column (Bootstrap: .navbar > .container) ──
+  // Caps the row at the stepped container widths; the bar itself stays full-bleed.
+  .#{$prefix}-navbar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--#{$prefix}-space-5);
+    inline-size: 100%;
+    margin-inline: auto;
+    @include container-steps;
   }
 
   // ── Brand / wordmark — pushes everything after it to the trailing edge ──
@@ -100,6 +114,10 @@
   }
   .#{$prefix}-navbar__link[aria-current="page"] {
     color: var(--#{$prefix}-color-primary);
+  }
+  .#{$prefix}-navbar__link[aria-disabled="true"] {   // Bootstrap .nav-link.disabled
+    color: var(--#{$prefix}-color-text-subtle);
+    pointer-events: none;
   }
   .#{$prefix}-navbar__link:focus-visible { @include focus-ring; }
 
@@ -149,6 +167,23 @@
   .#{$prefix}-navbar__toggle:focus-visible { @include focus-ring; }
   @media (min-width: bp("md")) {
     .#{$prefix}-navbar__toggle { display: none; }
+  }
+
+  // ── Expand point (Bootstrap .navbar-expand / .navbar-expand-{bp}) ──
+  // The default above is md; these modifiers move it. Below the chosen
+  // breakpoint the nav + search hide and the toggle shows, whatever the default did.
+  .#{$prefix}-navbar--expand .#{$prefix}-navbar__nav,
+  .#{$prefix}-navbar--expand .#{$prefix}-navbar__search { display: flex; }
+  .#{$prefix}-navbar--expand .#{$prefix}-navbar__toggle { display: none; }
+  @each $bp, $min in $breakpoints {
+    .#{$prefix}-navbar--expand-#{$bp} .#{$prefix}-navbar__nav,
+    .#{$prefix}-navbar--expand-#{$bp} .#{$prefix}-navbar__search { display: none; }
+    .#{$prefix}-navbar--expand-#{$bp} .#{$prefix}-navbar__toggle { display: inline-flex; }
+    @media (min-width: $min) {
+      .#{$prefix}-navbar--expand-#{$bp} .#{$prefix}-navbar__nav,
+      .#{$prefix}-navbar--expand-#{$bp} .#{$prefix}-navbar__search { display: flex; }
+      .#{$prefix}-navbar--expand-#{$bp} .#{$prefix}-navbar__toggle { display: none; }
+    }
   }
 
   // ── Cart button + count bubble ──
@@ -201,15 +236,25 @@
   // ═════════════════════════════ VARIANTS ═════════════════════════════
 
   // Centred brand — three-cell grid: nav (start) · brand (centre) · actions (end)
-  .#{$prefix}-navbar--centered {
+  .#{$prefix}-navbar--centered:not(:has(> .#{$prefix}-navbar__inner)),
+  .#{$prefix}-navbar--centered > .#{$prefix}-navbar__inner {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
   }
+  .#{$prefix}-navbar--centered .#{$prefix}-navbar__toggle,
+  .#{$prefix}-navbar--centered .#{$prefix}-navbar__nav { grid-column: 1; justify-self: start; }
   .#{$prefix}-navbar--centered .#{$prefix}-navbar__brand {
+    grid-column: 2;
     margin-inline-end: 0;
     justify-self: center;
     text-align: center;
+  }
+  .#{$prefix}-navbar--centered .#{$prefix}-navbar__actions { grid-column: 3; justify-self: end; }
+  .#{$prefix}-navbar--centered .#{$prefix}-navbar__search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-inline-size: none;
   }
 
   // Sticky — frosted, translucent, pinned to the top of the viewport.
