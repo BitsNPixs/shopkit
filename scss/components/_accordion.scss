@@ -21,7 +21,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-accordion {
     --#{$prefix}-accordion-border: var(--#{$prefix}-color-border);
     border-block-start: 1px solid var(--#{$prefix}-accordion-border);

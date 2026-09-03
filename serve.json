@@ -1,0 +1,9 @@
+{
+  "cleanUrls": false,
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/", "destination": "/docs/index.html", "type": 302 },
+    { "source": "/docs", "destination": "/docs/index.html", "type": 302 },
+    { "source": "/docs/", "destination": "/docs/index.html", "type": 302 }
+  ]
+}

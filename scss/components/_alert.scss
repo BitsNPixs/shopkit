@@ -2,8 +2,8 @@
 // ALERT · CALLOUT  ·  .sk-alert  ·  @layer sk.components
 // ───────────────────────────────────────────────────────────────────────────
 // An inline message block: info / success / warning / danger, optionally with a
-// leading icon, a title, and a dismiss button. Not a toast (that's Phase 4) —
-// this sits in the document flow.
+// leading icon, a title, and a dismiss button. Not a toast (that's `.sk-toast`,
+// components/_toast.scss) — this sits in the document flow.
 //
 // STRUCTURE vs COLOR — the base owns the box (padding, radius, the leading
 // accent rule) and reads three `--sk-alert-*` colour tokens: a soft tinted
@@ -17,7 +17,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-alert {
     // ── Tier-3 tokens (default = info) ──
     --#{$prefix}-alert-bg:     var(--#{$prefix}-color-info-soft);

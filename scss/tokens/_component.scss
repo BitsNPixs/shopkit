@@ -27,7 +27,7 @@
 
 @use "../config" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   :root {
     // Shared control metrics — reused by buttons, inputs, selects, steppers…
     --#{$prefix}-control-height:    2.75rem;   // 44px — meets min tap target

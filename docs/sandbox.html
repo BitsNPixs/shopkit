@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopKit · Sandbox</title>
+<meta name="description" content="A scratch page for trying ShopKit classes. Edit the markup, save, refresh.">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     THIS IS THE ONLY LINE THAT MATTERS.
+     One stylesheet. No build step, no JS, no framework — everything below
+     is plain HTML using ShopKit class names.
+     ══════════════════════════════════════════════════════════════════════ -->
+<link rel="stylesheet" href="../dist/shopkit.css">
+
+<style>
+  /* Not part of ShopKit — just makes the demo blocks visible so you can see
+     where the grid tracks actually land. Delete freely. */
+  body { padding: 2rem 0; }
+  .box {
+    display: flex; align-items: center; justify-content: center;
+    min-block-size: 3.5rem; padding: .5rem;
+    background: var(--sk-color-primary-soft);
+    color: var(--sk-color-primary);
+    border: 1px solid color-mix(in srgb, var(--sk-color-primary) 25%, transparent);
+    border-radius: var(--sk-radius-sm);
+    font-family: var(--sk-font-mono); font-size: .72rem; font-weight: 600;
+  }
+  .box.b { background: var(--sk-color-surface); color: var(--sk-color-text-muted);
+           border-color: var(--sk-color-border); }
+  h2 { margin-block: 2.5rem 1rem; font-size: var(--sk-text-lg); }
+  hr { border: 0; block-size: 1px; background: var(--sk-color-border); margin-block: 3rem; }
+</style>
+</head>
+<body>
+
+<div class="sk-container">
+
+  <p><a href="index.html">← Components</a> · <a href="layout.html">Layout</a></p>
+  <h1>ShopKit sandbox</h1>
+  <p class="sk-cluster">
+    <span class="sk-badge sk-badge--primary">edit me</span>
+    <span>Change the markup below, save the file, refresh the browser.</span>
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       1 · TWELVE-COLUMN GRID
+       .sk-grid makes 12 tracks. Children pick how many they span.
+       Try changing sk-col-8 to sk-col-6 and see the row rebalance.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <h2>1 · Column spans</h2>
+  <div class="sk-grid">
+    <div class="box sk-col-8">sk-col-8</div>
+    <div class="box sk-col-4">sk-col-4</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       2 · RESPONSIVE
+       Mobile-first: full width by default, half at md, a quarter at lg.
+       Drag your browser window narrower to watch it re-flow.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <h2>2 · Responsive spans — resize the window</h2>
+  <div class="sk-grid">
+    <div class="box sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+    <div class="box sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+    <div class="box sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+    <div class="box sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       3 · OFFSETS
+       .sk-col-start-N pins an item to grid line N, leaving a gap before it.
+       12 columns = 13 lines. Change start-5 to start-3 and watch it move.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <h2>3 · Offsets</h2>
+  <div class="sk-grid">
+    <div class="box sk-col-4 sk-col-start-5">start-5 · col-4</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       4 · FIXED COLUMNS
+       When every child takes one track, put the count on the PARENT and
+       the children need no class at all. Try sk-grid-cols-4.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <h2>4 · Fixed column count</h2>
+  <div class="sk-grid-cols-3">
+    <div class="box b">1</div>
+    <div class="box b">2</div>
+    <div class="box b">3</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       5 · AUTO GRID — no breakpoints at all
+       You give a minimum track width; the browser fits as many as it can.
+       Change --sk-grid-min to 8rem and refresh: more columns, no media query.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <h2>5 · Auto grid</h2>
+  <div class="sk-grid--auto" style="--sk-grid-min: 12rem">
+    <div class="box">1</div><div class="box">2</div><div class="box">3</div>
+    <div class="box">4</div><div class="box">5</div><div class="box">6</div>
+  </div>
+
+  <hr>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       6 · IT IS NOT JUST THE GRID
+       The same stylesheet has the whole component set. No JS needed for
+       any of these.
+       ═══════════════════════════════════════════════════════════════════ -->
+  <h2>6 · Components, same stylesheet</h2>
+  <div class="sk-cluster">
+    <button class="sk-btn">Primary</button>
+    <button class="sk-btn sk-btn--outline">Outline</button>
+    <button class="sk-btn sk-btn--ghost">Ghost</button>
+    <button class="sk-btn" disabled>Disabled</button>
+  </div>
+
+  <div class="sk-alert sk-alert--info" style="margin-block-start:1.5rem">
+    <div class="sk-alert__body">
+      <p class="sk-alert__title">Try theming</p>
+      Add <code>data-theme="dark"</code> or <code>data-brand="verde"</code> to the
+      <code>&lt;html&gt;</code> tag at the top of this file and refresh — every colour
+      on the page re-derives. No rebuild.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

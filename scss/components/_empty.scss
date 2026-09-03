@@ -29,7 +29,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-empty {
     // ── Tier-3 tokens ──
     --#{$prefix}-empty-pad-block:  var(--#{$prefix}-space-12);

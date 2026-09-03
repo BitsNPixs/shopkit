@@ -35,7 +35,7 @@
 @use "../base/mixins" as *;
 @use "../base/variants" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-stepper {
     // ── Tier-3 tokens (defaults resolve to the semantic / control layer) ──
     --#{$prefix}-stepper-height:  var(--#{$prefix}-control-height);

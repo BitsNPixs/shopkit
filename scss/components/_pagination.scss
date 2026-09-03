@@ -36,7 +36,7 @@
 @use "../config" as *;
 @use "../base/mixins" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-pagination {
     // ── Tier-3 tokens ──
     --#{$prefix}-pagination-size: var(--#{$prefix}-control-height-sm);

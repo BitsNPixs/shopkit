@@ -38,7 +38,7 @@
 @use "../base/mixins" as *;
 @use "../base/variants" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-facets {
     display: flex;
     flex-direction: column;

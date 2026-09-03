@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.layout {
+@layer #{$prefix}.layout {
   .#{$prefix}-section {
     padding-block: var(--#{$prefix}-space-section);
   }

@@ -38,6 +38,18 @@
   font-weight:700; font-size:1.15rem; letter-spacing:-.03em; }
 .brandmark .dot { inline-size:.85rem; block-size:.85rem; border-radius: calc(var(--sk-radius) * .5);
   background: linear-gradient(135deg, var(--sk-color-primary), var(--sk-color-accent)); }
+/* ---- docs shell: sticky side menu + content column ---- */
+.docshell { padding-inline: var(--sk-space-4); }
+/* --deck-h is measured at runtime, so the rail clears the deck at any wrap. */
+.docshell > .sk-sidenav { --sk-sidenav-offset: calc(var(--deck-h, 5rem) + var(--sk-space-4)); }
+
+/* Below lg the shell stacks, so the rail sits ABOVE the content. Keep the
+   page links (useful) and drop the long section list (would bury the page). */
+@media (max-width: 1023px) {
+  .sk-sidenav { max-inline-size: none; }
+  .sk-sidenav--sticky { position: static; max-block-size: none; }
+  #toc { display: none; }
+}
 .brandmark small { font-family: var(--sk-font-mono); font-size:.6rem; letter-spacing:.1em;
   color: var(--sk-color-text-subtle); text-transform:uppercase; align-self:flex-start; margin-block-start:.1rem; }
 .controls { display:flex; flex-wrap:wrap; align-items:flex-end; gap: var(--sk-space-5);
@@ -263,9 +275,11 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <div class="ctl">
         <span class="ey">Mode</span>
         <div class="seg" id="seg-mode" role="group" aria-label="Colour mode">
-          <button data-v="light" aria-pressed="true">Light</button>
+          <button data-v="light" aria-pressed="false">Light</button>
           <button data-v="dark" aria-pressed="false">Dark</button>
-          <button data-v="system" aria-pressed="false">System</button>
+          <!-- System is the true initial state: no data-theme is set on load,
+               so the page follows prefers-color-scheme until a button is hit. -->
+          <button data-v="system" aria-pressed="true">System</button>
         </div>
       </div>
 
@@ -320,9 +334,48 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     </div>
   </div>
 </header>
+<div class="sk-container sk-section sk-section--tight">
+<div class="sk-shell">
+ <nav class="sk-sidenav sk-sidenav--panel sk-sidenav--sticky" aria-label="Documentation">
+    <p class="sk-sidenav__title">ShopKit docs</p>
+
+    <ul class="sk-sidenav__group">
+      <li class="sk-sidenav__label">Pages</li>
+      <li><a class="sk-sidenav__item" href="index.html" aria-current="page">
+        <span class="sk-sidenav__icon" aria-hidden="true">◈</span> Components</a></li>
+      <li><a class="sk-sidenav__item" href="layout.html">
+        <span class="sk-sidenav__icon" aria-hidden="true">▦</span> Layout</a></li>
+      <li><a class="sk-sidenav__item" href="sandbox.html">
+        <span class="sk-sidenav__icon" aria-hidden="true">✎</span> Sandbox</a></li>
+      <li><a class="sk-sidenav__item" href="landing.html">
+        <span class="sk-sidenav__icon" aria-hidden="true">✦</span> Landing</a></li>
+    </ul>
+
+    <ul class="sk-sidenav__group" id="toc">
+      <li class="sk-sidenav__label">On this page</li>
+        <li><a class="sk-sidenav__item" href="#tokens">Semantic tokens</a></li>
+        <li><a class="sk-sidenav__item" href="#contrast">Contrast</a></li>
+        <li><a class="sk-sidenav__item" href="#scales">Type &amp; spacing scales</a></li>
+        <li><a class="sk-sidenav__item" href="#brands">Multi-brand</a></li>
+        <li><a class="sk-sidenav__item" href="#product-cards">Product cards</a></li>
+        <li><a class="sk-sidenav__item" href="#buttons">Buttons</a></li>
+        <li><a class="sk-sidenav__item" href="#forms">Form controls</a></li>
+        <li><a class="sk-sidenav__item" href="#feedback">Badges &amp; alerts</a></li>
+        <li><a class="sk-sidenav__item" href="#overlays">Tabs, accordion &amp; dialog</a></li>
+        <li><a class="sk-sidenav__item" href="#data">Toasts, tables &amp; meters</a></li>
+        <li><a class="sk-sidenav__item" href="#commerce">Commerce atoms</a></li>
+        <li><a class="sk-sidenav__item" href="#storefront">Storefront sections</a></li>
+        <li><a class="sk-sidenav__item" href="#spacing">Spacing utilities</a></li>
+        <li><a class="sk-sidenav__item" href="#flex">Flex &amp; display</a></li>
+        <li><a class="sk-sidenav__item" href="#variants">Variant · size · state</a></li>
+        <li><a class="sk-sidenav__item" href="#motion">Motion system</a></li>
+        <li><a class="sk-sidenav__item" href="#theme">Copy your theme</a></li>
+    </ul>
+  </nav>
+  
 
 <main id="main">
-
+   
   <!-- ══════════════════ HERO ══════════════════ -->
   <section class="sk-container hero">
     <p class="ey rise d1">ShopKit · design system — foundation</p>
@@ -338,7 +391,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <span class="pill">multi-brand</span>
       <span class="pill">RTL-ready</span>
       <span class="pill">WCAG 2.2 AA</span>
-      <span class="pill" id="pill-size">core ~5.3 KB gzip</span>
+      <span class="pill" id="pill-size">core ~20 KB gzip</span>
     </div>
   </section>
 
@@ -367,7 +420,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     <div class="tok-grid" data-group="status"></div>
   </section>
 
-  <section class="sk-container sk-section sk-section--tight" style="padding-block-start:0">
+  <section class="sk-container sk-section sk-section--tight" id="contrast" style="padding-block-start:0">
     <div class="head"><div><h2>Contrast, live</h2>
       <p class="lede">The theme picks colour <em>steps</em> per mode so key pairings stay legible in both.
       Ratios recompute as you switch — AA needs 4.5 for text, 3.0 for large/UI.</p></div>
@@ -376,7 +429,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ PROTO COMPONENTS ══════════════════ -->
-  <section class="sk-section sk-section--alt">
+  <section class="sk-section sk-section--alt" id="product-cards">
     <div class="sk-container">
       <div class="head">
         <div><h2>Product cards <span class="tag">new · phase 3</span></h2>
@@ -514,7 +567,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ MULTI-BRAND ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="brands">
     <div class="head">
       <div><h2>Three brands, one page, zero recompile</h2>
         <p class="lede">Each panel is scoped with a single <code>data-brand</code> attribute. They ignore the
@@ -546,7 +599,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ SCALES ══════════════════ -->
-  <section class="sk-container sk-section sk-section--tight">
+  <section class="sk-container sk-section sk-section--tight" id="scales">
     <div class="sk-grid">
       <div class="sk-col-12 sk-col-lg-6">
         <div class="head" style="margin-block-end:var(--sk-space-4)"><div><h2 style="font-size:var(--sk-text-xl)">Type scale</h2></div><span class="ey">modular · fluid</span></div>
@@ -577,7 +630,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ SPACING UTILITIES (PHASE 2) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="spacing">
     <div class="head">
       <div><h2>Spacing utilities <span class="tag">new · phase 2</span></h2>
         <p class="lede">Single-purpose margin &amp; padding helpers generated from the spacing scale, authored
@@ -629,7 +682,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ FLEX & DISPLAY UTILITIES (PHASE 2) ══════════════════ -->
-  <section class="sk-container sk-section sk-section--tight" style="padding-block-start:0">
+  <section class="sk-container sk-section sk-section--tight" id="flex" style="padding-block-start:0">
     <div class="head">
       <div><h2>Flex &amp; display utilities <span class="tag">new · phase 2</span></h2>
         <p class="lede">Composable flex helpers — direction, alignment, gap — plus responsive
@@ -663,7 +716,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ BUTTONS (PHASE 2 · REAL COMPONENT) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="buttons">
     <div class="head">
       <div><h2>Buttons <span class="tag">new · phase 2</span></h2>
         <p class="lede">The first real component — <code>.sk-btn</code>. Variants only remap
@@ -714,7 +767,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ FORM CONTROLS (PHASE 2) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="forms">
     <div class="head">
       <div><h2>Form controls <span class="tag">new · phase 2</span></h2>
         <p class="lede">Inputs, select, textarea, checkbox, radio, switch — all sharing the button's
@@ -723,7 +776,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <span class="ey">@layer sk.components</span>
     </div>
 
-    <div class="sk-grid" style="gap:var(--sk-space-5)">
+    <div class="sk-grid sk-gap-5">
       <div class="sk-col-12 sk-col-md-6">
         <div class="sk-stack">
           <div class="sk-field">
@@ -766,7 +819,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ BADGES · ALERTS · SKELETON · TOOLTIP (PHASE 2) ══════════════════ -->
-  <section class="sk-section sk-section--alt">
+  <section class="sk-section sk-section--alt" id="feedback">
     <div class="sk-container">
       <div class="head">
         <div><h2>Badges, alerts &amp; loading <span class="tag">new · phase 2</span></h2>
@@ -811,7 +864,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </div>
       </div>
 
-      <div class="sk-grid sk-mt-6" style="gap:var(--sk-space-6)">
+      <div class="sk-grid sk-gap-6 sk-mt-6">
         <div class="sk-col-12 sk-col-md-6">
           <p class="ey sk-mb-3">skeleton — loading a product card</p>
           <div style="max-inline-size:20rem">
@@ -836,7 +889,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ GROUPS · TABS · ACCORDION · MODAL (PHASE 2) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="overlays">
     <div class="head">
       <div><h2>Groups, tabs, accordion &amp; dialog <span class="tag">new · phase 2</span></h2>
         <p class="lede">Composition + disclosure. The button group merges <code>.sk-btn</code> borders;
@@ -859,7 +912,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </div>
     </div>
 
-    <div class="sk-grid sk-mt-7" style="gap:var(--sk-space-8)">
+    <div class="sk-grid sk-gap-8 sk-mt-7">
       <div class="sk-col-12 sk-col-md-6">
         <p class="ey sk-mb-3">tabs</p>
         <div class="sk-tabs" id="demo-tabs">
@@ -920,8 +973,93 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     </dialog>
   </section>
 
+  <!-- ══════════════════ TOASTS · TABLES · METERS · INPUT GROUPS ══════════════════ -->
+  <section class="sk-section sk-section--alt" id="data">
+    <div class="sk-container">
+      <div class="head">
+        <div><h2>Toasts, tables &amp; meters <span class="tag">new · v0.2</span></h2>
+          <p class="lede">Transient notifications, data tables, progress and the fused input row —
+            plus the shared <code>.sk-close</code> / <code>.sk-spinner</code> primitives. All token-driven:
+            flip the deck and they re-skin.</p></div>
+        <span class="ey">@layer sk.components</span>
+      </div>
+
+      <div class="sk-grid sk-gap-6">
+        <div class="sk-col-12 sk-col-md-6">
+          <p class="ey sk-mb-3">toasts — static preview · <button class="sk-btn sk-btn--sm sk-btn--soft" type="button" id="demo-toast-btn">fire a live one</button></p>
+          <div class="sk-stack" style="--sk-gap:var(--sk-space-2)">
+            <div class="sk-toast sk-toast--success" role="status">
+              <span class="sk-toast__icon" aria-hidden="true">✓</span>
+              <div class="sk-toast__body"><p class="sk-toast__title">Added to cart</p>Organic Cotton Crew Tee · $34</div>
+              <button class="sk-close" type="button" aria-label="Dismiss">✕</button>
+            </div>
+            <div class="sk-toast sk-toast--danger" role="alert">
+              <span class="sk-toast__icon" aria-hidden="true">✕</span>
+              <div class="sk-toast__body"><p class="sk-toast__title">Payment failed</p>Your card was declined.</div>
+              <button class="sk-close" type="button" aria-label="Dismiss">✕</button>
+            </div>
+          </div>
+
+          <p class="ey sk-mt-6 sk-mb-3">progress — one variable drives the bar</p>
+          <div class="sk-stack" style="--sk-gap:var(--sk-space-3)">
+            <div class="sk-progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="Free-shipping goal" style="--sk-progress-value:70"><div class="sk-progress__bar"></div></div>
+            <div class="sk-progress sk-progress--success sk-progress--sm" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Upload complete" style="--sk-progress-value:100"><div class="sk-progress__bar"></div></div>
+            <div class="sk-progress sk-progress--warning sk-progress--lg" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Stock remaining" style="--sk-progress-value:35"><div class="sk-progress__bar"></div></div>
+          </div>
+
+          <p class="ey sk-mt-6 sk-mb-3">input group · spinner · close</p>
+          <div class="sk-stack" style="--sk-gap:var(--sk-space-3)">
+            <div class="sk-input-group">
+              <span class="sk-input-group__text">$</span>
+              <input class="sk-input" type="text" inputmode="decimal" aria-label="Gift card amount" placeholder="25.00">
+              <button class="sk-btn" type="button">Apply</button>
+            </div>
+            <div class="sk-input-group">
+              <input class="sk-input" type="search" aria-label="Search products" placeholder="Search products…">
+              <button class="sk-btn sk-btn--secondary" type="button">Search</button>
+            </div>
+            <div class="sk-cluster sk-gap-4">
+              <span class="sk-spinner sk-spinner--sm" role="status" aria-label="Loading"></span>
+              <span class="sk-spinner" role="status" aria-label="Loading"></span>
+              <span class="sk-spinner sk-spinner--lg" role="status" aria-label="Loading" style="color:var(--sk-color-primary)"></span>
+              <button class="sk-close" type="button" aria-label="Close">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-col-12 sk-col-md-6">
+          <p class="ey sk-mb-3">table — striped · hover · scrolls in its wrap</p>
+          <div class="sk-table-wrap">
+            <table class="sk-table sk-table--striped sk-table--hover">
+              <caption>Recent orders — hover a row</caption>
+              <thead><tr><th scope="col">Order</th><th scope="col">Date</th><th scope="col">Status</th><th scope="col">Total</th></tr></thead>
+              <tbody>
+                <tr><td>#1042</td><td>Aug 28</td><td><span class="sk-badge sk-badge--success">Delivered</span></td><td>$86.00</td></tr>
+                <tr><td>#1041</td><td>Aug 21</td><td><span class="sk-badge sk-badge--info">Shipped</span></td><td>$34.00</td></tr>
+                <tr><td>#1040</td><td>Aug 12</td><td><span class="sk-badge sk-badge--warning">Processing</span></td><td>$129.50</td></tr>
+                <tr><td>#1039</td><td>Aug 02</td><td><span class="sk-badge sk-badge--danger">Refunded</span></td><td>$49.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="ey sk-mt-6 sk-mb-3">range + file — native, brand-tinted</p>
+          <div class="sk-stack" style="--sk-gap:var(--sk-space-3)">
+            <div class="sk-field">
+              <label class="sk-label" for="demo-range">Max price — $250</label>
+              <input class="sk-range" id="demo-range" type="range" min="0" max="500" value="250">
+            </div>
+            <div class="sk-field">
+              <label class="sk-label" for="demo-file">Return label</label>
+              <input class="sk-input" id="demo-file" type="file">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ══════════════════ COMMERCE ATOMS (PHASE 3) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="commerce">
     <div class="head">
       <div><h2>Commerce atoms &amp; navigation <span class="tag">new · phase 3</span></h2>
         <p class="lede">The parts a storefront is built from — price, rating, swatches, quantity, plus
@@ -939,7 +1077,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </ol>
     </nav>
 
-    <div class="sk-grid sk-mt-6" style="gap:var(--sk-space-6)">
+    <div class="sk-grid sk-gap-6 sk-mt-6">
       <div class="sk-col-12 sk-col-md-6">
         <p class="ey sk-mb-3">price — regular · sale · range</p>
         <div class="sk-stack sk-gap-3">
@@ -1021,8 +1159,36 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </ul>
     </nav>
 
-    <p class="ey sk-mt-7 sk-mb-3">empty state — zero results</p>
-    <div class="sk-empty" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg)">
+    <div class="sk-grid sk-gap-6 sk-mt-7">
+      <div class="sk-col-12 sk-col-md-5 sk-col-lg-4">
+        <p class="ey sk-mb-3">facets — filter sidebar (composes .sk-check + .sk-range)</p>
+        <div class="sk-facets" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg);padding-inline:var(--sk-space-4)">
+          <div class="sk-facet">
+            <h3 class="sk-facet__title">Brand
+              <button class="sk-facets__clear" type="button">Clear</button></h3>
+            <ul class="sk-facet__list">
+              <li><label class="sk-check"><input class="sk-checkbox" type="checkbox" checked> Aurora <span class="sk-facet__count">128</span></label></li>
+              <li><label class="sk-check"><input class="sk-checkbox" type="checkbox"> Verde <span class="sk-facet__count">64</span></label></li>
+              <li><label class="sk-check"><input class="sk-checkbox" type="checkbox"> Ember <span class="sk-facet__count">31</span></label></li>
+            </ul>
+          </div>
+          <div class="sk-facet">
+            <h3 class="sk-facet__title">Max price</h3>
+            <input class="sk-range" type="range" min="0" max="500" value="250" aria-label="Maximum price">
+          </div>
+          <div class="sk-facet">
+            <h3 class="sk-facet__title">Size</h3>
+            <div class="sk-swatches" role="group" aria-label="Filter by size">
+              <button class="sk-swatch sk-swatch--size" type="button" aria-pressed="false">S</button>
+              <button class="sk-swatch sk-swatch--size" type="button" aria-pressed="true">M</button>
+              <button class="sk-swatch sk-swatch--size" type="button" aria-pressed="false">L</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sk-col-12 sk-col-md-7 sk-col-lg-8">
+        <p class="ey sk-mb-3">empty state — zero results</p>
+        <div class="sk-empty" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg)">
       <span class="sk-empty__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M8 11h6"/></svg></span>
       <p class="sk-empty__title">No products match your filters</p>
       <p class="sk-empty__desc">Try widening your price range or clearing a colour to see more of the catalogue.</p>
@@ -1030,10 +1196,12 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         <button type="button" class="sk-btn sk-btn--soft">Clear all filters</button>
       </div>
     </div>
+      </div>
+    </div>
   </section>
 
   <!-- ══════════════════ STOREFRONT SECTIONS (PHASE 4) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="storefront">
     <div class="head">
       <div><h2>Storefront sections <span class="tag">new · phase 4</span></h2>
         <p class="lede">The page-level chrome a shop is assembled from — navbar, hero, checkout
@@ -1079,7 +1247,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </section>
     </div>
 
-    <div class="sk-grid sk-mt-7" style="gap:var(--sk-space-8)">
+    <div class="sk-grid sk-gap-8 sk-mt-7">
       <div class="sk-col-12 sk-col-md-7">
         <p class="ey sk-mb-3">checkout progress · open cart drawer</p>
         <ol class="sk-steps" style="max-inline-size:34rem">
@@ -1157,7 +1325,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ VARIANT SYSTEM (PHASE 5) ══════════════════ -->
-  <section class="sk-container sk-section">
+  <section class="sk-container sk-section" id="variants">
     <div class="head">
       <div><h2>Variant · size · state system <span class="tag">new · phase 5</span></h2>
         <p class="lede">One contract across every component — a variant remaps colour tokens, a size
@@ -1228,7 +1396,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   </section>
 
   <!-- ══════════════════ COPY THEME ══════════════════ -->
-  <section class="sk-section sk-section--sunken">
+  <section class="sk-section sk-section--sunken" id="theme">
     <div class="sk-container">
       <div class="head">
         <div><h2>Copy your theme <span class="tag">seed · phase 8</span></h2>
@@ -1249,6 +1417,8 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       intentionally omitted in this preview. Next: utilities + core UI (buttons, forms, modal, tabs, skeletons).</p>
   </footer>
 </main>
+</div>
+</div>
 
 <script>
 (function () {
@@ -1278,7 +1448,12 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     return parseFloat(getComputedStyle(probe).fontSize) || 0;
   }
   function rgbToArr(str) {
-    var m = str.match(/[\d.]+/g); if (!m) return [0,0,0,1];
+    var m = str.match(/-?[\d.]+(?:e-?\d+)?/g); if (!m) return [0,0,0,1];
+    // color-mix() results compute to `color(srgb r g b [/ a])` with 0–1 float
+    // channels — scale those to 0–255 so hex + contrast math stay correct.
+    if (str.lastIndexOf("color(", 0) === 0) {
+      return [ +m[0]*255, +m[1]*255, +m[2]*255, m[3] === undefined ? 1 : +m[3] ];
+    }
     return [ +m[0], +m[1], +m[2], m[3] === undefined ? 1 : +m[3] ];
   }
   function toHex(str) {
@@ -1487,10 +1662,17 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
 
   /* ---- init ---- */
   buildInspector(); buildContrast();
-  // set slider defaults onto root so the copy block + everything matches immediately
-  root.style.setProperty("--sk-radius", "10px");
-  root.style.setProperty("--sk-space-gutter", "24px");
-  root.style.setProperty("--sk-space-section", "72px");
+  // Sync slider positions to the RESOLVED stylesheet values without pinning
+  // anything onto :root — untouched knobs must keep the library defaults (the
+  // section rhythm is a fluid clamp(); pinning 72px would freeze it). Vars are
+  // only written when a slider is actually moved (see wireRange).
+  [["r-radius", "--sk-radius", "v-radius"],
+   ["r-gutter", "--sk-space-gutter", "v-gutter"],
+   ["r-section", "--sk-space-section", "v-section"]].forEach(function (t) {
+    var r = document.getElementById(t[0]), out = document.getElementById(t[2]);
+    var px = Math.round(resolveLenPx(t[1]));
+    if (r && px) { r.value = px; if (out) out.textContent = px + "px"; }
+  });
   refreshAll();
 })();
 </script>
@@ -1534,6 +1716,80 @@ function replayMotion() {
     el.className = cls;           // … then restore it
   });
 }
+
+/* ---- live toast demo: spawn into a real fixed .sk-toasts region ---- */
+(function () {
+  var btn = document.getElementById("demo-toast-btn");
+  if (!btn) return;
+  var region = null, n = 0;
+  btn.addEventListener("click", function () {
+    if (!region) {
+      region = document.createElement("div");
+      region.className = "sk-toasts";
+      document.body.appendChild(region);
+    }
+    n += 1;
+    var t = document.createElement("div");
+    t.className = "sk-toast sk-toast--success";
+    t.setAttribute("role", "status");
+    t.innerHTML =
+      '<span class="sk-toast__icon" aria-hidden="true">✓</span>' +
+      '<div class="sk-toast__body"><p class="sk-toast__title">Added to cart</p>Demo toast #' + n + "</div>" +
+      '<button class="sk-close" type="button" aria-label="Dismiss">✕</button>';
+    t.querySelector(".sk-close").addEventListener("click", function () { t.remove(); });
+    region.appendChild(t);
+    setTimeout(function () { t.remove(); }, 5000);
+  });
+})();
+
+/* ---- wishlist demo: toggle the saved state (aria-pressed drives the CSS) ---- */
+(function () {
+  document.querySelectorAll(".sk-wishlist").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var saved = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", String(!saved));
+      btn.setAttribute("aria-label", saved ? "Add to wishlist" : "Remove from wishlist");
+    });
+  });
+})();
+</script>
+<script>
+/* ---- docs shell: keep the sticky rail clear of the (wrapping) deck ---- */
+(function () {
+  var deck = document.querySelector(".deck");
+  if (!deck) return;
+  function measure() {
+    document.documentElement.style.setProperty("--deck-h", deck.offsetHeight + "px");
+  }
+  measure();
+  if ("ResizeObserver" in window) new ResizeObserver(measure).observe(deck);
+  else window.addEventListener("resize", measure);
+})();
+
+/* ---- scrollspy: mark the section being read in the side menu ----
+   aria-current="true" for the in-page section; "page" stays on the page link. */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll("#toc a[href^=\"#\"]"));
+  if (!links.length || !("IntersectionObserver" in window)) return;
+  var visible = Object.create(null);
+  function paint() {
+    var current = null;
+    links.forEach(function (a) {
+      var id = a.getAttribute("href").slice(1);
+      if (!current && visible[id]) current = a;   // topmost visible section wins
+      a.removeAttribute("aria-current");
+    });
+    if (current) current.setAttribute("aria-current", "true");
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { visible[en.target.id] = en.isIntersecting; });
+    paint();
+  }, { rootMargin: "-15% 0px -70% 0px" });
+  links.forEach(function (a) {
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (el) io.observe(el);
+  });
+})();
 </script>
 </body>
 </html>

@@ -61,7 +61,8 @@ standard `--<cmp>-height` / `--<cmp>-font-size` tokens can emit both modifiers w
 `@include control-sizes("<cmp>")`. Components that also vary padding/gap per size
 (e.g. the button) add those lines alongside.
 
-**Sized components:** button · input · select · stepper · modal (width) · price · rating.
+**Sized components:** button · input · select · stepper · modal (width) · price · rating ·
+spinner · progress (height).
 
 ---
 
@@ -134,6 +135,12 @@ the toolkit encodes exactly what the components already did.
 | checkbox/radio/switch | — | — | checked · focus · disabled | `accent-color` · `--sk-switch-*` |
 | badge / chip | primary · success · danger · warning · info · sale · new · bestseller · outline · pill | — | — | `--sk-badge-bg/-fg/-radius/-pad-*` |
 | alert | success · warning · danger · info | — | dismiss | `--sk-alert-bg/-fg/-accent/-radius` |
+| toast | success · danger · warning · info | — | enter motion · dismiss (JS/React-timed) | `--sk-toast-bg/-fg/-accent` |
+| table | striped · hover · bordered · compact | — | row hover | `--sk-table-pad-*/-border/-stripe-bg/-hover-bg` |
+| progress | success · danger · warning | sm · lg | value via `--sk-progress-value` | `--sk-progress-height/-track/-fill/-radius` |
+| input-group | — | (children keep theirs) | focus raises segment | inherits `--sk-control-*` |
+| spinner | — | sm · lg | reduced-motion stills | `--sk-spinner-size/-track` |
+| close | — | — | hover · focus | shared `close-button` mixin (base/_mixins) |
 | modal | sm · lg | (width) | open · backdrop | `--sk-modal-width/-radius` |
 | tabs | pill | — | **selected** (`aria-selected`) · disabled | `--sk-tabs-accent/-border` |
 | accordion | — | — | open (`<details>`) | `--sk-accordion-border` |

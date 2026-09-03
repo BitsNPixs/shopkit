@@ -1,0 +1,190 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// SIDENAV · VERTICAL SIDEBAR MENU  ·  .sk-sidenav  ·  @layer sk.components
+// ───────────────────────────────────────────────────────────────────────────
+// A persistent vertical navigation rail — docs sidebars, account/order menus,
+// category trees, admin shells. Unlike `.sk-menu` (a floating, dismissible
+// dropdown panel) this one is IN FLOW and always visible; it owns no
+// open/closed state, so it needs no JS at all.
+//
+//   <nav class="sk-sidenav" aria-label="Sections">
+//     <p class="sk-sidenav__title">Documentation</p>
+//     <ul class="sk-sidenav__group">
+//       <li class="sk-sidenav__label">Pages</li>
+//       <li><a class="sk-sidenav__item" href="layout.html" aria-current="page">
+//             <span class="sk-sidenav__icon" aria-hidden="true">▦</span> Layout</a></li>
+//       <li class="sk-sidenav__separator" role="separator"></li>
+//     </ul>
+//   </nav>
+//
+// STATE — the active row is the real DOM signal `aria-current="page"`, never a
+// styling-only `--active` class, so the a11y tree and the paint cannot drift.
+// `[aria-disabled="true"]` mutes a row while keeping it announced.
+//
+// RTL — logical properties throughout. The active indicator is a
+// `border-inline-start`, so it flips to the right edge under `dir="rtl"` with
+// no extra rule.
+//
+// MOTION — hover/active tint transitions on `--sk-dur-fast`; the token layer
+// zeroes that under `prefers-reduced-motion`, so this is reduced-motion safe
+// with no media query here.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "../config" as *;
+@use "../base/mixins" as *;
+
+@layer #{$prefix}.components {
+  .#{$prefix}-sidenav {
+    // ── Tier-3 tokens (each falls back to the semantic layer) ──
+    --#{$prefix}-sidenav-bg:          transparent;
+    --#{$prefix}-sidenav-border:      var(--#{$prefix}-color-border);
+    --#{$prefix}-sidenav-radius:      var(--#{$prefix}-radius-md);
+    --#{$prefix}-sidenav-inline-size: 15rem;
+    --#{$prefix}-sidenav-gap:         var(--#{$prefix}-space-1);
+    --#{$prefix}-sidenav-pad:         var(--#{$prefix}-space-3);
+    --#{$prefix}-sidenav-item-color:  var(--#{$prefix}-color-text-muted);
+    --#{$prefix}-sidenav-item-hover:  var(--#{$prefix}-color-surface-sunken);
+    --#{$prefix}-sidenav-active-bg:   var(--#{$prefix}-color-primary-soft);
+    --#{$prefix}-sidenav-active-fg:   var(--#{$prefix}-color-primary);
+    --#{$prefix}-sidenav-indicator:   2px;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-space-4);
+    inline-size: 100%;
+    max-inline-size: var(--#{$prefix}-sidenav-inline-size);
+    padding: var(--#{$prefix}-sidenav-pad);
+    background: var(--#{$prefix}-sidenav-bg);
+  }
+
+  // ── Variants — colour / box only, never structure (see VARIANT-API.md) ──
+  .#{$prefix}-sidenav--panel {
+    --#{$prefix}-sidenav-bg: var(--#{$prefix}-color-surface);
+
+    border: 1px solid var(--#{$prefix}-sidenav-border);
+    border-radius: var(--#{$prefix}-sidenav-radius);
+  }
+  // A hairline rail that divides the sidebar from the content column.
+  .#{$prefix}-sidenav--bordered {
+    border-inline-end: 1px solid var(--#{$prefix}-sidenav-border);
+  }
+  // Follows the reader down a long page. `--sk-sidenav-offset` clears any
+  // sticky masthead the consumer already has.
+  .#{$prefix}-sidenav--sticky {
+    position: sticky;
+    inset-block-start: var(--#{$prefix}-sidenav-offset, var(--#{$prefix}-space-4));
+    max-block-size: calc(100dvh - (var(--#{$prefix}-sidenav-offset, var(--#{$prefix}-space-4)) * 2));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  // ── Title — the rail's own heading ──
+  .#{$prefix}-sidenav__title {
+    margin: 0;
+    padding-inline: var(--#{$prefix}-space-2);
+    color: var(--#{$prefix}-color-text);
+    font-family: var(--#{$prefix}-font-heading);
+    font-size: var(--#{$prefix}-text-sm);
+    font-weight: var(--#{$prefix}-weight-bold);
+    letter-spacing: -0.01em;
+  }
+
+  // ── Group — the <ul>. Multiple groups stack inside one rail. ──
+  .#{$prefix}-sidenav__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}-sidenav-gap);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  // ── Label — small uppercase section kicker ──
+  .#{$prefix}-sidenav__label {
+    padding-block: var(--#{$prefix}-space-2) var(--#{$prefix}-space-1);
+    padding-inline: var(--#{$prefix}-space-2);
+    color: var(--#{$prefix}-color-text-subtle);
+    font-size: var(--#{$prefix}-text-2xs);
+    font-weight: var(--#{$prefix}-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  // ── Item — the interactive row (works on <a> and <button>) ──
+  .#{$prefix}-sidenav__item {
+    display: flex;
+    align-items: center;
+    gap: var(--#{$prefix}-space-2);
+    inline-size: 100%;
+    padding-block: var(--#{$prefix}-space-2);
+    padding-inline: var(--#{$prefix}-space-2);
+    border: 0;
+    // Reserve the indicator width up-front so the active row does not shift
+    // its label by 2px when the border appears.
+    border-inline-start: var(--#{$prefix}-sidenav-indicator) solid transparent;
+    border-radius: var(--#{$prefix}-radius-sm);
+    background: transparent;
+    color: var(--#{$prefix}-sidenav-item-color);
+    font: inherit;
+    font-size: var(--#{$prefix}-text-sm);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard),
+                color      var(--#{$prefix}-dur-fast) var(--#{$prefix}-ease-standard);
+  }
+
+  .#{$prefix}-sidenav__item:not([aria-disabled="true"]):hover {
+    background: var(--#{$prefix}-sidenav-item-hover);
+    color: var(--#{$prefix}-color-text);
+  }
+  .#{$prefix}-sidenav__item:focus-visible {
+    @include focus-ring;
+    outline-offset: calc(var(--#{$prefix}-focus-ring-offset) * -1);   // inset ring
+  }
+
+  // Active row — driven by the real navigation signal.
+  .#{$prefix}-sidenav__item[aria-current="page"],
+  .#{$prefix}-sidenav__item[aria-current="true"] {
+    border-inline-start-color: var(--#{$prefix}-sidenav-active-fg);
+    background: var(--#{$prefix}-sidenav-active-bg);
+    color: var(--#{$prefix}-sidenav-active-fg);
+    font-weight: var(--#{$prefix}-weight-semibold);
+  }
+
+  .#{$prefix}-sidenav__item[aria-disabled="true"] {
+    color: var(--#{$prefix}-color-text-subtle);
+    cursor: not-allowed;
+  }
+
+  // Icons track the label size and never squash the row.
+  .#{$prefix}-sidenav__item svg,
+  .#{$prefix}-sidenav__icon {
+    inline-size: 1.15em;
+    block-size: 1.15em;
+    flex: none;
+  }
+
+  // Trailing meta (a count, a "new" pill) pushed to the far edge.
+  .#{$prefix}-sidenav__meta {
+    margin-inline-start: auto;
+    color: var(--#{$prefix}-color-text-subtle);
+    font-family: var(--#{$prefix}-font-mono);
+    font-size: var(--#{$prefix}-text-2xs);
+  }
+
+  // ── Nested level — a sub-list indented under its parent row ──
+  .#{$prefix}-sidenav__group .#{$prefix}-sidenav__group {
+    padding-inline-start: var(--#{$prefix}-space-4);
+    margin-block-start: var(--#{$prefix}-sidenav-gap);
+    border-inline-start: 1px solid var(--#{$prefix}-color-border-subtle);
+  }
+
+  // ── Separator ──
+  .#{$prefix}-sidenav__separator {
+    block-size: 1px;
+    padding: 0;
+    margin-block: var(--#{$prefix}-space-2);
+    margin-inline: 0;
+    border: 0;
+    background: var(--#{$prefix}-color-border-subtle);
+  }
+}

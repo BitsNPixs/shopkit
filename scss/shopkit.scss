@@ -4,16 +4,17 @@
 //      @use "shopkit/scss/shopkit";
 //  or compile it to dist/shopkit.css and link the CDN build.
 //
-//  Phase 1 (Foundation) ships: cascade layers, the 3-tier token system,
-//  reset, typography, a11y base, and the container / grid / section layout
-//  with light + dark + multi-brand plumbing. Components, utilities, motion,
-//  and the React layer arrive in later phases and slot into the layers already
-//  declared here.
+//  Ships: cascade layers, the 3-tier token system, reset, typography, a11y
+//  base, the container / grid / section layout, the full Core-UI + commerce
+//  component set, and the spacing / display / flex / animation utilities —
+//  with light + dark + multi-brand + RTL plumbing throughout. The React
+//  parity layer (react/) emits these exact classes; scripts/parity.mjs
+//  guards the two against drift.
 // ═══════════════════════════════════════════════════════════════════════════
 
 @use "layers";     // 1 · declare @layer order (emits first)
 @use "tokens";     // 2 · @layer sk.tokens  (+ sk.components control metrics)
 @use "base";       // 3 · @layer sk.reset, sk.base
 @use "layout";     // 4 · @layer sk.layout
-@use "components"; // 5 · @layer sk.components  (button; more in Phase 2)
-@use "utilities";  // 6 · @layer sk.utilities  (spacing · display · flex)
+@use "components"; // 5 · @layer sk.components
+@use "utilities";  // 6 · @layer sk.utilities  (spacing · display · flex · animation)

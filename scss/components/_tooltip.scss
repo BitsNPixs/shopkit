@@ -18,7 +18,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   [data-#{$prefix}-tooltip] {
     position: relative;
   }

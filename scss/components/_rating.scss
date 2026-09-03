@@ -17,7 +17,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-rating {
     --#{$prefix}-rating-value: 0;      // 0 … max, fractions allowed
     --#{$prefix}-rating-max:   5;

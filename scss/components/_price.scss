@@ -19,7 +19,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
-@layer sk.components {
+@layer #{$prefix}.components {
   .#{$prefix}-price {
     --#{$prefix}-price-now:  var(--#{$prefix}-color-price);
     --#{$prefix}-price-size: var(--#{$prefix}-text-lg);
