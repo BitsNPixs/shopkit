@@ -104,7 +104,10 @@ Shipped (all config-gated via `$utilities-enabled`, all token-driven):
 
 - **Spacing** — m/p × all logical sides × full scale, negative margins, auto, curated responsive
 - **Display** — block/inline/flex/grid-adjacent values + responsive show/hide, `[hidden]`-safe
-- **Flex** — direction/wrap/justify/align/grow/shrink + `.sk-gap-*` (flex **and** grid), curated responsive
+- **Grid** — Bootstrap's `.row` model under `.sk-grid`: `.sk-col`, `.sk-col-auto`, `.sk-col-{n}`, `.sk-grid-cols-*`, `.sk-offset-*`, `.sk-order-*`, `.sk-g/-gx/-gy-*`, stepped `.sk-container(-{bp})` — Bootstrap 5 breakpoints, all responsive, all logical
+- **Flex** — direction/wrap/justify/align-items/align-self/align-content/grow/shrink + `.sk-gap-*`, `.sk-row-gap-*`, `.sk-column-gap-*`; responsive for every group (gap on curated keys)
+- **Sizing** — `.sk-w-/-h-{25,50,75,100,auto}`, `.sk-mw-100`, `.sk-mh-100`, `.sk-vw-/-vh-100`, `.sk-min-vw-/-vh-100`
+- **Text** — `.sk-text-start/-center/-end` + responsive (logical, RTL-safe)
 - **Animation** — `.sk-animate-fade/-fade-up/-fade-down/-scale-in/-spin/-pulse` + speed modifiers
 
 Not shipped (Bootstrap has them; `_config.scss` and `PHASES.md` mark these "add on
@@ -112,10 +115,9 @@ demand only" — that's the stated policy, not an oversight):
 
 | Group | Stance |
 |---|---|
-| Text (align/transform/weight/truncate) | most-requested next; note `truncate` exists as a **mixin** but no utility class |
+| Text (transform/weight/truncate) | alignment shipped as `.sk-text-*`; note `truncate` exists as a **mixin** but no utility class |
 | Colors / backgrounds | risky — invites bypassing semantic tokens; if added, emit only semantic-token values (`.sk-bg-surface`, never `.sk-bg-indigo-500`) |
 | Borders / radius | low cost, token-driven |
-| Sizing (w-/h-) | occasionally needed |
 | Shadows | tokens exist (`--sk-shadow-*`); classes don't |
 | Position / z-index / overflow / opacity / float / object-fit / visibility / interactions / vertical-align | add individually if a component demo actually needs one |
 | Ratio helper | `aspect-ratio` is one line of author CSS; card exposes `--sk-card-media-ratio` |

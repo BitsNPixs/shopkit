@@ -134,6 +134,10 @@ fails.
 - **`docs/preview.html`** is a Phase-1 artifact nothing links to. `docs/index.html` is the
   live showcase; `docs/landing.html` is the marketing page and the only one that loads
   `customizer.js`.
+- **`.sk-grid` is Bootstrap's `.row`** (flex + negative margins + gutter-padded children), not CSS
+  Grid. Gutters come from `.sk-g-*` / `.sk-gx-*` / `.sk-gy-*` or `--sk-gutter-x/-y`; never put
+  `.sk-gap-*` on it — a real `gap` makes `sk-col-6 + sk-col-6` wrap. Breakpoints and container
+  steps are Bootstrap 5's (`_config.scss`), with `2xl` standing in for `xxl`.
 
 ## Adding a component
 

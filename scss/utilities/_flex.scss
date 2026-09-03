@@ -1,71 +1,75 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // FLEXBOX UTILITIES  ·  @layer sk.utilities
 // ───────────────────────────────────────────────────────────────────────────
-// Direction, wrap, alignment, grow / shrink and gap helpers for flex (and, for
-// gap, grid) containers.
+// Bootstrap 5's flex utilities under sk- names. Values are Bootstrap's exactly
+// (`start` / `end` resolve to flex-start / flex-end):
+//
+//   Bootstrap                              ShopKit
+//   .flex-row / -column (+ -reverse)       .sk-flex-row / -col (+ -reverse)
+//   .flex-wrap / -nowrap / -wrap-reverse   .sk-flex-wrap / -nowrap / -wrap-reverse
+//   .justify-content-*                     .sk-justify-*      (main axis)
+//   .align-items-*                         .sk-items-*        (cross axis)
+//   .align-self-*                          .sk-self-*
+//   .align-content-*                       .sk-content-*      (multi-line cross axis)
+//   .flex-fill                             .sk-flex-auto      (+ .sk-flex-1 / -initial / -none)
+//   .flex-grow-1 / -0                      .sk-grow / .sk-grow-0
+//   .flex-shrink-1 / -0                    .sk-shrink / .sk-shrink-0
+//   .gap-* / .row-gap-* / .column-gap-*    .sk-gap-{k} / .sk-row-gap-{k} / .sk-column-gap-{k}
+//
+// Responsive (name-bp-value — .sk-flex-md-row, .sk-justify-lg-between,
+// .sk-self-md-end, .sk-grow-md-0, .sk-gap-md-6): direction · wrap · justify ·
+// items · self · content · grow · shrink · gap. Gap keys are the curated
+// $space-responsive subset — a size-budget decision, not a behaviour one.
 //
 // RTL / writing-mode safety: alignment uses the flex-relative box-alignment
-// keywords (`flex-start`, `flex-end`, `center`, …) which resolve along the flex
-// axes, not physical left/right — so they stay correct under `dir="rtl"` with
-// no physical values anywhere (nothing here trips the logical-props lint).
-//
-// `gap` on flex containers is Baseline — Chrome 84 / Firefox 63 / Safari 14.1,
-// ~94% global — so no float/margin fallback is needed. Values are spacing tokens.
-//
-//   .sk-flex-row / -col (+ -reverse)     flex-direction
-//   .sk-flex-wrap / -nowrap / -wrap-reverse
-//   .sk-justify-*                        justify-content   (main axis)
-//   .sk-items-* / .sk-self-*             align-items / align-self  (cross axis)
-//   .sk-flex-1 / -auto / -initial / -none   flex shorthand
-//   .sk-grow(-0) / .sk-shrink(-0)
-//   .sk-gap-{k}                          gap, from the spacing scale
-// Curated responsive (name-bp-value): direction · justify · items · gap
-//   e.g. .sk-flex-md-row · .sk-justify-lg-between · .sk-gap-md-6
+// keywords, which resolve along the flex axes, not physical left/right — so a
+// row stays correct under `dir="rtl"` with no physical values anywhere.
+// `gap` on flex containers is Baseline (Chrome 84 / Firefox 63 / Safari 14.1).
 // ═══════════════════════════════════════════════════════════════════════════
 @use "sass:map";
 @use "../config" as *;
 
+$-direction: ("row": row, "row-reverse": row-reverse, "col": column, "col-reverse": column-reverse);
+$-wrap:      ("wrap": wrap, "nowrap": nowrap, "wrap-reverse": wrap-reverse);
+$-justify:   ("start": flex-start, "end": flex-end, "center": center, "between": space-between, "around": space-around, "evenly": space-evenly);
+$-items:     ("start": flex-start, "end": flex-end, "center": center, "baseline": baseline, "stretch": stretch);
+$-self:      ("auto": auto, "start": flex-start, "end": flex-end, "center": center, "stretch": stretch, "baseline": baseline);
+$-content:   ("start": flex-start, "end": flex-end, "center": center, "between": space-between, "around": space-around, "stretch": stretch);
+
+// One breakpoint's worth of flex utilities (base when $infix is "").
+@mixin -flex-classes($infix, $gap-keys) {
+  @each $s, $v in $-direction { .#{$prefix}-flex#{$infix}-#{$s}    { flex-direction: $v; } }
+  @each $s, $v in $-wrap      { .#{$prefix}-flex#{$infix}-#{$s}    { flex-wrap: $v; } }
+  @each $s, $v in $-justify   { .#{$prefix}-justify#{$infix}-#{$s} { justify-content: $v; } }
+  @each $s, $v in $-items     { .#{$prefix}-items#{$infix}-#{$s}   { align-items: $v; } }
+  @each $s, $v in $-self      { .#{$prefix}-self#{$infix}-#{$s}    { align-self: $v; } }
+  @each $s, $v in $-content   { .#{$prefix}-content#{$infix}-#{$s} { align-content: $v; } }
+
+  .#{$prefix}-grow#{$infix}     { flex-grow: 1; }
+  .#{$prefix}-grow#{$infix}-0   { flex-grow: 0; }
+  .#{$prefix}-shrink#{$infix}   { flex-shrink: 1; }
+  .#{$prefix}-shrink#{$infix}-0 { flex-shrink: 0; }
+
+  @each $k in $gap-keys { .#{$prefix}-gap#{$infix}-#{$k} { gap: var(--#{$prefix}-space-#{$k}); } }
+}
+
 @if map.get($utilities-enabled, "flex") {
-  // Keyed by the short suffix so the responsive variant is a clean breakpoint
-  // insert: .sk-justify-center → .sk-justify-md-center.
-  $-direction: ("row": row, "row-reverse": row-reverse, "col": column, "col-reverse": column-reverse);
-  $-wrap:      ("flex-wrap": wrap, "flex-nowrap": nowrap, "flex-wrap-reverse": wrap-reverse);
-  $-justify:   ("start": flex-start, "end": flex-end, "center": center, "between": space-between, "around": space-around, "evenly": space-evenly);
-  $-items:     ("start": flex-start, "end": flex-end, "center": center, "baseline": baseline, "stretch": stretch);
-  $-self:      ("auto": auto, "start": flex-start, "end": flex-end, "center": center, "stretch": stretch, "baseline": baseline);
-
   @layer #{$prefix}.utilities {
-    // ── direction ──
-    @each $s, $v in $-direction { .#{$prefix}-flex-#{$s} { flex-direction: $v; } }
-    // ── wrap ──
-    @each $name, $v in $-wrap { .#{$prefix}-#{$name} { flex-wrap: $v; } }
-    // ── justify-content (main axis) ──
-    @each $s, $v in $-justify { .#{$prefix}-justify-#{$s} { justify-content: $v; } }
-    // ── align-items (cross axis) ──
-    @each $s, $v in $-items { .#{$prefix}-items-#{$s} { align-items: $v; } }
-    // ── align-self ──
-    @each $s, $v in $-self { .#{$prefix}-self-#{$s} { align-self: $v; } }
+    @include -flex-classes("", map.keys($space-scale));
 
-    // ── flex shorthand + grow / shrink ──
     .#{$prefix}-flex-1       { flex: 1 1 0%; }
     .#{$prefix}-flex-auto    { flex: 1 1 auto; }
     .#{$prefix}-flex-initial { flex: 0 1 auto; }
     .#{$prefix}-flex-none    { flex: none; }
-    .#{$prefix}-grow         { flex-grow: 1; }
-    .#{$prefix}-grow-0       { flex-grow: 0; }
-    .#{$prefix}-shrink       { flex-shrink: 1; }
-    .#{$prefix}-shrink-0     { flex-shrink: 0; }
 
-    // ── gap (flex + grid) — full spacing scale ──
-    @each $k, $_v in $space-scale { .#{$prefix}-gap-#{$k} { gap: var(--#{$prefix}-space-#{$k}); } }
+    @each $k, $_v in $space-scale {
+      .#{$prefix}-row-gap-#{$k}    { row-gap: var(--#{$prefix}-space-#{$k}); }
+      .#{$prefix}-column-gap-#{$k} { column-gap: var(--#{$prefix}-space-#{$k}); }
+    }
 
-    // ── curated responsive: direction · justify · items · gap ──
     @each $bp, $min in $breakpoints {
       @media (min-width: $min) {
-        @each $s, $v in $-direction  { .#{$prefix}-flex-#{$bp}-#{$s}    { flex-direction: $v; } }
-        @each $s, $v in $-justify    { .#{$prefix}-justify-#{$bp}-#{$s} { justify-content: $v; } }
-        @each $s, $v in $-items      { .#{$prefix}-items-#{$bp}-#{$s}   { align-items: $v; } }
-        @each $k in $space-responsive { .#{$prefix}-gap-#{$bp}-#{$k}    { gap: var(--#{$prefix}-space-#{$k}); } }
+        @include -flex-classes("-#{$bp}", $space-responsive);
       }
     }
   }

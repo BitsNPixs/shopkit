@@ -19,9 +19,26 @@
     outline: none;
   }
 
-  .#{$prefix}-sr-only { @include visually-hidden; }
+  // Bootstrap .visually-hidden / .visually-hidden-focusable parity: removed from
+  // sight only — still in the accessibility tree, still focusable (the
+  // -focusable variant re-appears on :focus / :focus-within, e.g. skip links).
+  // A <caption> keeps static position so the table's layout is undisturbed.
+  .#{$prefix}-sr-only,
   .#{$prefix}-sr-only-focusable:not(:focus):not(:focus-within) {
-    @include visually-hidden;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .#{$prefix}-sr-only:not(caption),
+  .#{$prefix}-sr-only-focusable:not(:focus):not(:focus-within):not(caption) {
+    position: absolute;
   }
 
   // Skip-link helper (revealed on focus) — used by page templates.

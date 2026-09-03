@@ -1,33 +1,111 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // GRID + FLEX PRIMITIVES  ·  @layer sk.layout
+// ───────────────────────────────────────────────────────────────────────────
+// `.sk-grid` replicates Bootstrap 5's `.row`, behaviour for behaviour: a
+// wrapping flex row with negative inline margins, and every direct child a
+// 100%-wide, gutter-padded cell. Column / offset / order / gutter classes map
+// one-to-one:
+//
+//   Bootstrap                  ShopKit                   CSS
+//   .row                       .sk-grid                  flex · wrap · −½-gutter inline margins
+//   .col                       .sk-col                   flex: 1 0 0%                 (equal width)
+//   .col-auto                  .sk-col-auto              flex: 0 0 auto; inline-size: auto  (content)
+//   .col-{1..12}               .sk-col-{1..12}           flex: 0 0 auto; inline-size: n/12
+//   .col-{bp}[-n|-auto]        .sk-col-{bp}[-n|-auto]    from that breakpoint up
+//   .row-cols-{n|auto}         .sk-grid-cols-{n|auto}    sizes every child
+//   .offset-{n}                .sk-offset-{n}            margin-inline-start: n/12
+//   .order-{first|0..5|last}   .sk-order-*               order: -1 | n | 6
+//   .g-* / .gx-* / .gy-*       .sk-g-* / -gx-* / -gy-*   --sk-gutter-x / --sk-gutter-y
+//   --bs-gutter-x / -y         --sk-gutter-x / -y        defaults: --sk-grid-gap → --sk-space-gutter · 0
+//
+// Bootstrap's left/right are authored as inline-start/end, so the same classes
+// are RTL-correct with no RTLCSS pass. `.sk-col-full` is a ShopKit alias for
+// `.sk-col-12`. Gutter keys follow the spacing scale (`.sk-g-6` = --sk-space-6),
+// not Bootstrap's 0–5.
+//
+// NEVER put `.sk-gap-*` on `.sk-grid`: like `.row`, the gutter is padding plus
+// negative margin, so a real `gap` makes `.sk-col-6 + .sk-col-6` wrap.
 // ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "sass:math";
 @use "../config" as *;
 
-@layer #{$prefix}.layout {
-  // ── 12-column grid ──
-  .#{$prefix}-grid {
-    display: grid;
-    grid-template-columns: repeat(#{$grid-columns}, minmax(0, 1fr));
-    gap: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
+@mixin -col-equal { flex: 1 0 0%; }
+@mixin -col-auto  { flex: 0 0 auto; inline-size: auto; }
+@mixin -col-span($n, $of: $grid-columns) {
+  flex: 0 0 auto;
+  inline-size: math.percentage(math.div($n, $of));
+}
+
+// One breakpoint's worth of grid classes. Source order mirrors Bootstrap so the
+// same precedence holds: `.sk-grid-cols-*` (every child) is emitted before
+// `.sk-col-*` (one child), so an explicit column class always wins.
+@mixin -grid-classes($infix, $gutter-keys) {
+  .#{$prefix}-col#{$infix} { @include -col-equal; }
+
+  .#{$prefix}-grid-cols#{$infix}-auto > * { @include -col-auto; }
+  @for $i from 1 through $grid-row-cols {
+    .#{$prefix}-grid-cols#{$infix}-#{$i} > * { @include -col-span(1, $i); }
   }
 
+  .#{$prefix}-col#{$infix}-auto { @include -col-auto; }
   @for $i from 1 through $grid-columns {
-    .#{$prefix}-col-#{$i} { grid-column: span #{$i} / span #{$i}; }
+    .#{$prefix}-col#{$infix}-#{$i} { @include -col-span($i); }
   }
-  .#{$prefix}-col-auto { grid-column: auto; }
-  .#{$prefix}-col-full { grid-column: 1 / -1; }
+  .#{$prefix}-col#{$infix}-full { @include -col-span($grid-columns); }
 
-  @each $bp, $min in $breakpoints {
-    @media (min-width: $min) {
-      @for $i from 1 through $grid-columns {
-        .#{$prefix}-col-#{$bp}-#{$i} { grid-column: span #{$i} / span #{$i}; }
+  @for $i from 0 through $grid-columns - 1 {
+    @if not ($infix == "" and $i == 0) {
+      .#{$prefix}-offset#{$infix}-#{$i} {
+        margin-inline-start: math.percentage(math.div($i, $grid-columns));
       }
-      .#{$prefix}-col-#{$bp}-auto { grid-column: auto; }
-      .#{$prefix}-col-#{$bp}-full { grid-column: 1 / -1; }
     }
   }
 
-  // ── Auto-fit product grid (no breakpoint soup) ──
+  .#{$prefix}-order#{$infix}-first { order: -1; }
+  @for $i from 0 through 5 {
+    .#{$prefix}-order#{$infix}-#{$i} { order: $i; }
+  }
+  .#{$prefix}-order#{$infix}-last { order: 6; }
+
+  @each $k in $gutter-keys {
+    .#{$prefix}-g#{$infix}-#{$k},
+    .#{$prefix}-gx#{$infix}-#{$k} { --#{$prefix}-gutter-x: var(--#{$prefix}-space-#{$k}); }
+    .#{$prefix}-g#{$infix}-#{$k},
+    .#{$prefix}-gy#{$infix}-#{$k} { --#{$prefix}-gutter-y: var(--#{$prefix}-space-#{$k}); }
+  }
+}
+
+@layer #{$prefix}.layout {
+  // ── Row (Bootstrap .row) ──
+  .#{$prefix}-grid {
+    --#{$prefix}-gutter-x: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
+    --#{$prefix}-gutter-y: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    margin-block-start: calc(-1 * var(--#{$prefix}-gutter-y));
+    margin-inline: calc(-0.5 * var(--#{$prefix}-gutter-x));
+  }
+
+  .#{$prefix}-grid > * {
+    flex-shrink: 0;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    padding-inline: calc(var(--#{$prefix}-gutter-x) * 0.5);
+    margin-block-start: var(--#{$prefix}-gutter-y);
+  }
+
+  // ── Columns · row-cols · offsets · order · gutters — base, then per breakpoint ──
+  @include -grid-classes("", map.keys($space-scale));
+
+  @each $bp, $min in $breakpoints {
+    @media (min-width: $min) {
+      @include -grid-classes("-#{$bp}", $space-responsive);
+    }
+  }
+
+  // ── Auto-fit product grid (ShopKit-only · CSS Grid, no breakpoint soup) ──
   .#{$prefix}-product-grid {
     display: grid;
     gap: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
@@ -40,16 +118,22 @@
       repeat(auto-fit, minmax(min(var(--#{$prefix}-product-min), 100%), 1fr));
   }
 
-  // ── Flex primitives ──
+  // ── Flex primitives (Bootstrap .vstack / .hstack) ──
   .#{$prefix}-stack {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
+    align-self: stretch;
     gap: var(--#{$prefix}-gap, var(--#{$prefix}-space-4));
   }
+  // `.hstack` that wraps by design (toolbars, badge rows must not overflow on
+  // narrow viewports). Add `.sk-flex-nowrap` for Bootstrap's exact single line.
   .#{$prefix}-cluster {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    align-self: stretch;
     gap: var(--#{$prefix}-gap, var(--#{$prefix}-space-3));
   }
   .#{$prefix}-cluster--between { justify-content: space-between; }

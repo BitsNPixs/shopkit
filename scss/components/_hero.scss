@@ -52,6 +52,7 @@
 // left / right, and the scrim uses inset:0, so the hero mirrors cleanly.
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
+@use "../base/mixins" as *;
 
 @layer #{$prefix}.components {
   .#{$prefix}-hero {
@@ -65,14 +66,14 @@
     flex-direction: column;
     gap: var(--#{$prefix}-space-5);
     padding-block: var(--#{$prefix}-space-section);
-    padding-inline: var(--#{$prefix}-space-gutter);
+    padding-inline: calc(var(--#{$prefix}-space-gutter) * 0.5);
     background: var(--#{$prefix}-color-surface);
   }
 
   // Centering wrapper — caps line length + centers within the band.
   .#{$prefix}-hero__inner {
     inline-size: 100%;
-    max-inline-size: var(--#{$prefix}-container-max);
+    @include container-steps;
     margin-inline: auto;
   }
 

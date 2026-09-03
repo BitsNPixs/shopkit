@@ -74,3 +74,14 @@
   }
   &:focus-visible { @include focus-ring; }
 }
+
+// Bootstrap-style stepped container cap — see $container-max-widths in _config.
+// Shared by .sk-container and by full-bleed sections (hero, footer) whose inner
+// column must line up with it. --sk-container-max stays the runtime ceiling.
+@mixin container-steps {
+  @each $bp, $max in $container-max-widths {
+    @media (min-width: bp($bp)) {
+      max-inline-size: min(#{$max}, var(--#{$prefix}-container-max));
+    }
+  }
+}

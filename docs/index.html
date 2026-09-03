@@ -233,14 +233,15 @@ input[type=range] { accent-color: var(--sk-color-primary); inline-size: 8.5rem; 
   border-radius: calc(var(--sk-radius) * .5); padding:.34rem .55rem;
   font-family: var(--sk-font-mono); font-size:.66rem; }
 .u-chip.sk-ps-6, .u-chip--alt { background: var(--sk-color-primary); color: var(--sk-color-primary-contrast); }
-/* grid demo cells: .sk-col-* does the sizing, this is paint only */
-.g-cell { min-inline-size:0; padding:.5rem .4rem; text-align:center;
+/* grid demo cells: the element IS the real .sk-col-* box (its padding is the
+   gutter); the <i> inside paints the content box so gutters read as gaps */
+.g-cell > i { display:block; padding:.5rem .4rem; text-align:center; font-style:normal;
   background: var(--sk-color-primary-soft); color: var(--sk-color-text);
   border:1px dashed color-mix(in srgb, var(--sk-color-primary) 55%, transparent);
   border-radius: calc(var(--sk-radius) * .6);
   font-family: var(--sk-font-mono); font-size:.64rem;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.g-cell--alt { background: var(--sk-color-accent); color: var(--sk-color-accent-contrast);
+.g-cell--alt > i { background: var(--sk-color-accent); color: var(--sk-color-accent-contrast);
   border-style:solid; border-color:transparent; }
 
 .footnote { color: var(--sk-color-text-subtle); font-size:.82rem; }
@@ -553,7 +554,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
 
   <!-- ══════════════════ SCALES ══════════════════ -->
   <section class="sk-container sk-section sk-section--tight">
-    <div class="sk-grid">
+    <div class="sk-grid sk-gy-8">
       <div class="sk-col-12 sk-col-lg-6">
         <div class="head" style="margin-block-end:var(--sk-space-4)"><div><h2 style="font-size:var(--sk-text-xl)">Type scale</h2></div><span class="ey">modular · fluid</span></div>
         <div id="type-list"></div>
@@ -586,30 +587,53 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
   <section class="sk-container sk-section" id="grid">
     <div class="head">
       <div><h2>Grid &amp; columns</h2>
-        <p class="lede">A 12-column CSS Grid. <code>.sk-grid</code> is the row and <code>.sk-col-{n}</code> spans
-          <em>n</em> of 12 — the same mental model as Bootstrap's <code>.row</code> / <code>.col-2</code>, but built
-          on <code>gap</code> instead of negative margins. Spans are logical: switch
-          <mark class="k">Dir&nbsp;→&nbsp;RTL</mark> in the deck and column 1 moves to the inline-start edge.</p></div>
+        <p class="lede">Bootstrap's grid, one-to-one, under <code>sk-</code> names. <code>.sk-grid</code> is
+          <code>.row</code> — a wrapping flex row with negative margins — and <code>.sk-col-{n}</code> is
+          <code>.col-{n}</code>. Gutters are column padding driven by <code>--sk-gutter-x</code> /
+          <code>--sk-gutter-y</code>. Left/right are authored as inline-start/end, so switch
+          <mark class="k">Dir&nbsp;→&nbsp;RTL</mark> in the deck and offsets and order stay correct.</p></div>
       <span class="ey">@layer sk.layout</span>
     </div>
 
     <!-- 12-column ruler -->
     <div class="u-demo">
-      <p class="ey">12-column ruler · <code>.sk-grid</code> › <code>.sk-col-1</code> × 12</p>
+      <p class="ey">12-column ruler · <code>.sk-grid.sk-g-2</code> › <code>.sk-col-1</code> × 12</p>
       <div class="u-frame">
-        <div class="sk-grid sk-gap-2">
-          <div class="g-cell sk-col-1">1</div>
-          <div class="g-cell sk-col-1">2</div>
-          <div class="g-cell sk-col-1">3</div>
-          <div class="g-cell sk-col-1">4</div>
-          <div class="g-cell sk-col-1">5</div>
-          <div class="g-cell sk-col-1">6</div>
-          <div class="g-cell sk-col-1">7</div>
-          <div class="g-cell sk-col-1">8</div>
-          <div class="g-cell sk-col-1">9</div>
-          <div class="g-cell sk-col-1">10</div>
-          <div class="g-cell sk-col-1">11</div>
-          <div class="g-cell sk-col-1">12</div>
+        <div class="sk-grid sk-g-2">
+          <div class="g-cell sk-col-1"><i>1</i></div>
+          <div class="g-cell sk-col-1"><i>2</i></div>
+          <div class="g-cell sk-col-1"><i>3</i></div>
+          <div class="g-cell sk-col-1"><i>4</i></div>
+          <div class="g-cell sk-col-1"><i>5</i></div>
+          <div class="g-cell sk-col-1"><i>6</i></div>
+          <div class="g-cell sk-col-1"><i>7</i></div>
+          <div class="g-cell sk-col-1"><i>8</i></div>
+          <div class="g-cell sk-col-1"><i>9</i></div>
+          <div class="g-cell sk-col-1"><i>10</i></div>
+          <div class="g-cell sk-col-1"><i>11</i></div>
+          <div class="g-cell sk-col-1"><i>12</i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- equal-width + content-sized -->
+    <div class="u-demo sk-mt-6">
+      <p class="ey">auto layout · <code>.sk-col</code> shares the row equally · <code>.sk-col-auto</code> is content-sized</p>
+      <div class="u-frame sk-stack sk-gap-3">
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+          <div class="g-cell g-cell--alt sk-col-auto"><i>.sk-col-auto — exactly as wide as this label</i></div>
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
+          <div class="g-cell g-cell--alt sk-col-6"><i>.sk-col-6</i></div>
+          <div class="g-cell sk-col"><i>.sk-col</i></div>
         </div>
       </div>
     </div>
@@ -618,74 +642,166 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
     <div class="u-demo sk-mt-6">
       <p class="ey">splits · Bootstrap <code>.col-2</code> → ShopKit <code>.sk-col-2</code></p>
       <div class="u-frame sk-stack sk-gap-3">
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-2">.sk-col-2</div>
-          <div class="g-cell g-cell--alt sk-col-10">.sk-col-10</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-2"><i>.sk-col-2</i></div>
+          <div class="g-cell g-cell--alt sk-col-10"><i>.sk-col-10</i></div>
         </div>
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-3">.sk-col-3</div>
-          <div class="g-cell g-cell--alt sk-col-9">.sk-col-9</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-3"><i>.sk-col-3</i></div>
+          <div class="g-cell g-cell--alt sk-col-9"><i>.sk-col-9</i></div>
         </div>
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-4">.sk-col-4</div>
-          <div class="g-cell sk-col-4">.sk-col-4</div>
-          <div class="g-cell sk-col-4">.sk-col-4</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
         </div>
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-6">.sk-col-6</div>
-          <div class="g-cell sk-col-6">.sk-col-6</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-6"><i>.sk-col-6</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-col-6</i></div>
         </div>
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-3">.sk-col-3</div>
-          <div class="g-cell sk-col-3">.sk-col-3</div>
-          <div class="g-cell sk-col-3">.sk-col-3</div>
-          <div class="g-cell sk-col-3">.sk-col-3</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-3"><i>.sk-col-3</i></div>
+          <div class="g-cell sk-col-3"><i>.sk-col-3</i></div>
+          <div class="g-cell sk-col-3"><i>.sk-col-3</i></div>
+          <div class="g-cell sk-col-3"><i>.sk-col-3</i></div>
         </div>
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-8">.sk-col-8</div>
-          <div class="g-cell g-cell--alt sk-col-4">.sk-col-4</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-8"><i>.sk-col-8</i></div>
+          <div class="g-cell g-cell--alt sk-col-4"><i>.sk-col-4</i></div>
         </div>
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell g-cell--alt sk-col-full">.sk-col-full — grid-column: 1 / -1</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell g-cell--alt sk-col-12"><i>.sk-col-12</i></div>
         </div>
       </div>
     </div>
 
-    <!-- auto-wrap: one wrapper, many items -->
+    <!-- offsets -->
     <div class="u-demo sk-mt-6">
-      <p class="ey">auto-wrap · six <code>.sk-col-4</code> items in one <code>.sk-grid</code> — no row wrappers</p>
+      <p class="ey">offsets · <code>.sk-offset-{n}</code> pushes from inline-start · responsive <code>.sk-offset-{bp}-{n}</code></p>
+      <div class="u-frame sk-stack sk-gap-3">
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell g-cell--alt sk-col-4 sk-offset-4"><i>.sk-col-4 .sk-offset-4</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-3 sk-offset-3"><i>.sk-col-3 .sk-offset-3</i></div>
+          <div class="g-cell sk-col-3 sk-offset-3"><i>.sk-col-3 .sk-offset-3</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell g-cell--alt sk-col-6 sk-offset-3"><i>.sk-col-6 .sk-offset-3 — centred</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-6 sk-col-md-5 sk-offset-md-2 sk-col-lg-4 sk-offset-lg-0"><i>.sk-col-md-5 .sk-offset-md-2 .sk-col-lg-4 .sk-offset-lg-0</i></div>
+          <div class="g-cell g-cell--alt sk-col-6 sk-col-md-5 sk-col-lg-4 sk-offset-lg-4"><i>.sk-col-md-5 .sk-col-lg-4 .sk-offset-lg-4</i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- order -->
+    <div class="u-demo sk-mt-6">
+      <p class="ey">order · <code>.sk-order-first</code> · <code>.sk-order-{0–5}</code> · <code>.sk-order-last</code> — DOM order is 1 · 2 · 3</p>
       <div class="u-frame">
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-4">.sk-col-4</div>
-          <div class="g-cell sk-col-4">.sk-col-4</div>
-          <div class="g-cell sk-col-4">.sk-col-4</div>
-          <div class="g-cell sk-col-4">.sk-col-4</div>
-          <div class="g-cell sk-col-4">.sk-col-4</div>
-          <div class="g-cell sk-col-4">.sk-col-4</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col sk-order-last"><i>DOM 1 · .sk-order-last</i></div>
+          <div class="g-cell sk-col"><i>DOM 2 · no order</i></div>
+          <div class="g-cell g-cell--alt sk-col sk-order-first"><i>DOM 3 · .sk-order-first</i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- gutters -->
+    <div class="u-demo sk-mt-6">
+      <p class="ey">gutters · <code>.sk-g-{k}</code> both axes · <code>.sk-gx-{k}</code> inline · <code>.sk-gy-{k}</code> block — keys follow the spacing scale</p>
+      <div class="u-frame sk-stack sk-gap-4">
+        <div class="sk-grid sk-g-0">
+          <div class="g-cell sk-col-6"><i>.sk-g-0</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-g-0</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-g-0</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-g-0</i></div>
+        </div>
+        <div class="sk-grid sk-gx-8 sk-gy-2">
+          <div class="g-cell sk-col-6"><i>.sk-gx-8 .sk-gy-2</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-gx-8 .sk-gy-2</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-gx-8 .sk-gy-2</i></div>
+          <div class="g-cell sk-col-6"><i>.sk-gx-8 .sk-gy-2</i></div>
+        </div>
+        <div class="sk-grid sk-g-6">
+          <div class="g-cell g-cell--alt sk-col-6"><i>.sk-g-6</i></div>
+          <div class="g-cell g-cell--alt sk-col-6"><i>.sk-g-6</i></div>
+          <div class="g-cell g-cell--alt sk-col-6"><i>.sk-g-6</i></div>
+          <div class="g-cell g-cell--alt sk-col-6"><i>.sk-g-6</i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- wrapping + w-100 break -->
+    <div class="u-demo sk-mt-6">
+      <p class="ey">wrapping · six <code>.sk-col-4</code> in one <code>.sk-grid</code> · an empty <code>.sk-w-100</code> forces a new line</p>
+      <div class="u-frame sk-stack sk-gap-3">
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+          <div class="g-cell sk-col-4"><i>.sk-col-4</i></div>
+        </div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-3"><i>.sk-col-3</i></div>
+          <div class="g-cell sk-col-3"><i>.sk-col-3</i></div>
+          <div class="sk-w-100"></div>
+          <div class="g-cell g-cell--alt sk-col-3"><i>after .sk-w-100</i></div>
+          <div class="g-cell g-cell--alt sk-col-3"><i>after .sk-w-100</i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- row columns -->
+    <div class="u-demo sk-mt-6">
+      <p class="ey">row columns · <code>.sk-grid-cols-{n}</code> sizes every child (Bootstrap <code>.row-cols-{n}</code>) · <code>.sk-grid-cols-2 .sk-grid-cols-md-4</code></p>
+      <div class="u-frame">
+        <div class="sk-grid sk-g-3 sk-grid-cols-2 sk-grid-cols-md-4">
+          <div class="g-cell"><i>child</i></div>
+          <div class="g-cell"><i>child</i></div>
+          <div class="g-cell"><i>child</i></div>
+          <div class="g-cell"><i>child</i></div>
+          <div class="g-cell"><i>child</i></div>
+          <div class="g-cell"><i>child</i></div>
+          <div class="g-cell g-cell--alt sk-col-6"><i>.sk-col-6 still wins</i></div>
+          <div class="g-cell"><i>child</i></div>
         </div>
       </div>
     </div>
 
     <!-- responsive -->
     <div class="u-demo sk-mt-6">
-      <p class="ey">responsive · <code>.sk-col-12 .sk-col-sm-6 .sk-col-md-4 .sk-col-lg-3</code> — resize across 480 · 768 · 1024px</p>
+      <p class="ey">responsive · <code>.sk-col-12 .sk-col-sm-6 .sk-col-md-4 .sk-col-lg-3</code> — resize across 576 · 768 · 992px</p>
       <div class="u-frame">
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3">12 → sm 6 → md 4 → lg 3</div>
-          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3">12 → sm 6 → md 4 → lg 3</div>
-          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3">12 → sm 6 → md 4 → lg 3</div>
-          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3">12 → sm 6 → md 4 → lg 3</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3"><i>12 → sm 6 → md 4 → lg 3</i></div>
+          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3"><i>12 → sm 6 → md 4 → lg 3</i></div>
+          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3"><i>12 → sm 6 → md 4 → lg 3</i></div>
+          <div class="g-cell sk-col-12 sk-col-sm-6 sk-col-md-4 sk-col-lg-3"><i>12 → sm 6 → md 4 → lg 3</i></div>
         </div>
       </div>
     </div>
 
-    <!-- sidebar + content -->
+    <!-- nesting -->
     <div class="u-demo sk-mt-6">
-      <p class="ey">sidebar layout · <code>.sk-col-12 .sk-col-md-4 .sk-col-lg-3</code> + <code>.sk-col-12 .sk-col-md-8 .sk-col-lg-9</code></p>
+      <p class="ey">nesting · a <code>.sk-grid</code> inside a column cancels that column's padding, exactly like Bootstrap</p>
       <div class="u-frame">
-        <div class="sk-grid sk-gap-3">
-          <div class="g-cell sk-col-12 sk-col-md-4 sk-col-lg-3">filters</div>
-          <div class="g-cell g-cell--alt sk-col-12 sk-col-md-8 sk-col-lg-9">products</div>
+        <div class="sk-grid sk-g-3">
+          <div class="g-cell sk-col-12 sk-col-md-4 sk-col-lg-3"><i>filters · .sk-col-lg-3</i></div>
+          <div class="sk-col-12 sk-col-md-8 sk-col-lg-9">
+            <div class="sk-grid sk-g-3">
+              <div class="g-cell g-cell--alt sk-col-6 sk-col-lg-4"><i>nested .sk-col-lg-4</i></div>
+              <div class="g-cell g-cell--alt sk-col-6 sk-col-lg-4"><i>nested .sk-col-lg-4</i></div>
+              <div class="g-cell g-cell--alt sk-col-6 sk-col-lg-4"><i>nested .sk-col-lg-4</i></div>
+              <div class="g-cell g-cell--alt sk-col-6 sk-col-lg-4"><i>nested .sk-col-lg-4</i></div>
+              <div class="g-cell g-cell--alt sk-col-6 sk-col-lg-4"><i>nested .sk-col-lg-4</i></div>
+              <div class="g-cell g-cell--alt sk-col-6 sk-col-lg-4"><i>nested .sk-col-lg-4</i></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -695,23 +811,35 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <p class="ey">bootstrap → shopkit</p>
       <div class="sk-table-wrap">
         <table class="sk-table sk-table--compact sk-table--striped">
-          <thead><tr><th>Bootstrap</th><th>ShopKit</th><th>Notes</th></tr></thead>
+          <thead><tr><th>Bootstrap</th><th>ShopKit</th><th>Compiled behaviour</th></tr></thead>
           <tbody>
-            <tr><td><code>.container</code></td><td><code>.sk-container</code></td><td>also <code>.sk-container-fluid</code>, <code>.sk-container-narrow</code></td></tr>
-            <tr><td><code>.row</code></td><td><code>.sk-grid</code></td><td>CSS Grid with 12 tracks — one wrapper, any number of items</td></tr>
-            <tr><td><code>.col-2</code></td><td><code>.sk-col-2</code></td><td>span 2 of 12 · <code>.sk-col-1</code> … <code>.sk-col-12</code></td></tr>
-            <tr><td><code>.col-md-6</code></td><td><code>.sk-col-md-6</code></td><td>mobile-first · sm 480 · md 768 · lg 1024 · xl 1280 · 2xl 1536</td></tr>
-            <tr><td><code>.col-auto</code></td><td><code>.sk-col-auto</code></td><td>natural placement, one track</td></tr>
-            <tr><td><code>.col-12</code></td><td><code>.sk-col-full</code></td><td><code>grid-column: 1 / -1</code> — stays full even if you change the column count</td></tr>
-            <tr><td><code>.g-3</code></td><td><code>.sk-gap-3</code></td><td>or set <code>--sk-grid-gap</code>; default is <code>--sk-space-gutter</code></td></tr>
+            <tr><td><code>.container</code></td><td><code>.sk-container</code></td><td>fluid &lt; 576, then max 540 · 720 · 960 · 1140 · 1320 · padding ½ gutter</td></tr>
+            <tr><td><code>.container-fluid</code> / <code>.container-md</code></td><td><code>.sk-container-fluid</code> / <code>.sk-container-md</code></td><td>always 100% / 100% until md, stepped after</td></tr>
+            <tr><td><code>.row</code></td><td><code>.sk-grid</code></td><td><code>display:flex; flex-wrap:wrap</code> · −½ gutter margins · <code>--sk-gutter-x/-y</code></td></tr>
+            <tr><td><code>.col</code></td><td><code>.sk-col</code></td><td><code>flex: 1 0 0%</code> — equal width</td></tr>
+            <tr><td><code>.col-auto</code></td><td><code>.sk-col-auto</code></td><td><code>flex: 0 0 auto; inline-size: auto</code> — content width</td></tr>
+            <tr><td><code>.col-6</code></td><td><code>.sk-col-6</code></td><td><code>flex: 0 0 auto; inline-size: 50%</code></td></tr>
+            <tr><td><code>.col-md-6</code> … <code>.col-xxl-6</code></td><td><code>.sk-col-md-6</code> … <code>.sk-col-2xl-6</code></td><td>sm 576 · md 768 · lg 992 · xl 1200 · 2xl 1400 (= xxl)</td></tr>
+            <tr><td><code>.row-cols-3</code></td><td><code>.sk-grid-cols-3</code></td><td>every child <code>inline-size: 33.33%</code>; explicit <code>.sk-col-*</code> wins</td></tr>
+            <tr><td><code>.offset-3</code> / <code>.offset-md-3</code></td><td><code>.sk-offset-3</code> / <code>.sk-offset-md-3</code></td><td><code>margin-inline-start: 25%</code></td></tr>
+            <tr><td><code>.order-first</code> / <code>.order-2</code> / <code>.order-last</code></td><td><code>.sk-order-first</code> / <code>.sk-order-2</code> / <code>.sk-order-last</code></td><td><code>order: -1</code> / <code>2</code> / <code>6</code>, responsive too</td></tr>
+            <tr><td><code>.g-3</code> / <code>.gx-3</code> / <code>.gy-3</code></td><td><code>.sk-g-3</code> / <code>.sk-gx-3</code> / <code>.sk-gy-3</code></td><td>sets <code>--sk-gutter-x</code> / <code>-y</code>; keys are the spacing scale, not 0–5</td></tr>
+            <tr><td><code>.w-100</code></td><td><code>.sk-w-100</code></td><td><code>inline-size: 100%</code> (also breaks a row)</td></tr>
+            <tr><td><code>.align-items-center</code> / <code>.align-self-end</code> / <code>.justify-content-between</code></td><td><code>.sk-items-center</code> / <code>.sk-self-end</code> / <code>.sk-justify-between</code></td><td>same flex keywords, responsive too</td></tr>
+            <tr><td><code>.d-none .d-md-block</code></td><td><code>.sk-hidden .sk-md-block</code></td><td>identical media queries</td></tr>
+            <tr><td><code>.mx-auto</code> / <code>.ms-auto</code></td><td><code>.sk-mx-auto</code> / <code>.sk-ms-auto</code></td><td>logical, responsive too</td></tr>
+            <tr><td><code>.vstack</code> / <code>.hstack</code></td><td><code>.sk-stack</code> / <code>.sk-cluster</code></td><td>cluster wraps by design — add <code>.sk-flex-nowrap</code> for exact hstack</td></tr>
+            <tr><td><code>.visually-hidden</code></td><td><code>.sk-sr-only</code></td><td>same clip recipe, <code>:not(caption)</code> included</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <p class="footnote sk-mt-4">No negative margins and no column padding — the gutter is a real <code>gap</code>, so a
-      column's edge is the content edge. For product listings prefer <code>.sk-product-grid</code>, which auto-fills
-      from <code>--sk-product-min</code> instead of breakpoints (see the cards above).</p>
+    <p class="footnote sk-mt-4">Deliberate differences, and why: spacing keys follow ShopKit's 4px token scale
+      (<code>.sk-g-6</code> = 1.5rem = Bootstrap's <code>.g-4</code>) because the scale is shared with every component;
+      <code>.sk-cluster</code> wraps so toolbars never overflow on narrow screens; there is no <code>.sk-d-grid</code>
+      because <code>.sk-grid</code> is the row. For product listings <code>.sk-product-grid</code> (CSS Grid,
+      auto-fill from <code>--sk-product-min</code>) is still the better tool.</p>
   </section>
 
   <!-- ══════════════════ SPACING UTILITIES (PHASE 2) ══════════════════ -->
@@ -861,7 +989,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       <span class="ey">@layer sk.components</span>
     </div>
 
-    <div class="sk-grid sk-gap-5">
+    <div class="sk-grid sk-g-5">
       <div class="sk-col-12 sk-col-md-6">
         <div class="sk-stack">
           <div class="sk-field">
@@ -949,7 +1077,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         </div>
       </div>
 
-      <div class="sk-grid sk-gap-6 sk-mt-6">
+      <div class="sk-grid sk-g-6 sk-mt-6">
         <div class="sk-col-12 sk-col-md-6">
           <p class="ey sk-mb-3">skeleton — loading a product card</p>
           <div style="max-inline-size:20rem">
@@ -997,7 +1125,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </div>
     </div>
 
-    <div class="sk-grid sk-gap-8 sk-mt-7">
+    <div class="sk-grid sk-g-8 sk-mt-7">
       <div class="sk-col-12 sk-col-md-6">
         <p class="ey sk-mb-3">tabs</p>
         <div class="sk-tabs" id="demo-tabs">
@@ -1069,7 +1197,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
         <span class="ey">@layer sk.components</span>
       </div>
 
-      <div class="sk-grid sk-gap-6">
+      <div class="sk-grid sk-g-6">
         <div class="sk-col-12 sk-col-md-6">
           <p class="ey sk-mb-3">toasts — static preview · <button class="sk-btn sk-btn--sm sk-btn--soft" type="button" id="demo-toast-btn">fire a live one</button></p>
           <div class="sk-stack" style="--sk-gap:var(--sk-space-2)">
@@ -1162,7 +1290,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </ol>
     </nav>
 
-    <div class="sk-grid sk-gap-6 sk-mt-6">
+    <div class="sk-grid sk-g-6 sk-mt-6">
       <div class="sk-col-12 sk-col-md-6">
         <p class="ey sk-mb-3">price — regular · sale · range</p>
         <div class="sk-stack sk-gap-3">
@@ -1244,7 +1372,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </ul>
     </nav>
 
-    <div class="sk-grid sk-gap-6 sk-mt-7">
+    <div class="sk-grid sk-g-6 sk-mt-7">
       <div class="sk-col-12 sk-col-md-5 sk-col-lg-4">
         <p class="ey sk-mb-3">facets — filter sidebar (composes .sk-check + .sk-range)</p>
         <div class="sk-facets" style="border:1px solid var(--sk-color-border-subtle);border-radius:var(--sk-radius-lg);padding-inline:var(--sk-space-4)">
@@ -1332,7 +1460,7 @@ mark.k { background: var(--sk-color-primary-soft); color: inherit; padding:0 .25
       </section>
     </div>
 
-    <div class="sk-grid sk-gap-8 sk-mt-7">
+    <div class="sk-grid sk-g-8 sk-mt-7">
       <div class="sk-col-12 sk-col-md-7">
         <p class="ey sk-mb-3">checkout progress · open cart drawer</p>
         <ol class="sk-steps" style="max-inline-size:34rem">

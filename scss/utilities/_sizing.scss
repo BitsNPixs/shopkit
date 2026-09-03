@@ -1,0 +1,37 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// SIZING UTILITIES  ·  @layer sk.utilities
+// ───────────────────────────────────────────────────────────────────────────
+// Bootstrap 5 sizing utilities, authored logically (inline-size / block-size
+// equal width / height in horizontal writing modes):
+//
+//   .w-{25|50|75|100|auto}   → .sk-w-*        inline-size
+//   .h-{25|50|75|100|auto}   → .sk-h-*        block-size
+//   .mw-100 / .mh-100        → .sk-mw-100 / .sk-mh-100
+//   .vw-100 / .vh-100        → .sk-vw-100 / .sk-vh-100
+//   .min-vw-100 / .min-vh-100 → .sk-min-vw-100 / .sk-min-vh-100
+//
+// `.sk-w-100` is a real width utility. Inside `.sk-grid` it therefore also
+// works as Bootstrap's row-break trick (an empty `.sk-w-100` forces a new line).
+// No responsive variants — Bootstrap ships none either.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "../config" as *;
+
+@if map.get($utilities-enabled, "sizing") {
+  $-sizes: (25: 25%, 50: 50%, 75: 75%, 100: 100%, "auto": auto);
+
+  @layer #{$prefix}.utilities {
+    @each $k, $v in $-sizes {
+      .#{$prefix}-w-#{$k} { inline-size: $v; }
+      .#{$prefix}-h-#{$k} { block-size: $v; }
+    }
+
+    .#{$prefix}-mw-100 { max-inline-size: 100%; }
+    .#{$prefix}-mh-100 { max-block-size: 100%; }
+
+    .#{$prefix}-vw-100 { inline-size: 100vw; }
+    .#{$prefix}-vh-100 { block-size: 100vh; }
+    .#{$prefix}-min-vw-100 { min-inline-size: 100vw; }
+    .#{$prefix}-min-vh-100 { min-block-size: 100vh; }
+  }
+}

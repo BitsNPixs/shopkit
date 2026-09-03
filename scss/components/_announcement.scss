@@ -41,7 +41,7 @@
     justify-content: center;
     gap: var(--#{$prefix}-space-2);
     padding-block: var(--#{$prefix}-space-2);
-    padding-inline: var(--#{$prefix}-space-gutter);
+    padding-inline: calc(var(--#{$prefix}-space-gutter) * 0.5);
     background: var(--#{$prefix}-announcement-bg);
     color: var(--#{$prefix}-announcement-fg);
     font-size: var(--#{$prefix}-text-sm);

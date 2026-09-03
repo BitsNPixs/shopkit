@@ -1,18 +1,47 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // CONTAINER  ·  @layer sk.layout
+// ───────────────────────────────────────────────────────────────────────────
+// Bootstrap 5 `.container` parity: fluid below `sm`, then a stepped
+// max-inline-size per breakpoint ($container-max-widths), centred, with
+// half-gutter inline padding. That half-gutter is what makes a nested
+// `.sk-grid` (−½-gutter margins) and its columns (+½-gutter padding) land
+// content flush with the container's content edge — Bootstrap's invariant.
+//
+//   .container         → .sk-container
+//   .container-fluid   → .sk-container-fluid    100% at every width
+//   .container-{bp}    → .sk-container-{bp}     100% until bp, stepped after
+//   (ShopKit-only)       .sk-container-narrow   --sk-container-narrow reading measure
+//
+// --sk-container-max stays the runtime ceiling: every step is
+// min(step, --sk-container-max), so lowering the token still narrows the page.
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
+$-all: ".#{$prefix}-container, .#{$prefix}-container-fluid, .#{$prefix}-container-narrow";
+@each $bp, $_max in $container-max-widths {
+  $-all: "#{$-all}, .#{$prefix}-container-#{$bp}";
+}
+
 @layer #{$prefix}.layout {
-  .#{$prefix}-container,
-  .#{$prefix}-container-fluid,
-  .#{$prefix}-container-narrow {
+  #{$-all} {
+    --#{$prefix}-gutter-x: var(--#{$prefix}-space-gutter);
+    --#{$prefix}-gutter-y: 0;
+
     inline-size: 100%;
     margin-inline: auto;
-    padding-inline: var(--#{$prefix}-space-gutter);
+    padding-inline: calc(var(--#{$prefix}-gutter-x) * 0.5);
   }
 
-  .#{$prefix}-container        { max-inline-size: var(--#{$prefix}-container-max); }
   .#{$prefix}-container-narrow { max-inline-size: var(--#{$prefix}-container-narrow); }
   .#{$prefix}-container-fluid  { max-inline-size: none; }
+
+  // Stepped caps: at each breakpoint, `.sk-container` plus every
+  // `.sk-container-{bp}` whose own breakpoint is at or below it.
+  $-stepped: ".#{$prefix}-container";
+  @each $bp, $max in $container-max-widths {
+    $-stepped: "#{$-stepped}, .#{$prefix}-container-#{$bp}";
+    @media (min-width: bp($bp)) {
+      #{$-stepped} { max-inline-size: min(#{$max}, var(--#{$prefix}-container-max)); }
+    }
+  }
 }

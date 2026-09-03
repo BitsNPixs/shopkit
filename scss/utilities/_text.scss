@@ -1,0 +1,31 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// TEXT ALIGNMENT UTILITIES  ·  @layer sk.utilities
+// ───────────────────────────────────────────────────────────────────────────
+// Bootstrap 5's `.text-start / .text-center / .text-end` (+ responsive
+// `.text-{bp}-*`). Bootstrap gets RTL by flipping `left`/`right` with RTLCSS;
+// ShopKit authors the logical keywords directly, so `.sk-text-start` is the
+// leading edge in both directions with one stylesheet.
+//
+// There is deliberately no `.sk-text-left` / `.sk-text-right`: physical
+// alignment would break the logical-properties invariant (and the lint gate).
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "../config" as *;
+
+@if map.get($utilities-enabled, "text") {
+  $-align: ("start": start, "center": center, "end": end);
+
+  @layer #{$prefix}.utilities {
+    @each $s, $v in $-align {
+      .#{$prefix}-text-#{$s} { text-align: $v; }
+    }
+
+    @each $bp, $min in $breakpoints {
+      @media (min-width: $min) {
+        @each $s, $v in $-align {
+          .#{$prefix}-text-#{$bp}-#{$s} { text-align: $v; }
+        }
+      }
+    }
+  }
+}

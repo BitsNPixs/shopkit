@@ -1,16 +1,21 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // DISPLAY UTILITIES  ·  @layer sk.utilities
 // ───────────────────────────────────────────────────────────────────────────
-// Single-purpose `display` helpers, base + responsive (mobile-first). Enables
-// the classic responsive show/hide pattern:  `class="sk-hidden sk-md-flex"`.
+// Bootstrap 5 display utilities, base + responsive (mobile-first) + print:
+//
+//   .d-none              → .sk-hidden          .d-{bp}-none    → .sk-{bp}-hidden
+//   .d-block / -inline / -inline-block / -flex / -inline-flex / -inline-grid
+//                        → .sk-block / .sk-inline / …           .d-{bp}-{v} → .sk-{bp}-{v}
+//   .d-print-{v}         → .sk-print-{v}
+//
+// Enables the classic responsive show/hide pattern: `class="sk-hidden sk-md-flex"`.
 //
 // Responsive form inserts the breakpoint right after the prefix — `.sk-md-flex`
 // — because the display value is a standalone token (no base name to sit before
 // the breakpoint, unlike `.sk-mt-md-8`).
 //
-// NOTE: `.sk-grid` is intentionally NOT emitted here — it is the 12-column
-// layout primitive (scss/layout/_grid.scss). Use that, `.sk-product-grid`, or
-// author your own grid container.
+// NOT emitted, on purpose: `.d-grid` (`.sk-grid` is the 12-column row —
+// scss/layout/_grid.scss) and `.d-table*` (`.sk-table` is the table component).
 //
 // `[hidden]` is re-asserted LAST in this layer so a display utility can never
 // force a `hidden` element visible: a bare `[hidden]` and `.sk-flex` share
@@ -27,17 +32,16 @@
     "inline-block": inline-block,
     "flex":         flex,
     "inline-flex":  inline-flex,
+    "inline-grid":  inline-grid,
     "contents":     contents,
     "hidden":       none,
   );
 
   @layer #{$prefix}.utilities {
-    // ── base ──
     @each $name, $val in $-values {
       .#{$prefix}-#{$name} { display: $val; }
     }
 
-    // ── responsive (mobile-first, min-width): .sk-md-flex ──
     @each $bp, $min in $breakpoints {
       @media (min-width: $min) {
         @each $name, $val in $-values {
@@ -46,7 +50,12 @@
       }
     }
 
-    // ── guard: a display utility must never override [hidden] ──
+    @media print {
+      @each $name, $val in $-values {
+        .#{$prefix}-print-#{$name} { display: $val; }
+      }
+    }
+
     [hidden] { display: none; }
   }
 }

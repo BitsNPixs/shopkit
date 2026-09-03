@@ -65,7 +65,7 @@
     --#{$prefix}-footer-fg: var(--#{$prefix}-color-text);
 
     padding-block: var(--#{$prefix}-space-section);
-    padding-inline: var(--#{$prefix}-space-gutter);
+    padding-inline: calc(var(--#{$prefix}-space-gutter) * 0.5);
     border-block-start: 1px solid var(--#{$prefix}-color-border);
     background: var(--#{$prefix}-footer-bg);
     color: var(--#{$prefix}-footer-fg);
@@ -73,7 +73,7 @@
 
   // ── Centred content column ──
   .#{$prefix}-footer__inner {
-    max-inline-size: var(--#{$prefix}-container-max);
+    @include container-steps;
     margin-inline: auto;
     inline-size: 100%;
   }

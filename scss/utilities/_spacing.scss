@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // SPACING UTILITIES  ·  @layer sk.utilities
 // ───────────────────────────────────────────────────────────────────────────
-// Single-purpose margin & padding helpers, generated from the $space-scale.
+// Bootstrap 5's margin & padding helpers, generated from the $space-scale.
 // LOGICAL properties throughout, so every helper flips automatically under
-// `dir="rtl"` and vertical writing modes — no physical top/left anywhere.
+// `dir="rtl"` and vertical writing modes — Bootstrap's `s`/`e` (start/end)
+// naming, with no physical top/left anywhere.
 //
 //   suffix   axis / side (logical)          physical (LTR) analogue
 //   ──────   ───────────────────────        ────────────────────────
@@ -16,9 +17,12 @@
 //   e        inline-end                      right
 //
 //   .sk-mt-4        base           block-start margin, --sk-space-4
-//   .sk-mt-md-8     responsive     from the `md` breakpoint up (curated subset)
+//   .sk-mt-md-8     responsive     every side, from the `md` breakpoint up (curated keys)
 //   .sk-mt-n4       negative       margins only, calc(token * -1)
-//   .sk-mx-auto     auto           margins only
+//   .sk-mx-auto     auto           margins only — base + responsive (.sk-ms-md-auto)
+//
+// Keys are ShopKit's 4px scale (`.sk-mt-6` = 1.5rem), not Bootstrap's 0–5 —
+// the scale is the token system and is shared with every component.
 //
 // Values reference the spacing TOKENS (`--sk-space-{k}`), never raw lengths, so
 // utilities track the scale and re-skin at runtime. Everything sits in the
@@ -29,7 +33,6 @@
 @use "../config" as *;
 
 @if map.get($utilities-enabled, "spacing") {
-  // abbreviation → logical CSS property it sets
   $-props: (
     "m":  margin,
     "mx": margin-inline,
@@ -46,27 +49,20 @@
     "ps": padding-inline-start,
     "pe": padding-inline-end,
   );
-  // margin-only abbreviations (padding can't be auto or negative)
   $-margins: ("m", "mx", "my", "mt", "mb", "ms", "me");
-  // Props that get RESPONSIVE variants — the common axis / block-side helpers.
-  // The per-inline-side ones (ms/me/ps/pe) stay base-only: rarely set per
-  // breakpoint, and dropping them keeps the responsive matrix ~30% smaller.
-  $-responsive-props: ("m", "mx", "my", "mt", "mb", "p", "px", "py", "pt", "pb");
+  $-responsive-props: ("m", "mx", "my", "mt", "mb", "ms", "me", "p", "px", "py", "pt", "pb", "ps", "pe");
 
   @layer #{$prefix}.utilities {
-    // ── Base: every prop × the full scale ──
     @each $abbr, $prop in $-props {
       @each $k, $_val in $space-scale {
         .#{$prefix}-#{$abbr}-#{$k} { #{$prop}: var(--#{$prefix}-space-#{$k}); }
       }
     }
 
-    // ── Auto margins (centering / pushing apart) ──
     @each $abbr in $-margins {
       .#{$prefix}-#{$abbr}-auto { #{map.get($-props, $abbr)}: auto; }
     }
 
-    // ── Negative margins (base breakpoint only) ──
     @each $abbr in $-margins {
       $prop: map.get($-props, $abbr);
       @each $k in $space-negative {
@@ -74,7 +70,6 @@
       }
     }
 
-    // ── Responsive variants: curated props × curated steps (mobile-first) ──
     @each $bp, $min in $breakpoints {
       @media (min-width: $min) {
         @each $abbr in $-responsive-props {
@@ -83,8 +78,7 @@
             .#{$prefix}-#{$abbr}-#{$bp}-#{$k} { #{$prop}: var(--#{$prefix}-space-#{$k}); }
           }
         }
-        // auto only on the responsive margin props (mx/my/m most useful here)
-        @each $abbr in ("m", "mx", "my", "mt", "mb") {
+        @each $abbr in $-margins {
           .#{$prefix}-#{$abbr}-#{$bp}-auto { #{map.get($-props, $abbr)}: auto; }
         }
       }

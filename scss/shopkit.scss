@@ -17,4 +17,4 @@
 @use "base";       // 3 · @layer sk.reset, sk.base
 @use "layout";     // 4 · @layer sk.layout
 @use "components"; // 5 · @layer sk.components
-@use "utilities";  // 6 · @layer sk.utilities  (spacing · display · flex · animation)
+@use "utilities";  // 6 · @layer sk.utilities  (spacing · display · flex · sizing · text · animation)

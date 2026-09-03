@@ -23,18 +23,33 @@ $leading-tight:  1.14  !default;     // headings
 $leading-snug:   1.35  !default;
 
 // ── Layout ─────────────────────────────────────────────────────────────────
-$container-max:    1240px !default;
-$container-narrow: 760px  !default;
+// The grid replicates Bootstrap 5 behaviour for behaviour: same breakpoints,
+// same stepped container widths, same 12 columns. `2xl` is ShopKit's name for
+// Bootstrap's `xxl` (class names keep the ShopKit convention).
+$container-max:    1320px !default;   // runtime ceiling (--sk-container-max) = Bootstrap's xxl step
+$container-narrow: 760px  !default;   // ShopKit-only reading measure (.sk-container-narrow)
 $grid-columns:     12     !default;
+$grid-row-cols:    6      !default;   // .sk-grid-cols-{1..n}   (Bootstrap $grid-row-columns)
 
-// Mobile-first, min-width breakpoints. Keys are used to generate responsive
-// class suffixes (e.g. `.sk-col-md-6`) and to scale section rhythm.
+// Mobile-first, min-width breakpoints — Bootstrap 5 values. Keys generate the
+// responsive class suffixes (e.g. `.sk-col-md-6`, `.sk-offset-lg-2`).
 $breakpoints: (
-  "sm":  480px,
+  "sm":  576px,
   "md":  768px,
-  "lg":  1024px,
-  "xl":  1280px,
-  "2xl": 1536px,
+  "lg":  992px,
+  "xl":  1200px,
+  "2xl": 1400px,
+) !default;
+
+// `.sk-container` max-inline-size at each breakpoint — Bootstrap 5 values.
+// Below `sm` the container is fluid. Every step is additionally capped by the
+// runtime token --sk-container-max, so lowering that token still narrows the page.
+$container-max-widths: (
+  "sm":  540px,
+  "md":  720px,
+  "lg":  960px,
+  "xl":  1140px,
+  "2xl": 1320px,
 ) !default;
 
 // ── Spacing scale ──────────────────────────────────────────────────────────
@@ -70,12 +85,14 @@ $utilities-enabled: (
   "spacing": true,
   "display": true,
   "flex":    true,
+  "sizing":  true,   // Bootstrap w-/h-/mw-/mh-/vw-/vh- (.sk-w-100 …)
+  "text":    true,   // Bootstrap text-start/-center/-end (logical, RTL-safe)
   "motion":  true,   // Phase 6 · animation utilities (.sk-animate-*)
 ) !default;
 
 // Curated subset of spacing keys that ALSO get responsive variants
-// (e.g. `.sk-mt-md-8`). A subset — not the whole scale — so the responsive
-// matrix stays small. Every entry must be a key of $space-scale.
+// (e.g. `.sk-mt-md-8`, `.sk-g-md-6`). A subset — not the whole scale — so the
+// responsive matrix stays small. Every entry must be a key of $space-scale.
 $space-responsive: (0, 2, 3, 4, 6, 8, 12, 16) !default;
 
 // Spacing keys that get NEGATIVE margin utilities (e.g. `.sk-mt-n4`). Margins
