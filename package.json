@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "The e-commerce design system you can copy-paste. HTML + CSS (SCSS) with token-driven runtime theming, dark mode, and multi-brand.",
   "scripts": {
+    "dev": "npx --yes serve@14 . -l 3000",
     "build": "sass scss/shopkit.scss dist/shopkit.css --style=expanded --no-source-map && sass scss/shopkit.scss dist/shopkit.min.css --style=compressed --no-source-map",
     "watch": "sass --watch scss/shopkit.scss dist/shopkit.css",
     "lint": "stylelint \"scss/**/*.scss\"",

@@ -71,6 +71,7 @@ $utilities-enabled: (
   "display": true,
   "flex":    true,
   "motion":  true,   // Phase 6 · animation utilities (.sk-animate-*)
+  "grid":    true,   // grid placement utilities (.sk-col-start-*, .sk-order-*)
 ) !default;
 
 // Curated subset of spacing keys that ALSO get responsive variants

@@ -1,5 +1,18 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // GRID + FLEX PRIMITIVES  ·  @layer sk.layout
+// ───────────────────────────────────────────────────────────────────────────
+// Three ways to build a row, in increasing order of control:
+//
+//   .sk-grid              12-column track set; children pick spans (.sk-col-6)
+//   .sk-grid-cols-{n}     an n-column track set; children just flow into it
+//   .sk-grid--auto        responsive with no breakpoints — tracks are derived
+//                         from --sk-grid-min via auto-fill
+//
+// Placement helpers (.sk-col-start-*, .sk-row-*, .sk-order-*) live in
+// utilities/_grid.scss so they can be compiled out via $utilities-enabled.
+// Gap and alignment come from the flex utilities (.sk-gap-*, .sk-items-*,
+// .sk-justify-*) — those already apply to grid containers, so they are not
+// restated here.
 // ═══════════════════════════════════════════════════════════════════════════
 @use "../config" as *;
 
@@ -25,6 +38,79 @@
       .#{$prefix}-col-#{$bp}-auto { grid-column: auto; }
       .#{$prefix}-col-#{$bp}-full { grid-column: 1 / -1; }
     }
+  }
+
+  // ── Fixed column-count grids ──────────────────────────────────────────────
+  // For the common case where every child takes exactly one track, so no
+  // per-child span class is needed at all. `minmax(0, 1fr)` (not plain `1fr`)
+  // keeps long words and overflowing media from blowing the track out.
+  @for $i from 1 through $grid-columns {
+    .#{$prefix}-grid-cols-#{$i} {
+      display: grid;
+      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
+      gap: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
+    }
+  }
+
+  @each $bp, $min in $breakpoints {
+    @media (min-width: $min) {
+      @for $i from 1 through $grid-columns {
+        .#{$prefix}-grid-cols-#{$bp}-#{$i} {
+          grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
+        }
+      }
+    }
+  }
+
+  // ── Auto grid — responsive without a single media query ───────────────────
+  // Tracks are derived from an ideal minimum width; the browser fits as many
+  // as the container allows. `min(…, 100%)` stops a track from overflowing a
+  // container narrower than --sk-grid-min. This is container-driven, so it
+  // reflows correctly inside a sidebar or a modal, which breakpoints cannot do.
+  .#{$prefix}-grid--auto {
+    --#{$prefix}-grid-min: 16rem;
+
+    display: grid;
+    gap: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
+    grid-template-columns:
+      repeat(auto-fill, minmax(min(var(--#{$prefix}-grid-min), 100%), 1fr));
+  }
+  // auto-fit collapses empty tracks, so the last row stretches to fill.
+  .#{$prefix}-grid--fit {
+    grid-template-columns:
+      repeat(auto-fit, minmax(min(var(--#{$prefix}-grid-min, 16rem), 100%), 1fr));
+  }
+
+  // ── Flow modifiers ────────────────────────────────────────────────────────
+  // Dense backfills holes left by wide/offset items. Visual order stops
+  // matching DOM order, so keep it off anything sequential (tab order does
+  // not follow it).
+  .#{$prefix}-grid--dense { grid-auto-flow: dense; }
+  .#{$prefix}-grid--flow-col {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  // ── Shell — the two-column rail + content shape ───────────────────────────
+  // The rail takes its configured inline size, the content column takes the
+  // rest. Below the lg breakpoint the two stack, so it needs no per-page media
+  // query. Pairs with .sk-sidenav.
+  .#{$prefix}-shell {
+    --#{$prefix}-shell-rail: 15rem;
+
+    display: grid;
+    gap: var(--#{$prefix}-grid-gap, var(--#{$prefix}-space-gutter));
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: bp("lg")) {
+    .#{$prefix}-shell {
+      grid-template-columns: var(--#{$prefix}-shell-rail) minmax(0, 1fr);
+      align-items: start;
+    }
+    // Puts the rail after the content in the VISUAL order while leaving it
+    // first in the DOM (so it stays first for screen readers and tab order).
+    .#{$prefix}-shell--end { grid-template-columns: minmax(0, 1fr) var(--#{$prefix}-shell-rail); }
+    .#{$prefix}-shell--end > :first-child { order: 2; }
   }
 
   // ── Auto-fit product grid (no breakpoint soup) ──

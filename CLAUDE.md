@@ -132,8 +132,18 @@ fails.
 - **Utility groups are config-gated.** Each partial wraps its output in
   `@if map.get($utilities-enabled, "<group>")`; a new group needs a key in `_config.scss`.
 - **`docs/preview.html`** is a Phase-1 artifact nothing links to. `docs/index.html` is the
-  live showcase; `docs/landing.html` is the marketing page and the only one that loads
-  `customizer.js`.
+  live showcase, `docs/layout.html` documents the grid/layout layer, and `docs/landing.html`
+  is the marketing page and the only one that loads `customizer.js`.
+- **`serve.json`: every docs entry point must REDIRECT to a real `.html` URL — never rewrite
+  to one.** The docs pages link to each other relatively (`layout.html`), so the browser
+  resolves those against whatever URL is in the address bar. A *rewrite* serves the file but
+  leaves the URL alone, so `/` serving `docs/index.html` makes `layout.html` resolve to
+  `/layout.html` → 404. A *redirect* moves the address bar to `/docs/index.html`, where the
+  relative link resolves correctly. Same reason `cleanUrls` is `false`: it would rewrite
+  `/docs/index.html` → `/docs`, extensionless *and* slashless, breaking the base the same way.
+  Two more traps: `serve-handler` rejects unknown keys (no `_comment` field), and with
+  `cleanUrls: false` it never serves `index.html` for a bare directory — hence the explicit
+  `/docs` and `/docs/` redirects, without which `/docs/` renders a raw file listing.
 
 ## Adding a component
 

@@ -48,12 +48,13 @@ scss/
 ├── _layers.scss      @layer order (emitted first): reset→tokens→base→layout→components→utilities
 ├── tokens/           Tier 1 primitives · Tier 2 semantic · Tier 3 component metrics
 ├── base/             reset · typography · a11y · _mixins (focus-ring…) · _variants (variant/size/state) · _motion (transition())
-├── layout/           container · grid · section · stack · cluster
+├── layout/           container · grid (12-col · cols-{n} · auto · dense) · shell · section · stack · cluster
 ├── components/       ✅ Core UI: button · button-group · form · badge · alert · modal · tabs · accordion · skeleton · tooltip
 │                      ✅ Commerce: price · rating · swatch · stepper · wishlist · product-card · breadcrumb · pagination · facets · empty
 │                      ✅ Sections: announcement · navbar · menu · mega-menu · drawer · hero · cart · checkout-steps · footer
 │                      ✅ Coverage fill: toast · table · progress · input-group · spinner · close
-├── utilities/        ✅ spacing · ✅ display · ✅ flex · ✅ animation (motion)
+│                      ✅ Nav: sidenav
+├── utilities/        ✅ spacing · ✅ display · ✅ flex · ✅ animation (motion) · ✅ grid (placement)
 └── shopkit.scss      entry — @use of each layer in cascade order
 ```
 

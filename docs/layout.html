@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopKit · Layout &amp; grid system</title>
+<meta name="description" content="ShopKit layout layer — a 12-column grid, fixed column sets, container-driven auto grids, offsets, ordering and the sidebar shell. All RTL-safe, all token-driven.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- ShopKit library (compiled) -->
+<link id="sk-css" rel="stylesheet" href="../dist/shopkit.css">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════
+   DOCS-PAGE CHROME — same rules as index.html: every value below comes from
+   a ShopKit semantic token, so the page re-skins live from the control deck.
+   The sidebar is NOT chrome — it is the real .sk-sidenav component.
+   ═══════════════════════════════════════════════════════════════════════ */
+.ey { font-family: var(--sk-font-mono); text-transform: uppercase; letter-spacing:.18em;
+      font-size:.72rem; color: var(--sk-color-text-muted); font-weight:500; }
+
+/* ---- control deck (sticky) ---- */
+.deck { position: sticky; inset-block-start:0; z-index: var(--sk-z-sticky);
+  background: color-mix(in srgb, var(--sk-color-surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+  border-block-end:1px solid var(--sk-color-border); }
+.deck__in { display:flex; flex-wrap:wrap; align-items:center; gap: var(--sk-space-5);
+  padding-block: var(--sk-space-3); }
+.brandmark { display:flex; align-items:center; gap:.55rem; font-family: var(--sk-font-heading);
+  font-weight:700; font-size:1.15rem; letter-spacing:-.03em; text-decoration:none; color:inherit; }
+.brandmark .dot { inline-size:.85rem; block-size:.85rem; border-radius: calc(var(--sk-radius) * .5);
+  background: linear-gradient(135deg, var(--sk-color-primary), var(--sk-color-accent)); }
+.brandmark small { font-family: var(--sk-font-mono); font-size:.6rem; letter-spacing:.1em;
+  color: var(--sk-color-text-subtle); text-transform:uppercase; align-self:flex-start; margin-block-start:.1rem; }
+
+.controls { display:flex; flex-wrap:wrap; align-items:flex-end; gap: var(--sk-space-5);
+  margin-inline-start:auto; }
+.ctl { display:flex; flex-direction:column; gap:.32rem; }
+.ctl > .ey { font-size:.58rem; letter-spacing:.14em; }
+.seg { display:inline-flex; padding:2px; gap:2px; background: var(--sk-color-surface-alt);
+  border:1px solid var(--sk-color-border); border-radius: var(--sk-radius); }
+.seg button { font: inherit; font-weight:600; font-size:.8rem; padding:.34rem .62rem;
+  color: var(--sk-color-text-muted); border-radius: calc(var(--sk-radius) - 2px); }
+.seg button[aria-pressed="true"] { background: var(--sk-color-surface); color: var(--sk-color-text);
+  box-shadow: var(--sk-shadow-sm); }
+.range-row { display:flex; align-items:center; gap:.55rem; }
+input[type=range] { accent-color: var(--sk-color-primary); inline-size: 7.5rem; block-size:1.1rem; }
+.range-val { font-family: var(--sk-font-mono); font-size:.72rem; color: var(--sk-color-text-muted);
+  min-inline-size:3.4rem; }
+
+/* ---- section scaffolding ---- */
+.head { display:flex; align-items:baseline; gap: var(--sk-space-4); flex-wrap:wrap;
+  margin-block-end: var(--sk-space-5); }
+.head h2 { font-size: var(--sk-text-xl); }
+.head .ey { margin-inline-start:auto; }
+.lede { color: var(--sk-color-text-muted); max-inline-size: 68ch; }
+.tag { font-family: var(--sk-font-mono); font-size:.6rem; text-transform:uppercase; letter-spacing:.1em;
+  padding:.18rem .44rem; border-radius: var(--sk-radius-pill); vertical-align:middle;
+  background: var(--sk-color-primary-soft); color: var(--sk-color-primary); font-weight:600; }
+.sec { padding-block: var(--sk-space-10); border-block-start:1px solid var(--sk-color-border-subtle);
+  scroll-margin-block-start: 5rem; }
+.sec:first-of-type { border-block-start:0; padding-block-start: var(--sk-space-6); }
+
+/* ---- demo surface + cells ---- */
+.demo { padding: var(--sk-space-4); border:1px dashed var(--sk-color-border-strong);
+  border-radius: var(--sk-radius); background: var(--sk-color-surface-sunken); }
+.cell { display:flex; align-items:center; justify-content:center; min-block-size:3.25rem;
+  padding: var(--sk-space-2); border-radius: calc(var(--sk-radius) * .6);
+  background: var(--sk-color-primary-soft); color: var(--sk-color-primary);
+  font-family: var(--sk-font-mono); font-size:.68rem; font-weight:600; text-align:center;
+  border:1px solid color-mix(in srgb, var(--sk-color-primary) 22%, transparent); }
+.cell.alt { background: var(--sk-color-surface); color: var(--sk-color-text-muted);
+  border-color: var(--sk-color-border); }
+.cell.acc { background: color-mix(in srgb, var(--sk-color-accent) 16%, transparent);
+  color: var(--sk-color-accent); border-color: color-mix(in srgb, var(--sk-color-accent) 30%, transparent); }
+
+/* ---- code sample ---- */
+pre.code { font-family: var(--sk-font-mono); font-size:.74rem; line-height:1.7; margin:0;
+  margin-block-start: var(--sk-space-3); padding: var(--sk-space-4);
+  border:1px solid var(--sk-color-border); border-radius: var(--sk-radius);
+  background: var(--sk-color-surface); color: var(--sk-color-text-muted);
+  overflow-x:auto; white-space:pre; }
+pre.code b { color: var(--sk-color-primary); font-weight:700; }
+pre.code i { opacity:.62; font-style:normal; }
+
+/* ---- ruler strip showing the 12 tracks ---- */
+.ruler { display:grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--sk-space-1);
+  margin-block-end: var(--sk-space-2); }
+.ruler span { block-size:.4rem; border-radius:2px; background: var(--sk-color-border-strong); }
+
+.note { display:flex; gap:.6rem; padding: var(--sk-space-3) var(--sk-space-4);
+  border-inline-start:3px solid var(--sk-color-info); border-radius: var(--sk-radius);
+  background: var(--sk-color-info-soft); font-size: var(--sk-text-sm);
+  color: var(--sk-color-text); margin-block-start: var(--sk-space-4); }
+
+.footnote { color: var(--sk-color-text-subtle); font-size: var(--sk-text-sm); }
+
+/* Clear the sticky deck when the rail pins itself. --deck-h is measured at
+   runtime, so the rail stays clear at any deck wrap. */
+.sk-sidenav { --sk-sidenav-offset: calc(var(--deck-h, 5rem) + var(--sk-space-4)); }
+
+/* Below lg the shell stacks, so the rail sits ABOVE the content. Keep the
+   page links (useful) and drop the long section list (would bury the page). */
+@media (max-width: 1023px) {
+  .sk-sidenav { max-inline-size: none; }
+  .sk-sidenav--sticky { position: static; max-block-size: none; }
+  #toc { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="sk-skip-link" href="#main">Skip to content</a>
+
+<!-- ══════════════════ CONTROL DECK ══════════════════ -->
+<header class="deck">
+  <div class="sk-container deck__in">
+    <a class="brandmark" href="landing.html"><span class="dot"></span> ShopKit <small>v0.1 · home ↗</small></a>
+
+    <div class="controls">
+      <div class="ctl">
+        <span class="ey">Mode</span>
+        <div class="seg" id="seg-mode" role="group" aria-label="Colour mode">
+          <button data-v="light" aria-pressed="false">Light</button>
+          <button data-v="dark" aria-pressed="false">Dark</button>
+          <button data-v="system" aria-pressed="true">System</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ey">Brand</span>
+        <div class="seg" id="seg-brand" role="group" aria-label="Brand">
+          <button data-v="aurora" aria-pressed="true">Aurora</button>
+          <button data-v="verde" aria-pressed="false">Verde</button>
+          <button data-v="ember" aria-pressed="false">Ember</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ey">Gutter</span>
+        <div class="range-row">
+          <input type="range" id="r-gutter" min="0" max="48" step="2" value="24" aria-label="Grid gutter">
+          <span class="range-val" id="v-gutter">24px</span>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ey">Dir</span>
+        <div class="seg" id="seg-dir" role="group" aria-label="Text direction">
+          <button data-v="ltr" aria-pressed="true">LTR</button>
+          <button data-v="rtl" aria-pressed="false">RTL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════ SHELL: sidebar + content ══════════════════
+     .sk-shell is itself one of the primitives this page documents. The rail is
+     FIRST in the DOM, so it is also first for screen readers and tab order. -->
+<div class="sk-container sk-section sk-section--tight">
+<div class="sk-shell">
+  <nav class="sk-sidenav sk-sidenav--panel sk-sidenav--sticky" aria-label="Documentation">
+    <p class="sk-sidenav__title">Layout</p>
+
+    <ul class="sk-sidenav__group">
+      <li class="sk-sidenav__label">Pages</li>
+      <li><a class="sk-sidenav__item" href="index.html">
+        <span class="sk-sidenav__icon" aria-hidden="true">◈</span> Components</a></li>
+      <li><a class="sk-sidenav__item" href="layout.html" aria-current="page">
+        <span class="sk-sidenav__icon" aria-hidden="true">▦</span> Layout
+        <span class="sk-sidenav__meta">new</span></a></li>
+      <li><a class="sk-sidenav__item" href="sandbox.html">
+        <span class="sk-sidenav__icon" aria-hidden="true">✎</span> Sandbox</a></li>
+      <li><a class="sk-sidenav__item" href="landing.html">
+        <span class="sk-sidenav__icon" aria-hidden="true">✦</span> Landing</a></li>
+    </ul>
+
+    <ul class="sk-sidenav__group" id="toc">
+      <li class="sk-sidenav__label">On this page</li>
+      <li><a class="sk-sidenav__item" href="#anatomy">Anatomy</a></li>
+      <li><a class="sk-sidenav__item" href="#spans">Column spans</a></li>
+      <li><a class="sk-sidenav__item" href="#responsive">Responsive spans</a></li>
+      <li><a class="sk-sidenav__item" href="#offsets">Offsets &amp; lines</a></li>
+      <li><a class="sk-sidenav__item" href="#fixed">Fixed columns</a></li>
+      <li><a class="sk-sidenav__item" href="#auto">Auto grid</a></li>
+      <li><a class="sk-sidenav__item" href="#rows">Rows &amp; dense flow</a></li>
+      <li><a class="sk-sidenav__item" href="#order">Order</a></li>
+      <li><a class="sk-sidenav__item" href="#align">Alignment</a></li>
+      <li><a class="sk-sidenav__item" href="#shell">Shell layout</a></li>
+      <li class="sk-sidenav__separator" role="separator"></li>
+      <li><a class="sk-sidenav__item" href="#cheatsheet">Cheat sheet</a></li>
+    </ul>
+  </nav>
+
+
+  <main id="main">
+
+    <!-- ══════════════════ INTRO + ANATOMY ══════════════════ -->
+    <section class="sec" id="anatomy">
+      <p class="ey">Layout · @layer sk.layout</p>
+      <h1 style="font-size:var(--sk-text-3xl);letter-spacing:-.03em;margin-block:var(--sk-space-2) var(--sk-space-4)">
+        Layout &amp; the grid system</h1>
+      <p class="lede">Three ways to build a row, in increasing order of control — a 12-column grid you
+        pick spans from, a fixed <code>n</code>-column set that children just flow into, and a
+        container-driven auto grid that needs no breakpoints at all. Every class below is real,
+        compiled ShopKit. Grab the deck above and flip to <strong>RTL</strong> to watch the offsets
+        mirror without a single extra rule.</p>
+
+      <div class="head" style="margin-block-start:var(--sk-space-8)">
+        <div><h2>Anatomy</h2></div><span class="ey">12 tracks · 13 lines</span>
+      </div>
+      <div class="demo">
+        <div class="ruler" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="sk-grid">
+          <div class="cell alt">1</div><div class="cell alt">2</div><div class="cell alt">3</div>
+          <div class="cell alt">4</div><div class="cell alt">5</div><div class="cell alt">6</div>
+          <div class="cell alt">7</div><div class="cell alt">8</div><div class="cell alt">9</div>
+          <div class="cell alt">10</div><div class="cell alt">11</div><div class="cell alt">12</div>
+        </div>
+      </div>
+      <pre class="code">&lt;div class="<b>sk-grid</b>"&gt;
+  &lt;div class="<b>sk-col-4</b>"&gt;…&lt;/div&gt;   <i>&lt;!-- spans 4 of 12 --&gt;</i>
+&lt;/div&gt;</pre>
+      <div class="note"><span aria-hidden="true">◆</span>
+        <span>The gutter is the <code>--sk-space-gutter</code> token — the same one the container pads
+        with, so grid gutters and page margins can never drift apart. Override one grid with
+        <code>--sk-grid-gap</code>.</span></div>
+    </section>
+
+    <!-- ══════════════════ SPANS ══════════════════ -->
+    <section class="sec" id="spans">
+      <div class="head"><div><h2>Column spans</h2></div><span class="ey">.sk-col-1 … .sk-col-12</span></div>
+      <p class="lede">Children declare how many of the 12 tracks they occupy. Spans wrap onto a new
+        row automatically once they overflow 12.</p>
+      <div class="demo sk-stack" style="--sk-gap:var(--sk-space-3)">
+        <div class="sk-grid">
+          <div class="cell sk-col-12">sk-col-12</div>
+        </div>
+        <div class="sk-grid">
+          <div class="cell sk-col-6">sk-col-6</div><div class="cell sk-col-6">sk-col-6</div>
+        </div>
+        <div class="sk-grid">
+          <div class="cell sk-col-4">sk-col-4</div><div class="cell sk-col-4">sk-col-4</div>
+          <div class="cell sk-col-4">sk-col-4</div>
+        </div>
+        <div class="sk-grid">
+          <div class="cell sk-col-3">3</div><div class="cell sk-col-3">3</div>
+          <div class="cell sk-col-3">3</div><div class="cell sk-col-3">3</div>
+        </div>
+        <div class="sk-grid">
+          <div class="cell sk-col-8">sk-col-8</div><div class="cell acc sk-col-4">sk-col-4</div>
+        </div>
+        <div class="sk-grid">
+          <div class="cell alt sk-col-auto">auto</div><div class="cell alt sk-col-auto">auto</div>
+          <div class="cell sk-col-full">sk-col-full · 1 / -1</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ RESPONSIVE ══════════════════ -->
+    <section class="sec" id="responsive">
+      <div class="head"><div><h2>Responsive spans</h2></div><span class="ey">sm · md · lg · xl · 2xl</span></div>
+      <p class="lede">Mobile-first, min-width. The breakpoint suffix sits between the property and the
+        value: <code>.sk-col-md-6</code>. Resize the window — the row below goes 12 → 6 → 3.</p>
+      <div class="demo">
+        <div class="sk-grid">
+          <div class="cell sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+          <div class="cell sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+          <div class="cell sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+          <div class="cell sk-col-12 sk-col-md-6 sk-col-lg-3">12 → 6 → 3</div>
+        </div>
+      </div>
+      <pre class="code">&lt;div class="<b>sk-col-12 sk-col-md-6 sk-col-lg-3</b>"&gt;…&lt;/div&gt;</pre>
+    </section>
+
+    <!-- ══════════════════ OFFSETS ══════════════════ -->
+    <section class="sec" id="offsets">
+      <div class="head"><div><h2>Offsets &amp; explicit lines <span class="tag">new</span></h2></div>
+        <span class="ey">.sk-col-start-* · .sk-col-end-*</span></div>
+      <p class="lede">A 12-column grid has 13 <em>lines</em>. Pin an item to one and it leaves a gap
+        before it — that is the offset mechanism. <code>.sk-col-start-5</code> +
+        <code>.sk-col-4</code> reads as “skip four columns, then span four”.</p>
+      <div class="demo sk-stack" style="--sk-gap:var(--sk-space-3)">
+        <div class="sk-grid">
+          <div class="cell sk-col-4 sk-col-start-5">start-5 · col-4</div>
+        </div>
+        <div class="sk-grid">
+          <div class="cell sk-col-3">col-3</div>
+          <div class="cell acc sk-col-3 sk-col-start-8">start-8 · col-3</div>
+        </div>
+        <div class="sk-grid">
+          <div class="cell sk-col-start-1 sk-col-end-7">start-1 → end-7</div>
+          <div class="cell alt sk-col-start-9 sk-col-end-13">start-9 → end-13</div>
+        </div>
+      </div>
+      <pre class="code">&lt;div class="sk-grid"&gt;
+  &lt;div class="<b>sk-col-start-5 sk-col-4</b>"&gt;centred block&lt;/div&gt;
+&lt;/div&gt;</pre>
+      <div class="note"><span aria-hidden="true">↹</span>
+        <span>Grid lines are <strong>inline-axis relative</strong>, so line 1 is the right edge under
+        <code>dir="rtl"</code>. Flip the Dir control in the deck — every offset above mirrors with no
+        RTL-specific CSS.</span></div>
+    </section>
+
+    <!-- ══════════════════ FIXED COLUMNS ══════════════════ -->
+    <section class="sec" id="fixed">
+      <div class="head"><div><h2>Fixed column sets <span class="tag">new</span></h2></div>
+        <span class="ey">.sk-grid-cols-1 … -12</span></div>
+      <p class="lede">When every child takes exactly one track, a span class on each child is pure
+        noise. Declare the track count once on the container instead — the children need no class at
+        all. Responsive too: <code>.sk-grid-cols-2 .sk-grid-cols-lg-5</code>.</p>
+      <div class="demo sk-stack" style="--sk-gap:var(--sk-space-3)">
+        <div class="sk-grid-cols-3">
+          <div class="cell">1</div><div class="cell">2</div><div class="cell">3</div>
+        </div>
+        <div class="sk-grid-cols-2 sk-grid-cols-lg-5">
+          <div class="cell alt">1</div><div class="cell alt">2</div><div class="cell alt">3</div>
+          <div class="cell alt">4</div><div class="cell alt">5</div>
+        </div>
+      </div>
+      <pre class="code">&lt;div class="<b>sk-grid-cols-2 sk-grid-cols-lg-5</b>"&gt;
+  &lt;div&gt;…&lt;/div&gt;  <i>&lt;!-- no per-child class needed --&gt;</i>
+&lt;/div&gt;</pre>
+      <div class="note"><span aria-hidden="true">◆</span>
+        <span>Tracks are <code>minmax(0, 1fr)</code>, not <code>1fr</code> — so a long unbroken word
+        or an oversized image can’t blow the track out.</span></div>
+    </section>
+
+    <!-- ══════════════════ AUTO GRID ══════════════════ -->
+    <section class="sec" id="auto">
+      <div class="head"><div><h2>Auto grid <span class="tag">new</span></h2></div>
+        <span class="ey">.sk-grid--auto · --sk-grid-min</span></div>
+      <p class="lede">Responsive with <strong>zero</strong> media queries. You give an ideal minimum
+        track width and the browser fits as many as the container allows. Because it reacts to the
+        <em>container</em> rather than the viewport, it also reflows correctly inside a sidebar, a
+        drawer or a modal — which breakpoints cannot do.</p>
+      <div class="sk-cluster" style="margin-block-end:var(--sk-space-3)">
+        <span class="ey">--sk-grid-min</span>
+        <input type="range" id="r-min" min="6" max="22" step="1" value="12"
+               aria-label="Auto grid minimum track width">
+        <span class="range-val" id="v-min">12rem</span>
+      </div>
+      <div class="demo">
+        <div class="sk-grid--auto" id="auto-demo">
+          <div class="cell">1</div><div class="cell">2</div><div class="cell">3</div>
+          <div class="cell">4</div><div class="cell">5</div><div class="cell">6</div>
+          <div class="cell">7</div><div class="cell">8</div>
+        </div>
+      </div>
+      <pre class="code">&lt;div class="<b>sk-grid--auto</b>" style="<b>--sk-grid-min</b>: 14rem"&gt;…&lt;/div&gt;
+
+<i>/* auto-fill keeps track width steady · auto-fit stretches the last row */</i>
+&lt;div class="<b>sk-grid--auto sk-grid--fit</b>"&gt;…&lt;/div&gt;</pre>
+    </section>
+
+    <!-- ══════════════════ ROWS ══════════════════ -->
+    <section class="sec" id="rows">
+      <div class="head"><div><h2>Row spans &amp; dense flow <span class="tag">new</span></h2></div>
+        <span class="ey">.sk-row-* · .sk-grid--dense</span></div>
+      <p class="lede">Items can span rows as well as columns — the basis of any editorial or bento
+        layout. <code>.sk-grid--dense</code> backfills the holes that wide items leave behind; toggle
+        it below and watch the gaps close.</p>
+      <div class="sk-cluster" style="margin-block-end:var(--sk-space-3)">
+        <div class="seg" id="seg-dense" role="group" aria-label="Grid auto flow">
+          <button data-v="off" aria-pressed="true">Default flow</button>
+          <button data-v="on" aria-pressed="false">Dense</button>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="sk-grid-cols-4" id="dense-demo" style="grid-auto-rows:3.25rem">
+          <div class="cell acc sk-col-2 sk-row-2">col-2 · row-2</div>
+          <div class="cell">a</div><div class="cell">b</div>
+          <div class="cell alt sk-col-3">col-3</div>
+          <div class="cell">c</div><div class="cell">d</div><div class="cell">e</div>
+          <div class="cell alt sk-col-2">col-2</div>
+        </div>
+      </div>
+      <div class="note"><span aria-hidden="true">⚠</span>
+        <span><strong>Dense reorders visually only.</strong> The DOM — and therefore tab order and
+        screen-reader order — is unchanged, so never use it to repair a reading order that is wrong
+        in the markup.</span></div>
+    </section>
+
+    <!-- ══════════════════ ORDER ══════════════════ -->
+    <section class="sec" id="order">
+      <div class="head"><div><h2>Order <span class="tag">new</span></h2></div>
+        <span class="ey">.sk-order-* · -first · -last</span></div>
+      <p class="lede">Reposition an item without touching the markup — most often to pull an order
+        summary above a form on small screens and drop it back beside the form on large ones.</p>
+      <div class="demo">
+        <div class="sk-grid-cols-3">
+          <div class="cell alt">DOM 1</div>
+          <div class="cell acc sk-order-first">DOM 2 · order-first</div>
+          <div class="cell alt">DOM 3</div>
+        </div>
+      </div>
+      <pre class="code"><i>&lt;!-- summary first on mobile, back to third from lg up --&gt;</i>
+&lt;aside class="<b>sk-order-first sk-order-lg-none</b>"&gt;Order summary&lt;/aside&gt;</pre>
+    </section>
+
+    <!-- ══════════════════ ALIGNMENT ══════════════════ -->
+    <section class="sec" id="align">
+      <div class="head"><div><h2>Alignment</h2></div><span class="ey">shared with flex utilities</span></div>
+      <p class="lede">Box alignment is not restated for grid — <code>.sk-items-*</code>,
+        <code>.sk-justify-*</code> and <code>.sk-gap-*</code> already apply to grid containers. Only
+        <code>justify-items</code> / <code>justify-self</code> have no flex equivalent, so those are
+        the grid layer’s own.</p>
+      <div class="demo sk-stack" style="--sk-gap:var(--sk-space-3)">
+        <div class="sk-grid-cols-3 sk-items-center"
+             style="block-size:6rem;background:color-mix(in srgb,var(--sk-color-text) 4%,transparent);border-radius:var(--sk-radius)">
+          <div class="cell" style="min-block-size:2rem">items-center</div>
+          <div class="cell" style="min-block-size:3.5rem">items-center</div>
+          <div class="cell" style="min-block-size:2.5rem">items-center</div>
+        </div>
+        <div class="sk-grid-cols-3 sk-justify-items-center">
+          <div class="cell alt" style="inline-size:7rem">justify-items</div>
+          <div class="cell alt" style="inline-size:7rem">-center</div>
+          <div class="cell alt" style="inline-size:7rem">(not stretched)</div>
+        </div>
+      </div>
+      <pre class="code">&lt;div class="sk-grid-cols-3 <b>sk-items-center sk-justify-items-center sk-gap-6</b>"&gt;…&lt;/div&gt;</pre>
+    </section>
+
+    <!-- ══════════════════ SHELL ══════════════════ -->
+    <section class="sec" id="shell">
+      <div class="head"><div><h2>Shell layout <span class="tag">new</span></h2></div>
+        <span class="ey">.sk-shell · --sk-shell-rail</span></div>
+      <p class="lede">The two-column sidebar shape every docs site and admin screen needs — and the
+        one this page is built with. The rail takes a fixed inline size, the content column takes
+        whatever is left; below <code>lg</code> they stack, so no per-page media query is needed.</p>
+      <div class="demo">
+        <div class="sk-shell" style="--sk-shell-rail:8rem">
+          <div class="cell acc">rail</div>
+          <div class="cell">content · minmax(0, 1fr)</div>
+        </div>
+      </div>
+      <pre class="code">&lt;div class="<b>sk-shell</b>" style="<b>--sk-shell-rail</b>: 15rem"&gt;
+  &lt;nav class="<b>sk-sidenav sk-sidenav--panel sk-sidenav--sticky</b>" aria-label="Docs"&gt;
+    &lt;p class="sk-sidenav__title"&gt;ShopKit docs&lt;/p&gt;
+    &lt;ul class="sk-sidenav__group"&gt;
+      &lt;li class="sk-sidenav__label"&gt;Pages&lt;/li&gt;
+      &lt;li&gt;&lt;a class="<b>sk-sidenav__item</b>" href="layout.html" <b>aria-current="page"</b>&gt;Layout&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+  &lt;main&gt;…&lt;/main&gt;
+&lt;/div&gt;</pre>
+      <div class="note"><span aria-hidden="true">◆</span>
+        <span>The sidebar beside you is the real <code>.sk-sidenav</code> component. Its active row is
+        driven by <code>aria-current="page"</code> — a genuine DOM signal, never a styling-only
+        <code>--active</code> class — so the accessibility tree and the paint cannot drift apart.
+        <code>.sk-shell--end</code> moves the rail to the visual end while leaving it first in the
+        DOM for tab order.</span></div>
+    </section>
+
+    <!-- ══════════════════ CHEAT SHEET ══════════════════ -->
+    <section class="sec" id="cheatsheet">
+      <div class="head"><div><h2>Cheat sheet</h2></div><span class="ey">every layout class</span></div>
+      <div class="sk-table-wrap">
+        <table class="sk-table sk-table--striped sk-table--compact">
+          <caption class="sk-sr-only">Every class in the ShopKit layout and grid system</caption>
+          <thead>
+            <tr><th scope="col">Class</th><th scope="col">Layer</th><th scope="col">Does</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>.sk-grid</code></td><td>layout</td><td>12-column track set</td></tr>
+            <tr><td><code>.sk-col-{1…12}</code></td><td>layout</td><td>span n tracks</td></tr>
+            <tr><td><code>.sk-col-{bp}-{n}</code></td><td>layout</td><td>span from a breakpoint up</td></tr>
+            <tr><td><code>.sk-col-auto</code> · <code>.sk-col-full</code></td><td>layout</td><td>intrinsic width · full bleed</td></tr>
+            <tr><td><code>.sk-grid-cols-{1…12}</code></td><td>layout</td><td>fixed n-column set</td></tr>
+            <tr><td><code>.sk-grid-cols-{bp}-{n}</code></td><td>layout</td><td>track count per breakpoint</td></tr>
+            <tr><td><code>.sk-grid--auto</code></td><td>layout</td><td>auto-fill from <code>--sk-grid-min</code></td></tr>
+            <tr><td><code>.sk-grid--fit</code></td><td>layout</td><td>auto-fit — last row stretches</td></tr>
+            <tr><td><code>.sk-grid--dense</code></td><td>layout</td><td>backfill holes (visual only)</td></tr>
+            <tr><td><code>.sk-grid--flow-col</code></td><td>layout</td><td>flow into columns</td></tr>
+            <tr><td><code>.sk-shell</code></td><td>layout</td><td>rail + content, stacks under <code>lg</code></td></tr>
+            <tr><td><code>.sk-shell--end</code></td><td>layout</td><td>rail at the visual end</td></tr>
+            <tr><td><code>.sk-container</code> · <code>-narrow</code> · <code>-fluid</code></td><td>layout</td><td>page measure + gutter</td></tr>
+            <tr><td><code>.sk-stack</code> · <code>.sk-cluster</code></td><td>layout</td><td>vertical · wrapping flex primitives</td></tr>
+            <tr><td><code>.sk-col-start-{1…13}</code></td><td>utilities</td><td>pin to a column line → offset</td></tr>
+            <tr><td><code>.sk-col-end-{1…13}</code></td><td>utilities</td><td>pin the trailing edge</td></tr>
+            <tr><td><code>.sk-col-start-{bp}-{n}</code></td><td>utilities</td><td>offset per breakpoint</td></tr>
+            <tr><td><code>.sk-row-{1…12}</code></td><td>utilities</td><td>span n rows</td></tr>
+            <tr><td><code>.sk-row-start-{n}</code> · <code>-end-</code></td><td>utilities</td><td>pin to a row line</td></tr>
+            <tr><td><code>.sk-order-{n}</code> · <code>-first</code> · <code>-last</code></td><td>utilities</td><td>visual order</td></tr>
+            <tr><td><code>.sk-justify-items-*</code></td><td>utilities</td><td>inline-axis alignment of children</td></tr>
+            <tr><td><code>.sk-justify-self-*</code></td><td>utilities</td><td>inline-axis alignment of one child</td></tr>
+            <tr><td><code>.sk-place-center</code></td><td>utilities</td><td>centre on both axes</td></tr>
+            <tr><td><code>.sk-gap-{k}</code> · <code>.sk-items-*</code></td><td>utilities</td><td>shared with flex — apply to grid too</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note"><span aria-hidden="true">◆</span>
+        <span>The <code>utilities</code> rows are config-gated. Set
+        <code>"grid": false</code> in <code>$utilities-enabled</code> (<code>scss/_config.scss</code>)
+        and that whole matrix disappears from the build — 1.2&nbsp;KB gzip you don’t pay for if you
+        don’t use it.</span></div>
+    </section>
+
+    <footer class="sec">
+      <p class="footnote">ShopKit — layout layer. Everything on this page is the compiled library; the
+        page chrome adds no styling the tokens don’t already provide.
+        <a href="index.html">Back to the component showcase →</a></p>
+    </footer>
+
+  </main>
+</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+
+  /* ---- keep the sticky rail clear of the (wrapping) deck ---- */
+  (function () {
+    var deck = document.querySelector(".deck");
+    if (!deck) return;
+    function measure() {
+      root.style.setProperty("--deck-h", deck.offsetHeight + "px");
+    }
+    measure();
+    if ("ResizeObserver" in window) new ResizeObserver(measure).observe(deck);
+    else window.addEventListener("resize", measure);
+  })();
+
+  /* ---- segmented controls ---- */
+  function wireSeg(id, apply) {
+    var seg = document.getElementById(id);
+    if (!seg) return;
+    seg.addEventListener("click", function (e) {
+      var btn = e.target.closest("button"); if (!btn) return;
+      seg.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
+      apply(btn.getAttribute("data-v"));
+    });
+  }
+  wireSeg("seg-mode", function (v) {
+    if (v === "system") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", v);
+  });
+  wireSeg("seg-brand", function (v) {
+    if (v === "aurora") root.removeAttribute("data-brand"); else root.setAttribute("data-brand", v);
+  });
+  wireSeg("seg-dir", function (v) { root.setAttribute("dir", v); });
+  wireSeg("seg-dense", function (v) {
+    document.getElementById("dense-demo").classList.toggle("sk-grid--dense", v === "on");
+  });
+
+  /* ---- sliders ---- */
+  var g = document.getElementById("r-gutter"), gv = document.getElementById("v-gutter");
+  g.addEventListener("input", function () {
+    root.style.setProperty("--sk-space-gutter", g.value + "px");
+    gv.textContent = g.value + "px";
+  });
+  var m = document.getElementById("r-min"), mv = document.getElementById("v-min");
+  m.addEventListener("input", function () {
+    document.getElementById("auto-demo").style.setProperty("--sk-grid-min", m.value + "rem");
+    mv.textContent = m.value + "rem";
+  });
+
+  /* ---- scrollspy: mark the section being read in the sidebar ----
+     aria-current="true" for the in-page section; "page" stays on the page link
+     itself, so the two markers never fight over the same meaning. */
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a[href^="#"]'));
+  var visible = Object.create(null);
+  function paint() {
+    var current = null;
+    links.forEach(function (a) {
+      var id = a.getAttribute("href").slice(1);
+      if (!current && visible[id]) current = a;      // topmost visible section wins
+      a.removeAttribute("aria-current");
+    });
+    if (current) current.setAttribute("aria-current", "true");
+  }
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { visible[en.target.id] = en.isIntersecting; });
+      paint();
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    links.forEach(function (a) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      if (el) io.observe(el);
+    });
+  }
+})();
+</script>
+</body>
+</html>

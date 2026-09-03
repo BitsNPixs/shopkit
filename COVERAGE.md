@@ -29,7 +29,9 @@ ShopKit's philosophy differs from Bootstrap's in two ways that explain most gaps
 | Typography base | ✅ headings, links, lists, code, blockquote, `::selection` | ✅ | ❌ no `.display-*` headings, no `.lead` |
 | Fluid type scale | ✅ `clamp()`-based `--sk-text-*` | RFS (opt-in) | |
 | Container | ✅ `.sk-container` / `-narrow` / `-fluid` | ✅ | |
-| Grid | ✅ 12-col CSS Grid + responsive spans | ✅ (flexbox rows) | plus `.sk-product-grid` auto-fit |
+| Grid | ✅ 12-col CSS Grid + responsive spans · fixed `.sk-grid-cols-{n}` · container-driven `.sk-grid--auto` | ✅ (flexbox rows) | plus `.sk-product-grid` auto-fit |
+| Grid placement | ✅ offsets (`.sk-col-start-*`), row spans, `.sk-order-*`, `justify-items` | 🟡 `.offset-*`, `.order-*` | config-gated utility group `"grid"` |
+| App / docs shell | ✅ `.sk-shell` — rail + content, stacks under `lg` | ❌ | pairs with `.sk-sidenav` |
 | Stack / cluster primitives | ✅ `.sk-stack`, `.sk-cluster` | 🟡 stacks helpers | |
 | Section rhythm | ✅ `.sk-section` + fluid `--sk-space-section` | ❌ | |
 | Breakpoints | ✅ 5 (sm–2xl), configurable | ✅ 6 | |
@@ -60,6 +62,7 @@ ShopKit's philosophy differs from Bootstrap's in two ways that explain most gaps
 | Breadcrumb | ✅ `.sk-breadcrumb` | parity |
 | Pagination | ✅ `.sk-pagination` | parity |
 | Navbar | ✅ `.sk-navbar` — brand/nav/search/actions, mobile toggle, sticky | parity |
+| Sidebar nav | ✅ `.sk-sidenav` — in-flow vertical rail, `aria-current` active row, sticky/panel variants | 🟡 `.nav-pills.flex-column` | no JS; `.sk-menu` stays the floating dropdown |
 | Forms | ✅ input · textarea · select · checkbox · radio · switch · range · file · input-group · label · help · error · field · fieldset/legend; invalid via `[aria-invalid]` | parity+ (validation via ARIA, not classes) |
 | Toast | ✅ `.sk-toasts` + `.sk-toast` — status variants, enter motion, React timing wrapper | parity |
 | Table | ✅ `.sk-table` + striped/hover/bordered/compact + `.sk-table-wrap` | parity |
@@ -105,6 +108,7 @@ Shipped (all config-gated via `$utilities-enabled`, all token-driven):
 - **Spacing** — m/p × all logical sides × full scale, negative margins, auto, curated responsive
 - **Display** — block/inline/flex/grid-adjacent values + responsive show/hide, `[hidden]`-safe
 - **Flex** — direction/wrap/justify/align/grow/shrink + `.sk-gap-*` (flex **and** grid), curated responsive
+- **Grid** — `.sk-col-start/-end-*` (offsets), `.sk-row-*`, `.sk-order-*`, `justify-items/self`, curated responsive
 - **Animation** — `.sk-animate-fade/-fade-up/-fade-down/-scale-in/-spin/-pulse` + speed modifiers
 
 Not shipped (Bootstrap has them; `_config.scss` and `PHASES.md` mark these "add on
@@ -172,8 +176,9 @@ tokens, layers, RTL, a11y, specificity, markup↔CSS). What it **fixed**:
 What it **verified clean** (no action needed):
 
 - **Zero** hardcoded colors, durations, or real `!important` anywhere outside the token tiers
-- **Zero Bootstrap** residue; exactly **one** grid system (`layout/_grid.scss`) — the other
-  `display:grid` uses are component anatomy, not competing layout APIs
+- **Zero Bootstrap** residue; exactly **one** grid system (`layout/_grid.scss`, with
+  per-item placement in `utilities/_grid.scss`) — the other `display:grid` uses are
+  component anatomy, not competing layout APIs
 - Every media query flows through `bp()` / `$breakpoints`; no stray breakpoints
 - Markup↔CSS cross-reference across all three docs pages + customizer: **0 classes used but
   undefined**, both before and after the fixes (1,300 defined / 251 used in docs / 136 in the

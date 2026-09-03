@@ -1,0 +1,97 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// GRID PLACEMENT UTILITIES  ·  @layer sk.utilities
+// ───────────────────────────────────────────────────────────────────────────
+// Per-item placement inside any grid container. The container primitives
+// (.sk-grid, .sk-grid-cols-*, .sk-grid--auto) live in layout/_grid.scss; gap
+// and box-alignment (.sk-gap-*, .sk-items-*, .sk-justify-*) come from the flex
+// utilities, which apply to grid containers unchanged. This partial adds only
+// what neither of those covers: WHERE an item sits.
+//
+//   .sk-col-start-{n} / -end-{n}   explicit column line (1…13) → offsets
+//   .sk-row-{n}                    row span
+//   .sk-row-start-{n} / -end-{n}   explicit row line
+//   .sk-order-{n} / -first / -last visual reordering
+//   .sk-justify-items-* / -self-*  inline-axis alignment
+//   .sk-place-center               the one-liner centring shorthand
+// Curated responsive (name-bp-value): col-start · order
+//   e.g. .sk-col-start-md-4 · .sk-order-lg-first
+//
+// RTL — `grid-column` lines are INLINE-axis relative, so line 1 is the right
+// edge under `dir="rtl"`. Offsets mirror automatically; nothing here is
+// physical.
+//
+// ORDER IS VISUAL ONLY — `order` and `grid-*-start` do not move the element in
+// the DOM, so tab order and screen-reader order still follow the source. Never
+// use them to fix a reading order that is wrong in the markup.
+// ═══════════════════════════════════════════════════════════════════════════
+@use "sass:map";
+@use "../config" as *;
+
+@if map.get($utilities-enabled, "grid") {
+  // Line-based placement runs to $grid-columns + 1 because N columns have
+  // N+1 lines — `.sk-col-end-13` is the trailing edge of a 12-column grid.
+  $-lines: $grid-columns + 1;
+  $-justify: ("start": start, "end": end, "center": center, "stretch": stretch);
+
+  @layer #{$prefix}.utilities {
+    // ── Column lines — the offset mechanism ──
+    // `.sk-col-start-5` + `.sk-col-4` = "skip four columns, then span four".
+    @for $i from 1 through $-lines {
+      .#{$prefix}-col-start-#{$i} { grid-column-start: #{$i}; }
+      .#{$prefix}-col-end-#{$i}   { grid-column-end: #{$i}; }
+    }
+    .#{$prefix}-col-start-auto { grid-column-start: auto; }
+    .#{$prefix}-col-end-auto   { grid-column-end: auto; }
+
+    // ── Row spans + row lines ──
+    @for $i from 1 through $grid-columns {
+      .#{$prefix}-row-#{$i} { grid-row: span #{$i} / span #{$i}; }
+    }
+    @for $i from 1 through $-lines {
+      .#{$prefix}-row-start-#{$i} { grid-row-start: #{$i}; }
+      .#{$prefix}-row-end-#{$i}   { grid-row-end: #{$i}; }
+    }
+    .#{$prefix}-row-auto { grid-row: auto; }
+    .#{$prefix}-row-full { grid-row: 1 / -1; }
+
+    // ── Order (visual only — see the header note) ──
+    @for $i from 1 through $grid-columns {
+      .#{$prefix}-order-#{$i} { order: #{$i}; }
+    }
+    .#{$prefix}-order-first { order: -9999; }
+    .#{$prefix}-order-last  { order: 9999; }
+    .#{$prefix}-order-none  { order: 0; }
+
+    // ── justify-items / justify-self / place ──
+    // align-items is already covered by .sk-items-* in the flex utilities;
+    // justify-items has no flex equivalent, so it only exists here.
+    @each $s, $v in $-justify {
+      .#{$prefix}-justify-items-#{$s} { justify-items: $v; }
+      .#{$prefix}-justify-self-#{$s}  { justify-self: $v; }
+    }
+    .#{$prefix}-place-center {
+      place-items: center;
+      place-content: center;
+    }
+
+    // ── Curated responsive: col-start · order ──
+    // Deliberately narrow. These two carry almost every real layout change at
+    // a breakpoint; emitting the full matrix here would cost more against the
+    // size budget than it earns.
+    @each $bp, $min in $breakpoints {
+      @media (min-width: $min) {
+        @for $i from 1 through $-lines {
+          .#{$prefix}-col-start-#{$bp}-#{$i} { grid-column-start: #{$i}; }
+        }
+        .#{$prefix}-col-start-#{$bp}-auto { grid-column-start: auto; }
+
+        @for $i from 1 through $grid-columns {
+          .#{$prefix}-order-#{$bp}-#{$i} { order: #{$i}; }
+        }
+        .#{$prefix}-order-#{$bp}-first { order: -9999; }
+        .#{$prefix}-order-#{$bp}-last  { order: 9999; }
+        .#{$prefix}-order-#{$bp}-none  { order: 0; }
+      }
+    }
+  }
+}
