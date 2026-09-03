@@ -9,8 +9,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-<!-- ShopKit library (compiled). In the standalone preview this is inlined. -->
+<!-- ShopKit library (compiled) -->
 <link id="sk-css" rel="stylesheet" href="../dist/shopkit.css">
+<script>
+  if (window.location.hostname.includes('github.io')) {
+    document.getElementById('sk-css').href = 'https://cdn.jsdelivr.net/gh/BitsNPixs/shopkit@main/dist/shopkit.css';
+  }
+</script>
 
 <style>
 /* ═══════════════════════════════════════════════════════════════════════

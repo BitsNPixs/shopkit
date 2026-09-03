@@ -11,6 +11,11 @@
 
 <!-- ShopKit library (compiled). In the standalone preview this is inlined. -->
 <link id="sk-css" rel="stylesheet" href="../dist/shopkit.css">
+<script>
+  if (window.location.hostname.includes('github.io')) {
+    document.getElementById('sk-css').href = 'https://cdn.jsdelivr.net/gh/BitsNPixs/shopkit@main/dist/shopkit.css';
+  }
+</script>
 
 <style>
 /* ═══════════════════════════════════════════════════════════════════════
